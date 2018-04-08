@@ -1,0 +1,353 @@
+DORB Logistics
+
+Wordt alles gebracht op de dag dat de klant aangeeft?
+Wat als die dag niet kan?
+Wat betekend apk tot, moet die dag de apk gedaan worden?
+Staan de werkdagen vast of moet er gekeken worden hoeveel ze al gewerkt hebben in een week?
+Moet wachtwoord gehashed zijn?
+Wat moeten planners doen? (rit inplannen?)
+(Kunnen klanten alleen order per pallet maken?)(??)
+Wie moeten de vrachtwagen inladen?
+Moet een klant ingelogd zijn?
+Moet de routbeschrijving google maps zijn?
+Moet het web zijn?
+Moet er rekening gehouden worden met de afstanden tussen de adressen?
+
+(hb je rekening gehouden met de apk?) (opgelost)
+(werkdagen per week)
+
+(hash is one-way-ticket, use encryption/decryption) <<<< nog doen!!!
+(::: hoeveelheid per vrachtwagen)
+=============================================
+Adres:
+Zijpendaalseweg 167
+6814 CJ Arnhem
+Nederland
+
+=============================================
+Vrachtwagens:
+
+CF 300 FA:
+- 11 (wagens)
+- 10 (pallets)
+- rijbewijs (C, D)
+
+CF 410 FTN
+- 6 (wagens)
+- 20 (pallets)
+- (houd rekening met de volgorde van de pallets)
+- rijbewijs (C, D)
+
+XF 430 FMT
+- 3 (wagens)
+- 30 (pallets)
+- 10 (in aanhanger)
+- 20 (in oplegger)
+- (houd rekening met de volgorde van de pallets (aanhanger moet eerst leeg))
+- rijbewijs (D)
+
+
+- kenteken
+- apk (datum) (nietbeschikbaar)
+- beschikbaarheid (beschikbaar, nietbeschikbaar)
+  - (nietbeschikbaar met onderhoud en als hij weg is)
+  - (beschikbaar als hij er is)
+============================================
+Users:
+
+Chauffeurs:
+- 25 (chauffeurs)
+- nationaliteit (Nederland, Duitsland, Luxemburg, Belgie)
+- rijbewijs (C, D)
+- voornaam
+- tussenvoegsel
+- achternaam
+- werkdagen (min 1, max 5)
+- inlognaam
+- wachtwoord
+- pagina:
+  - werk rooster
+    - order:
+      - datum
+      - adres
+      - vrachtwagen
+      - order
+  - route beschrijving
+
+Planners:
+- 5 (planners)
+- voornaam
+- tusselvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+- pagina:
+  - pallets in vrachtwagen (filter op datum)
+    - (filter alle orders van die dag op de km van hier vandaan, zet dat in volgorde)
+    - Lijst met orders en pallets
+
+Managers:
+- 2 (managers)
+- voornaam
+- tussenvoegsel
+- achternaam
+- wachtwoord
+- pagina:
+  - crud:
+    - orders
+    - chauffeurs
+    - managers
+    - planners
+    - vrachtwagens
+    - prijzen
+
+Klanten:
+- voornaam
+- tussenvoegsel
+- achternaam
+- rekeningnummer
+- kan orders maken
+- pagina:
+  - order maken pagina
+
+============================================
+[Systeem]Prijs (input van aantal pallets, [systeem]route.km):
+
+1 Pallet:
+- +0,50 * km
+
+2 v 3 Pallet:
+- +0,45 * km
+
+4 v 5 Pallet:
+- +0,40 * km
+
+6 -> Pallet:
+- +0,35 * km
+
+Nederland:
+- +0,00
+
+Duitsland:
+- +25,00
+
+Belgie:
+- +15,00
+
+Luxemburg:
+- +20,00
+
+(prijzen uit db)
+(facaturen naar het rekening nummer van de klant)
+
+============================================
+[systeem]Route (input van adress):
+
+(return km voor prijs, land voor orders, route voor chauffeurs)
+(maak een lijst met de adressen en laad ze dan in in google maps 
+en als hij daar is ga dan naar de volgende adres)
+
+
+============================================
+[systeem]Orders (filter):
+
+Klant:
+- adres
+  - welk land (kortste route)
+- pallets (aantal)
+- datum (alle bestellingen worden in 1 dag wegebracht)
+
+Vrachtwagen (input aantal pallets, datum):
+- beschikbaarheid
+  - is hij beschikbaar die dag 
+  - is hij in onderhoud
+- grootte (type vrachtwagen)
+  - hoeveel pallets in vrachtwagen (pallets (na orde) - pallets die er geordend worden)
+(anders nog een vrachtwagen)
+
+Chauffeurs (input vrachtwagen, datum, [systeem]route.land)
+- rijbewijs
+  - mag de chauffeur wel op de vrachtwagen
+- datum
+  - kan de chauffeur op die datum
+  - (kan de chauffeur wel in de week of heeft hij al gewerkt)
+- nationaliteit
+  - kan de chauffeur wel naar dat land?
+
+Prijs (input pallets, [systeem]prijs)
+- check pallets
+  - * km
+- check land 
+
+Totaal (return)
+- Klant
+- Vrachtwagen
+- Chauffeur
+- Adres
+- Prijs
+- datum
+- aantal pallets
+- ruimte over in vrachtwagen (aantal pallets)
+
+(facaturen naar het rekeningnummer van de klant) (?? klopt niet meer)
+(bij totaal pas naar db -> orders)
+
+============================================
+Database:
+
+Nationaliteit:
+- nat_Id
+- land
+
+Chauffeurs:
+- user_Id
+- vooraam
+- tussenvoegsel
+- achternaam
+- rijbewijs_Id (key) (kunnen meerdere)
+- nat_Id (key) (kunnen meerdere)
+- werkdagen (aantal)
+- inlognaam
+- wachtwoord
+
+Planners:
+- user_Id
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Managers:
+- user_Id
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Prijzen:
+- prijs_Id
+- pallets
+- prijs
+- nat_Id (key)
+(oproepen met get prijs where (landen/pallets) = ...)
+
+Orders:
+- order_Id
+{
+- voornaam
+- tussenvoegsel
+- achternaam
+- rekeningnummer
+}
+(- vrachtwagen_Id (key) (??))
+(- chauffeur_Id (key) (??))
+- adres 
+- prijs
+- datum
+- aantal pallets
+- rit_Id (key) (kunnen meerdere zijn)
+
+(Klant:
+- user_Id
+- voornaam
+- tussenvoegsel
+- achternaam
+- rekeningnummer)
+
+Typevrachtwagens:
+- typ_Id
+- type
+- ruimte
+- rijbewijs_Id (key) (kunnen meerdere)
+- grootst (boolean)
+
+Rit:
+- rit_Id
+- ruimte (aantal pallets na order) (??)
+- datum
+(- order (key) (kunnen meerdere))
+- vrachtwagen_Id (key)
+- chauffeur_Id (key)
+
+Vrachtwagens:
+- vrachtwagen_Id
+- typ_Id (key)
+- kenteken
+- apk tot
+- status (enum) (beschikbaar, onderhoud)
+
+Rijbewijs:
+- rijbewijs_Id
+- rijbewijs
+
+
+(hoeveel pallets kunnen er nog in de vrachtwagen na de orde)
+
+============================================
+Na login:
+- welke database van users
+- user_Id
+
+============================================
+Curd:
+
+Orders:
+- verwijderen
+- (als meer moet moet hij weer door de order filter)
+
+Chauffeurs:
+- toevoegen
+- verwijderen
+- vooraam
+- tussenvoegsel
+- achternaam
+- rijbewijs (spinner v radiobutton)
+- nationaliteit (spinner met alle opties van nationaliteit)
+- werkdagen (aantal)
+- inlognaam
+- wachtwoord
+
+Managers:
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Planners:
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Vrachtwagens:
+- type vrachtwagen (spinner met alle opties van type vrachtwagen)
+- kenteken
+- apk tot
+- status (spinner v radiobutton)
+
+Prijzen:
+- prijs
+
+=============================================
+Wireframes
+
+- login
+  - button voor klant
+- curd orders
+- curd chauffeurs
+- crud managers
+- crud vrachtwagens
+- crud prijzen
+- crud planners
+
+- orders maken
+- werkrooster
+- pallet lijst
+- route beschrijving
+
+- (bij alles kan uitloggen)
+
