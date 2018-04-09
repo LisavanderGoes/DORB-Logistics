@@ -15,6 +15,7 @@ Moet er rekening gehouden worden met de afstanden tussen de adressen?
 
 (hb je rekening gehouden met de apk?) (opgelost)
 (werkdagen per week)
+(managers krijgen lijstjes)(vraag nader)
 
 (hash is one-way-ticket, use encryption/decryption) <<<< nog doen!!!
 (::: hoeveelheid per vrachtwagen)
@@ -310,6 +311,20 @@ Chauffeurs:
 - wachtwoord
 
 Managers:
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Admins:
+- voornaam
+- tussenvoegsel
+- achternaam
+- inlognaam
+- wachtwoord
+
+Klanten:
 - voornaam
 - tussenvoegsel
 - achternaam

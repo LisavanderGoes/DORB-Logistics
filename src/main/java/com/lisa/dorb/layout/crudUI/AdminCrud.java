@@ -5,6 +5,7 @@ import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.model.Admin;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
+import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
@@ -22,10 +23,10 @@ public class AdminCrud extends HorizontalLayout {
     @Autowired
     Crud crud;
 
-    public List<Admin> adminList = crud.adminList();
+    public List<Admin> adminList; //define inside methode otherwise null
 
     public void addTable() {
-        crudUI.crudAdminBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        adminList = crud.adminList();
         crudUI.gridAdmin.setCaption("Admins");
         crudUI.gridAdmin.setSizeFull();
         crudUI.gridAdmin.setSelectionMode(Grid.SelectionMode.NONE);
@@ -77,15 +78,14 @@ public class AdminCrud extends HorizontalLayout {
         crudUI.gridAdmin.getEditor().setEnabled(true);
 
         crudUI.table.addComponentsAndExpand(crudUI.gridAdmin);
-        HorizontalLayout buttons = new HorizontalLayout();
         crudUI.addBtn.addClickListener(event -> {
             toevoegen();
         });
         crudUI.deleteBtn.addClickListener(event -> {
             delete(crudUI.rowId, crudUI.rowItem);
         });
-        buttons.addComponents(crudUI.addBtn, crudUI.deleteBtn);
-        crudUI.parent.addComponent(buttons);
+
+        crudUI.parent.addComponents(crudUI.addBtn, crudUI.deleteBtn);
         crudUI.parent.addComponentsAndExpand(crudUI.table);
     }
 
@@ -94,11 +94,11 @@ public class AdminCrud extends HorizontalLayout {
         crudUI.rowItem = item;
     }
 
-    private void setWachtwoord(Admin admin, String s) {
+    private void setWachtwoord(Admin admin, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = crud.updateAdminWachtwoord(admin, s);
+        String snd = crud.updateAdminWachtwoord(admin, wachtwoord);
         if(snd == null) {
-            admin.setWachtwoord(s);
+            admin.setWachtwoord(wachtwoord);
             crudUI.gridAdmin.setItems(adminList);
             crudUI.send.setValue("");
         }else {
@@ -106,10 +106,10 @@ public class AdminCrud extends HorizontalLayout {
         }
     }
 
-    private void setInlognaam(Admin admin, String s) {
-        String snd = crud.updateAdminInlognaam(admin, s);
+    private void setInlognaam(Admin admin, String inlognaam) {
+        String snd = crud.updateAdminInlognaam(admin, inlognaam);
         if(snd == null) {
-            admin.setInlognaam(s);
+            admin.setInlognaam(inlognaam);
             crudUI.gridAdmin.setItems(adminList);
             crudUI.send.setValue("");
         }else {
@@ -117,21 +117,21 @@ public class AdminCrud extends HorizontalLayout {
         }
     }
 
-    private void setAchternaam(Admin admin, String s) {
-        crud.updateAdminAchternaam(admin, s);
-        admin.setAchternaam(s);
+    private void setAchternaam(Admin admin, String achternaam) {
+        crud.updateAdminAchternaam(admin, achternaam);
+        admin.setAchternaam(achternaam);
         crudUI.gridAdmin.setItems(adminList);
     }
 
-    private void setTussenvoegsel(Admin admin, String s) {
-        crud.updateAdminTussenvoegsel(admin, s);
-        admin.setTussenvoegsel(s);
+    private void setTussenvoegsel(Admin admin, String tussenvoegsel) {
+        crud.updateAdminTussenvoegsel(admin, tussenvoegsel);
+        admin.setTussenvoegsel(tussenvoegsel);
         crudUI.gridAdmin.setItems(adminList);
     }
 
-    public void setVoornaam(Admin admin, String s){
-        crud.updateAdminVoornaam(admin, s);
-        admin.setVoornaam(s);
+    public void setVoornaam(Admin admin, String voornaam){
+        crud.updateAdminVoornaam(admin, voornaam);
+        admin.setVoornaam(voornaam);
         crudUI.gridAdmin.setItems(adminList);
     }
 

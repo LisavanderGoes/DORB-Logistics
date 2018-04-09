@@ -38,7 +38,8 @@ public class Klant implements Serializable {
     protected Klant() {
     }
 
-    public Klant(String voornaam, String tussenvoegsel, String achternaam, String rekeningnummer, String inlognaam, String wachtwoord) {
+    public Klant(long id, String voornaam, String tussenvoegsel, String achternaam, String rekeningnummer, String inlognaam, String wachtwoord) {
+        this.user_Id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;

@@ -23,10 +23,10 @@ public class KlantCrud extends HorizontalLayout {
     @Autowired
     Crud crud;
 
-    public List<Klant> klantList = crud.klantList();
+    public List<Klant> klantList; //define inside methode otherwise null
 
     public void addTable() {
-        crudUI.crudKlantBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        klantList = crud.klantList();
         crudUI.gridKlant.setCaption("Klanten");
         crudUI.gridKlant.setSizeFull();
         crudUI.gridKlant.setSelectionMode(Grid.SelectionMode.NONE);
@@ -38,6 +38,7 @@ public class KlantCrud extends HorizontalLayout {
         TextField taskField1 = new TextField();
         TextField taskField2 = new TextField();
         TextField taskField3 = new TextField();
+        TextField taskField6 = new TextField();
         TextField taskField4 = new TextField();
         TextField taskField5 = new TextField();
 
@@ -61,7 +62,7 @@ public class KlantCrud extends HorizontalLayout {
                 .setExpandRatio(2);
 
         crudUI.gridKlant.addColumn(Klant::getRekeningnummer)
-                .setEditorComponent(taskField3, this::setRekeningnummer)
+                .setEditorComponent(taskField6, this::setRekeningnummer)
                 .setCaption("Rekeningnummer")
                 .setExpandRatio(2);
 
@@ -83,22 +84,20 @@ public class KlantCrud extends HorizontalLayout {
         crudUI.gridKlant.getEditor().setEnabled(true);
 
         crudUI.table.addComponentsAndExpand(crudUI.gridKlant);
-        HorizontalLayout buttons = new HorizontalLayout();
         crudUI.addBtn.addClickListener(event -> {
             toevoegen();
         });
         crudUI.deleteBtn.addClickListener(event -> {
             delete(crudUI.rowId, crudUI.rowItem);
         });
-        buttons.addComponents(crudUI.addBtn, crudUI.deleteBtn);
-        crudUI.parent.addComponent(buttons);
+        crudUI.parent.addComponents(crudUI.addBtn, crudUI.deleteBtn);
         crudUI.parent.addComponentsAndExpand(crudUI.table);
     }
 
-    private void setRekeningnummer(Admin admin, String s) {
-        crud.updateKlantRekeningnummer(admin, s);
-        admin.setTussenvoegsel(s);
-        crudUI.gridAdmin.setItems(adminList);
+    private void setRekeningnummer(Klant klant, String rekeningnummer) {
+        crud.updateKlantRekeningnummer(klant, rekeningnummer);
+        klant.setRekeningnummer(rekeningnummer);
+        crudUI.gridKlant.setItems(klantList);
     }
 
     private void setID(long id, Object item) {
@@ -106,54 +105,54 @@ public class KlantCrud extends HorizontalLayout {
         crudUI.rowItem = item;
     }
 
-    private void setWachtwoord(Admin admin, String s) {
+    private void setWachtwoord(Klant klant, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = crud.updateAdminWachtwoord(admin, s);
+        String snd = crud.updateKlantWachtwoord(klant, wachtwoord);
         if(snd == null) {
-            admin.setWachtwoord(s);
-            crudUI.gridAdmin.setItems(adminList);
+            klant.setWachtwoord(wachtwoord);
+            crudUI.gridKlant.setItems(klantList);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
         }
     }
 
-    private void setInlognaam(Admin admin, String s) {
-        String snd = crud.updateAdminInlognaam(admin, s);
+    private void setInlognaam(Klant klant, String inlognaam) {
+        String snd = crud.updateKlantInlognaam(klant, inlognaam);
         if(snd == null) {
-            admin.setInlognaam(s);
-            crudUI.gridAdmin.setItems(adminList);
+            klant.setInlognaam(inlognaam);
+            crudUI.gridKlant.setItems(klant);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
         }
     }
 
-    private void setAchternaam(Admin admin, String s) {
-        crud.updateAdminAchternaam(admin, s);
-        admin.setAchternaam(s);
-        crudUI.gridAdmin.setItems(adminList);
+    private void setAchternaam(Klant klant, String achternaam) {
+        crud.updateKlantAchternaam(klant, achternaam);
+        klant.setAchternaam(achternaam);
+        crudUI.gridKlant.setItems(klantList);
     }
 
-    private void setTussenvoegsel(Admin admin, String s) {
-        crud.updateAdminTussenvoegsel(admin, s);
-        admin.setTussenvoegsel(s);
-        crudUI.gridAdmin.setItems(adminList);
+    private void setTussenvoegsel(Klant klant, String tussenvoegsel) {
+        crud.updateKlantTussenvoegsel(klant, tussenvoegsel);
+        klant.setTussenvoegsel(tussenvoegsel);
+        crudUI.gridKlant.setItems(klantList);
     }
 
-    public void setVoornaam(Admin admin, String s){
-        crud.updateAdminVoornaam(admin, s);
-        admin.setVoornaam(s);
-        crudUI.gridAdmin.setItems(adminList);
+    public void setVoornaam(Klant klant, String s){
+        crud.updateKlantVoornaam(klant, s);
+        klant.setVoornaam(s);
+        crudUI.gridKlant.setItems(klantList);
     }
 
     private void toevoegen() {
-        String snd = crud.addAdminRow();
+        String snd = crud.addKlantRow();
         if(snd == null) {
-            long id = crud.getAdminId();
-            Admin admin = new Admin(id, "", "", "", "", "");
-            adminList.add(admin);
-            crudUI.gridAdmin.setItems(adminList);
+            long id = crud.getKlantId();
+            Klant klant = new Klant(id, "", "", "", "", "", "");
+            klantList.add(klant);
+            crudUI.gridKlant.setItems(klantList);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
@@ -161,8 +160,8 @@ public class KlantCrud extends HorizontalLayout {
     }
 
     private void delete(long id, Object item) {
-        crud.deleteAdminRow(id);
-        adminList.remove(item);
-        crudUI.gridAdmin.setItems(adminList);
+        crud.deleteKlantRow(id);
+        klantList.remove(item);
+        crudUI.gridKlant.setItems(klantList);
     }
 }
