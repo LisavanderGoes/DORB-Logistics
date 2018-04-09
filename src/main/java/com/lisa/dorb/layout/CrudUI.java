@@ -2,8 +2,10 @@ package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.crudUI.AdminCrud;
+import com.lisa.dorb.layout.crudUI.ChauffeurCrud;
 import com.lisa.dorb.layout.crudUI.KlantCrud;
 import com.lisa.dorb.model.Admin;
+import com.lisa.dorb.model.Chauffeur;
 import com.lisa.dorb.model.Klant;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
@@ -30,12 +32,15 @@ public class CrudUI extends VerticalLayout implements View {
     @Autowired
     KlantCrud klantCrud;
     @Autowired
+    ChauffeurCrud chauffeurCrud;
+    @Autowired
     Crud crud;
 
     //UI
     public HorizontalLayout table = new HorizontalLayout();
     public Grid<Admin> gridAdmin = new Grid<>();
     public Grid<Klant> gridKlant = new Grid<>();
+    public Grid<Chauffeur> gridChauffeur = new Grid<>();
 
     public Button crudAdminBtn = new Button(strings.ADMIN);
     public Button crudKlantBtn = new Button(strings.KLANT);
@@ -95,6 +100,7 @@ public class CrudUI extends VerticalLayout implements View {
                 klantCrud.addTable();
                 break;
             case strings.CHAUFFEUR:
+                chauffeurCrud.addTable();
                 break;
             case strings.PLANNER:
                 break;
@@ -110,6 +116,7 @@ public class CrudUI extends VerticalLayout implements View {
         }
         gridAdmin.removeAllColumns();
         gridKlant.removeAllColumns();
+        gridChauffeur.removeAllColumns();
     }
 
     private void setupLayout() {

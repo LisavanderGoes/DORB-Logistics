@@ -205,7 +205,7 @@ Chauffeurs:
 - vooraam
 - tussenvoegsel
 - achternaam
-- rijbewijs_Id (key) (kunnen meerdere)
+- rijbewijs (key) (kunnen meerdere)
 - nat_Id (key) (kunnen meerdere)
 - werkdagen (aantal)
 - inlognaam
@@ -261,7 +261,7 @@ Typevrachtwagens:
 - typ_Id
 - type
 - ruimte
-- rijbewijs_Id (key) (kunnen meerdere)
+- rijbewijs (key) (kunnen meerdere)
 - grootst (boolean)
 
 Rit:
@@ -280,7 +280,7 @@ Vrachtwagens:
 - status (enum) (beschikbaar, onderhoud)
 
 Rijbewijs:
-- rijbewijs_Id
+- rijbewijs
 - rijbewijs
 
 

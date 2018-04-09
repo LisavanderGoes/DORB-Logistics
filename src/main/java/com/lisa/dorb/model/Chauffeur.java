@@ -7,7 +7,6 @@ import java.io.Serializable;
 @Table(name = "chauffeurs")
 public class Chauffeur implements Serializable {
 
-    private static final long serialVersionUID = -3009157732242241606L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long user_Id;
@@ -21,11 +20,8 @@ public class Chauffeur implements Serializable {
     @Column(name = "achternaam")
     private String achternaam;
 
-    @Column(name = "rijbewijs_Id")
-    private long rijbewijs_Id;
-
-    @Column(name = "nat_Id")
-    private long nat_Id;
+    @Column(name = "rijbewijs")
+    private String rijbewijs;
 
     @Column(name = "werkdagen")
     private long werkdagen;
@@ -39,12 +35,12 @@ public class Chauffeur implements Serializable {
     protected Chauffeur() {
     }
 
-    public Chauffeur(String voornaam, String tussenvoegsel, String achternaam, long rijbewijs_Id, long nat_Id, long werkdagen, String inlognaam, String wachtwoord) {
+    public Chauffeur(long id, String voornaam, String tussenvoegsel, String achternaam, String rijbewijs, long werkdagen, String inlognaam, String wachtwoord) {
+        this.user_Id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;
         this.achternaam = achternaam;
-        this.rijbewijs_Id = rijbewijs_Id;
-        this.nat_Id = nat_Id;
+        this.rijbewijs = rijbewijs;
         this.werkdagen = werkdagen;
         this.inlognaam = inlognaam;
         this.wachtwoord = wachtwoord;
@@ -58,8 +54,54 @@ public class Chauffeur implements Serializable {
     public String getWachtwoord(){
         return wachtwoord;
     }
-
+    public String getVoornaam(){
+        return voornaam;
+    }
+    public String getTussenvoegsel(){
+        return tussenvoegsel;
+    }
+    public String getAchternaam(){
+        return achternaam;
+    }
+    public String getInlognaam(){
+        return inlognaam;
+    }
+    public String getRijbewijs(){
+        return rijbewijs;
+    }
+    public String getWerkdagen(){
+        String s = String.valueOf(werkdagen);
+        return s;
+    }
     public long getID() {
         return user_Id;
+    }
+
+    public void setVoornaam(String voornaam) {
+        this.voornaam = voornaam;
+    }
+
+    public void setTussenvoegsel(String tussenvoegsel) {
+        this.tussenvoegsel = tussenvoegsel;
+    }
+
+    public void setAchternaam(String achternaam) {
+        this.achternaam = achternaam;
+    }
+
+    public void setInlognaam(String inlognaam) {
+        this.inlognaam = inlognaam;
+    }
+
+    public void setWachtwoord(String wachtwoord) {
+        this.wachtwoord = wachtwoord;
+    }
+
+    public void setRijbewijs(String rijbewijs) {
+        this.rijbewijs = rijbewijs;
+    }
+
+    public void setWerkdagen(long werkdagen) {
+        this.werkdagen = werkdagen;
     }
 }
