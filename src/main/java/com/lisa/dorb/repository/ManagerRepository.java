@@ -17,8 +17,8 @@ public interface ManagerRepository extends JpaRepository<Manager, Long> {
     @Query(value = "SELECT * FROM managers", nativeQuery = true)
     List<Manager> findAll();
 
-    @Query(value = "SELECT wachtwoord FROM managers WHERE inlognaam = ?1", nativeQuery = true)
-    String findWachtwoordByInlognaam(String inlognaam);
+    @Query(value = "SELECT wachtwoord FROM managers WHERE inlognaam = :inlognaam", nativeQuery = true)
+    String findWachtwoordByInlognaam(@Param("inlognaam")String inlognaam);
 
     @Transactional
     @Modifying(clearAutomatically = true)

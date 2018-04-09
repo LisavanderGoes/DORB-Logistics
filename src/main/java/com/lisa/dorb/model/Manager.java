@@ -7,7 +7,6 @@ import java.io.Serializable;
 @Table(name = "managers")
 public class Manager implements Serializable {
 
-    private static final long serialVersionUID = -3009157732242241606L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long user_Id;
@@ -20,7 +19,6 @@ public class Manager implements Serializable {
 
     @Column(name = "achternaam")
     private String achternaam;
-
 
     @Column(name = "inlognaam")
     private String inlognaam;

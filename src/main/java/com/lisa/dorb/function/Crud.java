@@ -25,7 +25,7 @@ public class Crud {
     CrudManagerUI crudManagerUI;
 
     public List<Manager> managerList() {
-    return (List<Manager>) managerRepository.findAll();
+        return (List<Manager>) managerRepository.findAll();
     }
 
     public void updateManagerVoornaam(Manager manager, String s) {
@@ -43,11 +43,16 @@ public class Crud {
         managerRepository.updateAchternaam(s, id);
     }
 
+    /**
+     * @param manager The manager
+     * @param s       The string that you want to update to
+     * @return null if no errors, a string with the exception
+     */
     public String updateManagerInlognaam(Manager manager, String s) {
         long id = manager.getID();
         try {
             managerRepository.updateInlognaam(s, id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
@@ -57,7 +62,7 @@ public class Crud {
         long id = manager.getID();
         try {
             managerRepository.updateWachtwoord(s, id);
-        } catch (Exception e){
+        } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
@@ -68,16 +73,16 @@ public class Crud {
         managerRepository.deleteRow(id);
     }
 
-    public String addManagerRow(){
+    public String addManagerRow() {
         try {
             managerRepository.addRow();
-        }catch (Exception e){
+        } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
     }
 
-    public long getManagerId(){
+    public long getManagerId() {
         return managerRepository.getId();
     }
 }

@@ -10,7 +10,7 @@ import com.lisa.dorb.model.Klant;
 
 import javax.naming.NamingException;
 
-public interface KlantRepository extends JpaRepository<Klant, Long> {
+public interface KlantRepository extends CrudRepository<Klant, Long> {
 
     @Query(value = "SELECT wachtwoord FROM klanten WHERE inlognaam = ?1", nativeQuery = true)
     String findWachtwoordByInlognaam(String inlognaam);

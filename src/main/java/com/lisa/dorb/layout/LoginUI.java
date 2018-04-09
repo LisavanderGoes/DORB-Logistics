@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @SpringComponent
-@Scope("prototype")
+//@Scope("prototype")
 public class LoginUI extends VerticalLayout implements View {
 
     private VerticalLayout parent;
