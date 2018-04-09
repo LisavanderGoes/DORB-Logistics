@@ -13,7 +13,6 @@ import javax.persistence.Table;
 @Table(name = "klanten")
 public class Klant implements Serializable {
 
-    private static final long serialVersionUID = -3009157732242241606L;
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long user_Id;
@@ -59,5 +58,45 @@ public class Klant implements Serializable {
 
     public long getID() {
         return user_Id;
+    }
+
+    public String getVoornaam(){
+        return voornaam;
+    }
+    public String getTussenvoegsel(){
+        return tussenvoegsel;
+    }
+    public String getAchternaam(){
+        return achternaam;
+    }
+    public String getInlognaam(){
+        return inlognaam;
+    }
+    public String getRekeningnummer(){
+        return rekeningnummer;
+    }
+
+    public void setVoornaam(String voornaam) {
+        this.voornaam = voornaam;
+    }
+
+    public void setTussenvoegsel(String tussenvoegsel) {
+        this.tussenvoegsel = tussenvoegsel;
+    }
+
+    public void setAchternaam(String achternaam) {
+        this.achternaam = achternaam;
+    }
+
+    public void setInlognaam(String inlognaam) {
+        this.inlognaam = inlognaam;
+    }
+
+    public void setWachtwoord(String wachtwoord) {
+        this.wachtwoord = wachtwoord;
+    }
+
+    public void setRekeningnummer(String rekeningnummer) {
+        this.rekeningnummer = rekeningnummer;
     }
 }

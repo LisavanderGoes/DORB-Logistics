@@ -1,22 +1,13 @@
 package com.lisa.dorb.controller;
 
-import com.lisa.dorb.model.Manager;
-import com.lisa.dorb.repository.ManagerRepository;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
-
-import com.lisa.dorb.model.Klant;
-import com.lisa.dorb.repository.KlantRepository;
-
-import javax.validation.Valid;
-import java.util.List;
 
 @RestController
 public class WebController {
     /*@Autowired
     KlantRepository repository;
     @Autowired
-    ManagerRepository managerRepository;
+    AdminRepository managerRepository;
 
     @RequestMapping("/test")
     public String test(){

@@ -1,10 +1,11 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.layout.CrudManagerUI;
-import com.lisa.dorb.model.Manager;
+import com.lisa.dorb.layout.CrudUI;
+import com.lisa.dorb.model.Admin;
+import com.lisa.dorb.model.Klant;
+import com.lisa.dorb.repository.AdminRepository;
 import com.lisa.dorb.repository.ChauffeurRepository;
 import com.lisa.dorb.repository.KlantRepository;
-import com.lisa.dorb.repository.ManagerRepository;
 import com.lisa.dorb.repository.PlannerRepository;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,71 +19,208 @@ public class Crud {
     @Autowired
     ChauffeurRepository chauffeurRepository;
     @Autowired
-    ManagerRepository managerRepository;
+    AdminRepository adminRepository;
     @Autowired
     PlannerRepository plannerRepository;
     @Autowired
-    CrudManagerUI crudManagerUI;
+    CrudUI crudUI;
 
-    public List<Manager> managerList() {
-        return (List<Manager>) managerRepository.findAll();
-    }
-
-    public void updateManagerVoornaam(Manager manager, String s) {
-        long id = manager.getID();
-        managerRepository.updateVoornaam(s, id);
-    }
-
-    public void updateManagerTussenvoegsel(Manager manager, String s) {
-        long id = manager.getID();
-        managerRepository.updateTussenvoegsel(s, id);
-    }
-
-    public void updateManagerAchternaam(Manager manager, String s) {
-        long id = manager.getID();
-        managerRepository.updateAchternaam(s, id);
+    //region [Admin]
+    /**
+     * @return list of all managers
+     */
+    public List<Admin> adminList() {
+        return (List<Admin>) adminRepository.findAll();
     }
 
     /**
-     * @param manager The manager
-     * @param s       The string that you want to update to
-     * @return null if no errors, a string with the exception
+     * @param admin Admin model
+     * @param voornaam The new voornaam
      */
-    public String updateManagerInlognaam(Manager manager, String s) {
-        long id = manager.getID();
+    public void updateAdminVoornaam(Admin admin, String voornaam) {
+        long id = admin.getID();
+        adminRepository.updateVoornaam(voornaam, id);
+    }
+
+    /**
+     * @param admin Admin model
+     * @param tussenvoegsel The new tussenvoegsel
+     */
+    public void updateAdminTussenvoegsel(Admin admin, String tussenvoegsel) {
+        long id = admin.getID();
+        adminRepository.updateTussenvoegsel(tussenvoegsel, id);
+    }
+
+    /**
+     * @param admin Admin model
+     * @param achternaam The new achternaam
+     */
+    public void updateAdminAchternaam(Admin admin, String achternaam) {
+        long id = admin.getID();
+        adminRepository.updateAchternaam(achternaam, id);
+    }
+
+    /**
+     * @param admin Admin model
+     * @param inlognaam The new inlognaam
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateAdminInlognaam(Admin admin, String inlognaam) {
+        long id = admin.getID();
         try {
-            managerRepository.updateInlognaam(s, id);
+            adminRepository.updateInlognaam(inlognaam, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
     }
 
-    public String updateManagerWachtwoord(Manager manager, String s) {
-        long id = manager.getID();
+    /**
+     * @param admin Admin model
+     * @param wachtwoord The new wachtwoord
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateAdminWachtwoord(Admin admin, String wachtwoord) {
+        long id = admin.getID();
         try {
-            managerRepository.updateWachtwoord(s, id);
+            adminRepository.updateWachtwoord(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
     }
 
-    public void deleteManagerRow(long i) {
+    /**
+     * @param i id from selection
+     */
+    public void deleteAdminRow(long i) {
         long id = i;
-        managerRepository.deleteRow(id);
+        adminRepository.deleteRow(id);
     }
 
-    public String addManagerRow() {
+    /**
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String addAdminRow() {
         try {
-            managerRepository.addRow();
+            adminRepository.addRow();
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
         return null;
     }
 
-    public long getManagerId() {
-        return managerRepository.getId();
+    /**
+     * @return last added id
+     */
+    public long getAdminId() {
+        return adminRepository.getId();
+    }
+    //endregion
+
+    /**
+     * @return list of all Klanten
+     */
+    public List<Klant> klantList() {
+        return (List<Klant>) klantRepository.findAll();
+    }
+
+    /**
+     * @param klant Klant model
+     * @param voornaam The new voornaam
+     */
+    public void updateKlantVoornaam(Klant klant, String voornaam) {
+        long id = klant.getID();
+        adminRepository.updateVoornaam(voornaam, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param tussenvoegsel The new tussenvoegsel
+     */
+    public void updateKlantTussenvoegsel(Klant klant, String tussenvoegsel) {
+        long id = klant.getID();
+        adminRepository.updateTussenvoegsel(tussenvoegsel, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param achternaam The new achternaam
+     */
+    public void updateKlantAchternaam(Klant klant, String achternaam) {
+        long id = klant.getID();
+        adminRepository.updateAchternaam(achternaam, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param inlognaam The new inlognaam
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateKlantInlognaam(Klant klant, String inlognaam) {
+        long id = klant.getID();
+        try {
+            adminRepository.updateInlognaam(inlognaam, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param klant Klant model
+     * @param wachtwoord The new wachtwoord
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateKlantWachtwoord(Klant klant, String wachtwoord) {
+        long id = klant.getID();
+        try {
+            adminRepository.updateWachtwoord(wachtwoord, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param klant
+     * @param wachtwoord
+     * @return
+     */
+    public String updateKlantRekeningnummer(Klant klant, String wachtwoord) {
+        long id = klant.getID();
+        try {
+            adminRepository.updateWachtwoord(wachtwoord, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param i id from selection
+     */
+    public void deleteKlantRow(long i) {
+        long id = i;
+        adminRepository.deleteRow(id);
+    }
+
+    /**
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String addKlantRow() {
+        try {
+            adminRepository.addRow();
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @return last added id
+     */
+    public long getKlantId() {
+        return adminRepository.getId();
     }
 }

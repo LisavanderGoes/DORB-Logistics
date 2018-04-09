@@ -2,14 +2,11 @@ package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.Login;
 import com.lisa.dorb.values.strings;
-import com.vaadin.annotations.Push;
 import com.vaadin.navigator.View;
-import com.vaadin.shared.communication.PushMode;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Scope;
 
 import javax.annotation.PostConstruct;
 import java.util.ArrayList;
@@ -28,7 +25,7 @@ public class LoginUI extends VerticalLayout implements View {
     TestUI testUI;
 
     @Autowired
-    CrudManagerUI crudManagerUI;
+    CrudUI crudUI;
 
 
     //UI
@@ -56,8 +53,8 @@ public class LoginUI extends VerticalLayout implements View {
         try {
             if(login.login(naam.getValue(), wachtwoord.getValue(), status.getValue().toString())) {
                 switch (status.getValue().toString()) {
-                    case strings.MANAGER:
-                        getUI().setContent(crudManagerUI);
+                    case strings.ADMIN:
+                        getUI().setContent(crudUI);
                         break;
                     case strings.KLANT:
                         getUI().setContent(testUI);
@@ -84,7 +81,7 @@ public class LoginUI extends VerticalLayout implements View {
         List<String> states = new ArrayList<>();
         states.add(strings.KLANT);
         states.add(strings.CHAUFFEUR);
-        states.add(strings.MANAGER);
+        states.add(strings.ADMIN);
         states.add(strings.PLANNER);
         status.setItems(states);
     }

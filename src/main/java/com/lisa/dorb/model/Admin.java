@@ -4,8 +4,8 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "managers")
-public class Manager implements Serializable {
+@Table(name = "admins")
+public class Admin implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -26,10 +26,10 @@ public class Manager implements Serializable {
     @Column(name = "wachtwoord")
     private String wachtwoord;
 
-    protected Manager() {
+    protected Admin() {
     }
 
-    public Manager(long id, String voornaam, String tussenvoegsel, String achternaam, String inlognaam, String wachtwoord) {
+    public Admin(long id, String voornaam, String tussenvoegsel, String achternaam, String inlognaam, String wachtwoord) {
         this.user_Id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;
@@ -62,23 +62,23 @@ public class Manager implements Serializable {
         return user_Id;
     }
 
-    public void setVoornaam(String s) {
-        this.voornaam = s;
+    public void setVoornaam(String voornaam) {
+        this.voornaam = voornaam;
     }
 
-    public void setTussenvoegsel(String s) {
-        this.tussenvoegsel = s;
+    public void setTussenvoegsel(String tussenvoegsel) {
+        this.tussenvoegsel = tussenvoegsel;
     }
 
-    public void setAchternaam(String s) {
-        this.achternaam = s;
+    public void setAchternaam(String achternaam) {
+        this.achternaam = achternaam;
     }
 
-    public void setInlognaam(String s) {
-        this.inlognaam = s;
+    public void setInlognaam(String inlognaam) {
+        this.inlognaam = inlognaam;
     }
 
-    public void setWachtwoord(String s) {
-        this.wachtwoord = s;
+    public void setWachtwoord(String wachtwoord) {
+        this.wachtwoord = wachtwoord;
     }
 }

@@ -1,20 +1,12 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.model.Chauffeur;
-import com.lisa.dorb.model.Klant;
-import com.lisa.dorb.model.Manager;
-import com.lisa.dorb.model.Planner;
+import com.lisa.dorb.repository.AdminRepository;
 import com.lisa.dorb.repository.ChauffeurRepository;
 import com.lisa.dorb.repository.KlantRepository;
-import com.lisa.dorb.repository.ManagerRepository;
 import com.lisa.dorb.repository.PlannerRepository;
 import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.spring.annotation.UIScope;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RestController;
-
-import java.util.List;
 
 @SpringComponent //werkt alleen als ie opgeroepen wordt door @autowire
 public class Login {
@@ -23,7 +15,7 @@ public class Login {
     @Autowired
     ChauffeurRepository chauffeurRepository;
     @Autowired
-    ManagerRepository managerRepository;
+    AdminRepository adminRepository;
     @Autowired
     PlannerRepository plannerRepository;
 
@@ -32,7 +24,7 @@ public class Login {
         if(naam.equals("") || wachtwoord.equals("")){
         } else{
             switch (status){
-                case strings.MANAGER:
+                case strings.ADMIN:
                     return checkManager(naam, wachtwoord);
                 case strings.KLANT:
                     return checkKlant(naam, wachtwoord);
@@ -47,7 +39,7 @@ public class Login {
     }
 
     public Boolean test(String naam, String wachtwoord){
-        String dbwachtwoord = managerRepository.findWachtwoordByInlognaam(naam);
+        String dbwachtwoord = adminRepository.findWachtwoordByInlognaam(naam);
 
             if(wachtwoord.equals(dbwachtwoord)){
                 return true;
@@ -88,7 +80,7 @@ public class Login {
     }
 
     public Boolean checkManager(String naam, String wachtwoord){
-        String dbwachtwoord = managerRepository.findWachtwoordByInlognaam(naam);
+        String dbwachtwoord = adminRepository.findWachtwoordByInlognaam(naam);
 
         if(wachtwoord.equals(dbwachtwoord)){
             return true;
