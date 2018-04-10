@@ -5,4 +5,5 @@ public class strings {
     final public static String CHAUFFEUR = "Chauffeur";
     final public static String KLANT = "Klant";
     final public static String PLANNER = "Planner";
+    public static final String MANAGER = "Manager";
 }

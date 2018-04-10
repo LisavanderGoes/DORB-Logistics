@@ -2,15 +2,15 @@ package com.lisa.dorb.layout.crudUI;
 
 import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Admin;
 import com.lisa.dorb.model.Klant;
+import com.lisa.dorb.repository.KlantRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
-import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
@@ -21,12 +21,14 @@ public class KlantCrud extends HorizontalLayout {
     @Autowired
     CrudUI crudUI;
     @Autowired
-    Crud crud;
+    KlantRepository klantRepository;
 
     public List<Klant> klantList; //define inside methode otherwise null
+    public Button deleteBtn= new Button("Verwijderen");
+    public Button addBtn = new Button("Toevoegen");
 
     public void addTable() {
-        klantList = crud.klantList();
+        klantList = klantList();
         crudUI.gridKlant.setCaption("Klanten");
         crudUI.gridKlant.setSizeFull();
         crudUI.gridKlant.setSelectionMode(Grid.SelectionMode.NONE);
@@ -84,18 +86,19 @@ public class KlantCrud extends HorizontalLayout {
         crudUI.gridKlant.getEditor().setEnabled(true);
 
         crudUI.table.addComponentsAndExpand(crudUI.gridKlant);
-        crudUI.addBtn.addClickListener(event -> {
+        addBtn.addClickListener(event -> {
             toevoegen();
         });
-        crudUI.deleteBtn.addClickListener(event -> {
+        deleteBtn.addClickListener(event -> {
             delete(crudUI.rowId, crudUI.rowItem);
         });
-        crudUI.parent.addComponents(crudUI.addBtn, crudUI.deleteBtn);
+
+        crudUI.table.addComponents(addBtn, deleteBtn);
         crudUI.parent.addComponentsAndExpand(crudUI.table);
     }
 
     private void setRekeningnummer(Klant klant, String rekeningnummer) {
-        crud.updateKlantRekeningnummer(klant, rekeningnummer);
+        updateRekeningnummer(klant, rekeningnummer);
         klant.setRekeningnummer(rekeningnummer);
         crudUI.gridKlant.setItems(klantList);
     }
@@ -107,7 +110,7 @@ public class KlantCrud extends HorizontalLayout {
 
     private void setWachtwoord(Klant klant, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = crud.updateKlantWachtwoord(klant, wachtwoord);
+        String snd = updateWachtwoord(klant, wachtwoord);
         if(snd == null) {
             klant.setWachtwoord(wachtwoord);
             crudUI.gridKlant.setItems(klantList);
@@ -118,7 +121,7 @@ public class KlantCrud extends HorizontalLayout {
     }
 
     private void setInlognaam(Klant klant, String inlognaam) {
-        String snd = crud.updateKlantInlognaam(klant, inlognaam);
+        String snd = updateInlognaam(klant, inlognaam);
         if(snd == null) {
             klant.setInlognaam(inlognaam);
             crudUI.gridKlant.setItems(klant);
@@ -129,27 +132,27 @@ public class KlantCrud extends HorizontalLayout {
     }
 
     private void setAchternaam(Klant klant, String achternaam) {
-        crud.updateKlantAchternaam(klant, achternaam);
+        updateAchternaam(klant, achternaam);
         klant.setAchternaam(achternaam);
         crudUI.gridKlant.setItems(klantList);
     }
 
     private void setTussenvoegsel(Klant klant, String tussenvoegsel) {
-        crud.updateKlantTussenvoegsel(klant, tussenvoegsel);
+        updateTussenvoegsel(klant, tussenvoegsel);
         klant.setTussenvoegsel(tussenvoegsel);
         crudUI.gridKlant.setItems(klantList);
     }
 
     public void setVoornaam(Klant klant, String s){
-        crud.updateKlantVoornaam(klant, s);
+        updateVoornaam(klant, s);
         klant.setVoornaam(s);
         crudUI.gridKlant.setItems(klantList);
     }
 
     private void toevoegen() {
-        String snd = crud.addKlantRow();
+        String snd = addKlantRow();
         if(snd == null) {
-            long id = crud.getKlantId();
+            long id = getKlantId();
             Klant klant = new Klant(id, "", "", "", "", "", "");
             klantList.add(klant);
             crudUI.gridKlant.setItems(klantList);
@@ -160,8 +163,112 @@ public class KlantCrud extends HorizontalLayout {
     }
 
     private void delete(long id, Object item) {
-        crud.deleteKlantRow(id);
+        deleteKlantRow(id);
         klantList.remove(item);
         crudUI.gridKlant.setItems(klantList);
     }
+
+    //region [Klant]
+    /**
+     * @return list of all klanten
+     */
+    public List<Klant> klantList() {
+        return (List<Klant>) klantRepository.findAll();
+    }
+
+    /**
+     * @param klant Klant model
+     * @param voornaam The new voornaam
+     */
+    public void updateVoornaam(Klant klant, String voornaam) {
+        long id = klant.getID();
+        klantRepository.updateVoornaam(voornaam, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param tussenvoegsel The new tussenvoegsel
+     */
+    public void updateTussenvoegsel(Klant klant, String tussenvoegsel) {
+        long id = klant.getID();
+        klantRepository.updateTussenvoegsel(tussenvoegsel, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param achternaam The new achternaam
+     */
+    public void updateAchternaam(Klant klant, String achternaam) {
+        long id = klant.getID();
+        klantRepository.updateAchternaam(achternaam, id);
+    }
+
+    /**
+     * @param klant Klant model
+     * @param inlognaam The new inlognaam
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateInlognaam(Klant klant, String inlognaam) {
+        long id = klant.getID();
+        try {
+            klantRepository.updateInlognaam(inlognaam, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param klant Klant model
+     * @param wachtwoord The new wachtwoord
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateWachtwoord(Klant klant, String wachtwoord) {
+        long id = klant.getID();
+        try {
+            klantRepository.updateWachtwoord(wachtwoord, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+
+    /**
+     * @param klant M
+     * @param rekeningummer
+     */
+    public void updateRekeningnummer(Klant klant, String rekeningummer) {
+        long id = klant.getID();
+        klantRepository.updateRekeningummer(rekeningummer, id);
+
+    }
+
+    /**
+     * @param i id from selection
+     */
+    public void deleteKlantRow(long i) {
+        long id = i;
+        klantRepository.deleteRow(id);
+    }
+
+    /**
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String addKlantRow() {
+        try {
+            klantRepository.addRow();
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @return last added id
+     */
+    public long getKlantId() {
+        return klantRepository.getId();
+    }
+    //endregion
 }

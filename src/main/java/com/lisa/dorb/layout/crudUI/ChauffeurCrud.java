@@ -3,9 +3,11 @@ package com.lisa.dorb.layout.crudUI;
 import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.model.Chauffeur;
+import com.lisa.dorb.repository.ChauffeurRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.ui.Button;
 import com.vaadin.ui.Grid;
 import com.vaadin.ui.HorizontalLayout;
 import com.vaadin.ui.TextField;
@@ -19,13 +21,15 @@ public class ChauffeurCrud extends HorizontalLayout {
     @Autowired
     CrudUI crudUI;
     @Autowired
-    Crud crud;
+    ChauffeurRepository chauffeurRepository;
 
     public List<Chauffeur> chauffeurList; //define inside methode otherwise null
     private Grid<Chauffeur> grid;
+    public Button deleteBtn= new Button("Verwijderen");
+    public Button addBtn = new Button("Toevoegen");
 
     public void addTable() {
-        chauffeurList = crud.chauffeursList();
+        chauffeurList = chauffeursList();
         grid = crudUI.gridChauffeur;
         grid.setCaption("Chauffeurs");
         grid.setSizeFull();
@@ -90,14 +94,14 @@ public class ChauffeurCrud extends HorizontalLayout {
         grid.getEditor().setEnabled(true);
 
         crudUI.table.addComponentsAndExpand(grid);
-        crudUI.addBtn.addClickListener(event -> {
+        addBtn.addClickListener(event -> {
             toevoegen();
         });
-        crudUI.deleteBtn.addClickListener(event -> {
+        deleteBtn.addClickListener(event -> {
             delete(crudUI.rowId, crudUI.rowItem);
         });
 
-        crudUI.parent.addComponents(crudUI.addBtn, crudUI.deleteBtn);
+        crudUI.table.addComponents(addBtn, deleteBtn);
         crudUI.parent.addComponentsAndExpand(crudUI.table);
     }
 
@@ -108,7 +112,7 @@ public class ChauffeurCrud extends HorizontalLayout {
 
     private void setWachtwoord(Chauffeur model, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = crud.updateChauffeurWachtwoord(model, wachtwoord);
+        String snd = updateWachtwoord(model, wachtwoord);
         if(snd == null) {
             model.setWachtwoord(wachtwoord);
             grid.setItems(chauffeurList);
@@ -119,7 +123,7 @@ public class ChauffeurCrud extends HorizontalLayout {
     }
 
     private void setInlognaam(Chauffeur model, String inlognaam) {
-        String snd = crud.updateChauffeurInlognaam(model, inlognaam);
+        String snd = updateInlognaam(model, inlognaam);
         if(snd == null) {
             model.setInlognaam(inlognaam);
             grid.setItems(chauffeurList);
@@ -130,25 +134,25 @@ public class ChauffeurCrud extends HorizontalLayout {
     }
 
     private void setAchternaam(Chauffeur model, String achternaam) {
-        crud.updateChauffeurAchternaam(model, achternaam);
+        updateAchternaam(model, achternaam);
         model.setAchternaam(achternaam);
         grid.setItems(chauffeurList);
     }
 
     private void setTussenvoegsel(Chauffeur model, String tussenvoegsel) {
-        crud.updateChauffeurTussenvoegsel(model, tussenvoegsel);
+        updateTussenvoegsel(model, tussenvoegsel);
         model.setTussenvoegsel(tussenvoegsel);
         grid.setItems(chauffeurList);
     }
 
     public void setVoornaam(Chauffeur model, String voornaam){
-        crud.updateChauffeurVoornaam(model, voornaam);
+        updateVoornaam(model, voornaam);
         model.setVoornaam(voornaam);
         grid.setItems(chauffeurList);
     }
 
     public void setRijbewijs(Chauffeur model, String rijbewijs){
-        String snd = crud.updateChauffeurRijbewijs(model, rijbewijs);
+        String snd = updateRijbewijs(model, rijbewijs);
         if(snd == null) {
             model.setRijbewijs(rijbewijs);
             grid.setItems(chauffeurList);
@@ -160,17 +164,17 @@ public class ChauffeurCrud extends HorizontalLayout {
 
     public void setWerkdagen(Chauffeur model, String werkdagen){
         Long newWerkdagen = Long.parseLong(werkdagen);
-        crud.updateChauffeurWerkdagen(model, newWerkdagen);
+        updateWerkdagen(model, newWerkdagen);
         model.setWerkdagen(newWerkdagen);
         grid.setItems(chauffeurList);
     }
 
     private void toevoegen() {
-        String snd = crud.addChauffeurRow();
+        String snd = addChauffeurRow();
         if(snd == null) {
-            long id = crud.getChauffeurId();
-            Chauffeur admin = new Chauffeur(id, "", "", "", "", 0, "", "");
-            chauffeurList.add(admin);
+            long id = getChauffeurId();
+            Chauffeur model = new Chauffeur(id, "", "", "", "", 0, "", "");
+            chauffeurList.add(model);
             grid.setItems(chauffeurList);
             crudUI.send.setValue("");
         }else {
@@ -179,8 +183,124 @@ public class ChauffeurCrud extends HorizontalLayout {
     }
 
     private void delete(long id, Object item) {
-        crud.deleteChauffeurRow(id);
+        deleteChauffeurRow(id);
         chauffeurList.remove(item);
         grid.setItems(chauffeurList);
     }
+
+    //region [Chauffeur]
+    /**
+     * @return list of all chauffeurs
+     */
+    public List<Chauffeur> chauffeursList() {
+        return (List<Chauffeur>) chauffeurRepository.findAll();
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param voornaam The new voornaam
+     */
+    public void updateVoornaam(Chauffeur chauffeur, String voornaam) {
+        long id = chauffeur.getID();
+        chauffeurRepository.updateVoornaam(voornaam, id);
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param tussenvoegsel The new tussenvoegsel
+     */
+    public void updateTussenvoegsel(Chauffeur chauffeur, String tussenvoegsel) {
+        long id = chauffeur.getID();
+        chauffeurRepository.updateTussenvoegsel(tussenvoegsel, id);
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param achternaam The new achternaam
+     */
+    public void updateAchternaam(Chauffeur chauffeur, String achternaam) {
+        long id = chauffeur.getID();
+        chauffeurRepository.updateAchternaam(achternaam, id);
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param inlognaam The new inlognaam
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateInlognaam(Chauffeur chauffeur, String inlognaam) {
+        long id = chauffeur.getID();
+        try {
+            chauffeurRepository.updateInlognaam(inlognaam, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param wachtwoord The new wachtwoord
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String updateWachtwoord(Chauffeur chauffeur, String wachtwoord) {
+        long id = chauffeur.getID();
+        try {
+            chauffeurRepository.updateWachtwoord(wachtwoord, id);
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param rijbewijs The new werkdagen
+     */
+    public String updateRijbewijs(Chauffeur chauffeur, String rijbewijs) {
+        long id = chauffeur.getID();
+        try {
+            chauffeurRepository.updateRijbewijs(rijbewijs, id);
+        }catch (Exception e){
+            return "Rijbewijs kan alleen C of D zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @param chauffeur Chauffeur model
+     * @param werkdagen The new werkdagen
+     */
+    public void updateWerkdagen(Chauffeur chauffeur, long werkdagen) {
+        long id = chauffeur.getID();
+        chauffeurRepository.updateWerkdagen(werkdagen, id);
+    }
+
+    /**
+     * @param i id from selection
+     */
+    public void deleteChauffeurRow(long i) {
+        long id = i;
+        chauffeurRepository.deleteRow(id);
+    }
+
+    /**
+     * @return null if no errors, a inlognaam with the exception
+     */
+    public String addChauffeurRow() {
+        try {
+            chauffeurRepository.addRow();
+        } catch (Exception e) {
+            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        }
+        return null;
+    }
+
+    /**
+     * @return last added id
+     */
+    public long getChauffeurId() {
+        return chauffeurRepository.getId();
+    }
+    //endregion
 }

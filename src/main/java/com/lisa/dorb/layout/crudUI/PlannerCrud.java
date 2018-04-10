@@ -2,37 +2,42 @@ package com.lisa.dorb.layout.crudUI;
 
 import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Admin;
-import com.lisa.dorb.repository.AdminRepository;
+import com.lisa.dorb.model.Planner;
+import com.lisa.dorb.repository.PlannerRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.*;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.Grid;
+import com.vaadin.ui.HorizontalLayout;
+import com.vaadin.ui.TextField;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @SpringComponent
-public class AdminCrud extends VerticalLayout {
+public class PlannerCrud extends HorizontalLayout {
 
     @Autowired
     CrudUI crudUI;
     @Autowired
-    AdminRepository adminRepository;
+    PlannerRepository plannerRepository;
 
-    public List<Admin> adminList; //define inside methode otherwise null
+    public List<Planner> plannerList; //define inside methode otherwise null
+    private Grid<Planner> grid;
     public Button deleteBtn= new Button("Verwijderen");
     public Button addBtn = new Button("Toevoegen");
 
     public void addTable() {
-        adminList = adminList();
-        crudUI.gridAdmin.setCaption("Admins");
-        crudUI.gridAdmin.setSizeFull();
-        crudUI.gridAdmin.setSelectionMode(Grid.SelectionMode.NONE);
-        ListDataProvider<Admin> dataProvider =
-                DataProvider.ofCollection(adminList);
+        plannerList = plannerList();
+        grid = crudUI.plannerGrid;
+        grid.setCaption("Planners");
+        grid.setSizeFull();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        ListDataProvider<Planner> dataProvider =
+                DataProvider.ofCollection(plannerList);
 
-        crudUI.gridAdmin.setDataProvider(dataProvider);
+        grid.setDataProvider(dataProvider);
 
         TextField taskField1 = new TextField();
         TextField taskField2 = new TextField();
@@ -40,43 +45,43 @@ public class AdminCrud extends VerticalLayout {
         TextField taskField4 = new TextField();
         TextField taskField5 = new TextField();
 
-        crudUI.gridAdmin.addColumn(Admin::getID)
+        grid.addColumn(Planner::getID)
                 .setCaption("Id")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getVoornaam)
+        grid.addColumn(Planner::getVoornaam)
                 .setEditorComponent(taskField1, this::setVoornaam)
                 .setCaption("Voornaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getTussenvoegsel)
+        grid.addColumn(Planner::getTussenvoegsel)
                 .setEditorComponent(taskField2, this::setTussenvoegsel)
                 .setCaption("Tussenvoegsel")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getAchternaam)
+        grid.addColumn(Planner::getAchternaam)
                 .setEditorComponent(taskField3, this::setAchternaam)
                 .setCaption("Achternaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getInlognaam)
+        grid.addColumn(Planner::getInlognaam)
                 .setEditorComponent(taskField4, this::setInlognaam)
                 .setCaption("Inlognaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getWachtwoord)
+        grid.addColumn(Planner::getWachtwoord)
                 .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
                 .setCaption("Wachtwoord")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        crudUI.gridAdmin.addItemClickListener(event ->
+        grid.addItemClickListener(event ->
                 setID(event.getItem().getID(), event.getItem()));
 
-        crudUI.gridAdmin.getEditor().setEnabled(true);
+        grid.getEditor().setEnabled(true);
 
-        crudUI.table.addComponentsAndExpand(crudUI.gridAdmin);
+        crudUI.table.addComponentsAndExpand(grid);
         addBtn.addClickListener(event -> {
             toevoegen();
         });
@@ -93,54 +98,54 @@ public class AdminCrud extends VerticalLayout {
         crudUI.rowItem = item;
     }
 
-    private void setWachtwoord(Admin admin, String wachtwoord) {
+    private void setWachtwoord(Planner model, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = updateWachtwoord(admin, wachtwoord);
+        String snd = updateWachtwoord(model, wachtwoord);
         if(snd == null) {
-            admin.setWachtwoord(wachtwoord);
-            crudUI.gridAdmin.setItems(adminList);
+            model.setWachtwoord(wachtwoord);
+            grid.setItems(plannerList);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
         }
     }
 
-    private void setInlognaam(Admin admin, String inlognaam) {
-        String snd = updateInlognaam(admin, inlognaam);
+    private void setInlognaam(Planner model, String inlognaam) {
+        String snd = updateInlognaam(model, inlognaam);
         if(snd == null) {
-            admin.setInlognaam(inlognaam);
-            crudUI.gridAdmin.setItems(adminList);
+            model.setInlognaam(inlognaam);
+            grid.setItems(plannerList);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
         }
     }
 
-    private void setAchternaam(Admin admin, String achternaam) {
-        updateAchternaam(admin, achternaam);
-        admin.setAchternaam(achternaam);
-        crudUI.gridAdmin.setItems(adminList);
+    private void setAchternaam(Planner model, String achternaam) {
+        updateAchternaam(model, achternaam);
+        model.setAchternaam(achternaam);
+        grid.setItems(plannerList);
     }
 
-    private void setTussenvoegsel(Admin admin, String tussenvoegsel) {
-        updateTussenvoegsel(admin, tussenvoegsel);
-        admin.setTussenvoegsel(tussenvoegsel);
-        crudUI.gridAdmin.setItems(adminList);
+    private void setTussenvoegsel(Planner model, String tussenvoegsel) {
+        updatePlannerTussenvoegsel(model, tussenvoegsel);
+        model.setTussenvoegsel(tussenvoegsel);
+        grid.setItems(plannerList);
     }
 
-    public void setVoornaam(Admin admin, String voornaam){
-        updateVoornaam(admin, voornaam);
-        admin.setVoornaam(voornaam);
-        crudUI.gridAdmin.setItems(adminList);
+    public void setVoornaam(Planner model, String voornaam){
+        updateVoornaam(model, voornaam);
+        model.setVoornaam(voornaam);
+        grid.setItems(plannerList);
     }
 
     private void toevoegen() {
-        String snd = addAdminRow();
+        String snd = addPlannerRow();
         if(snd == null) {
-            long id = getAdminId();
-            Admin admin = new Admin(id, "", "", "", "", "");
-            adminList.add(admin);
-            crudUI.gridAdmin.setItems(adminList);
+            long id = getPlannerId();
+            Planner model = new Planner(id, "", "", "", "", "");
+            plannerList.add(model);
+            grid.setItems(plannerList);
             crudUI.send.setValue("");
         }else {
             crudUI.send.setValue(snd);
@@ -148,55 +153,55 @@ public class AdminCrud extends VerticalLayout {
     }
 
     private void delete(long id, Object item) {
-        deleteAdminRow(id);
-        adminList.remove(item);
-        crudUI.gridAdmin.setItems(adminList);
+        deletePlannerRow(id);
+        plannerList.remove(item);
+        grid.setItems(plannerList);
     }
 
-    //region [Admin]
+    //region [Planner]
     /**
-     * @return list of all admins
+     * @return list of all planners
      */
-    public List<Admin> adminList() {
-        return (List<Admin>) adminRepository.findAll();
+    public List<Planner> plannerList() {
+        return (List<Planner>) plannerRepository.findAll();
     }
 
     /**
-     * @param admin Admin model
+     * @param model Planner model
      * @param voornaam The new voornaam
      */
-    public void updateVoornaam(Admin admin, String voornaam) {
-        long id = admin.getID();
-        adminRepository.updateVoornaam(voornaam, id);
+    public void updateVoornaam(Planner model, String voornaam) {
+        long id = model.getID();
+        plannerRepository.updateVoornaam(voornaam, id);
     }
 
     /**
-     * @param admin Admin model
+     * @param model Planner model
      * @param tussenvoegsel The new tussenvoegsel
      */
-    public void updateTussenvoegsel(Admin admin, String tussenvoegsel) {
-        long id = admin.getID();
-        adminRepository.updateTussenvoegsel(tussenvoegsel, id);
+    public void updatePlannerTussenvoegsel(Planner model, String tussenvoegsel) {
+        long id = model.getID();
+        plannerRepository.updateTussenvoegsel(tussenvoegsel, id);
     }
 
     /**
-     * @param admin Admin model
+     * @param model Planner model
      * @param achternaam The new achternaam
      */
-    public void updateAchternaam(Admin admin, String achternaam) {
-        long id = admin.getID();
-        adminRepository.updateAchternaam(achternaam, id);
+    public void updateAchternaam(Planner model, String achternaam) {
+        long id = model.getID();
+        plannerRepository.updateAchternaam(achternaam, id);
     }
 
     /**
-     * @param admin Admin model
+     * @param model Planner model
      * @param inlognaam The new inlognaam
      * @return null if no errors, a inlognaam with the exception
      */
-    public String updateInlognaam(Admin admin, String inlognaam) {
-        long id = admin.getID();
+    public String updateInlognaam(Planner model, String inlognaam) {
+        long id = model.getID();
         try {
-            adminRepository.updateInlognaam(inlognaam, id);
+            plannerRepository.updateInlognaam(inlognaam, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -204,14 +209,14 @@ public class AdminCrud extends VerticalLayout {
     }
 
     /**
-     * @param admin Admin model
+     * @param model Planner model
      * @param wachtwoord The new wachtwoord
      * @return null if no errors, a inlognaam with the exception
      */
-    public String updateWachtwoord(Admin admin, String wachtwoord) {
-        long id = admin.getID();
+    public String updateWachtwoord(Planner model, String wachtwoord) {
+        long id = model.getID();
         try {
-            adminRepository.updateWachtwoord(wachtwoord, id);
+            plannerRepository.updateWachtwoord(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -221,17 +226,17 @@ public class AdminCrud extends VerticalLayout {
     /**
      * @param i id from selection
      */
-    public void deleteAdminRow(long i) {
+    public void deletePlannerRow(long i) {
         long id = i;
-        adminRepository.deleteRow(id);
+        plannerRepository.deleteRow(id);
     }
 
     /**
      * @return null if no errors, a inlognaam with the exception
      */
-    public String addAdminRow() {
+    public String addPlannerRow() {
         try {
-            adminRepository.addRow();
+            plannerRepository.addRow();
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -241,8 +246,8 @@ public class AdminCrud extends VerticalLayout {
     /**
      * @return last added id
      */
-    public long getAdminId() {
-        return adminRepository.getId();
+    public long getPlannerId() {
+        return plannerRepository.getId();
     }
     //endregion
 }
