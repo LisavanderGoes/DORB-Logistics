@@ -35,14 +35,14 @@ public class Vrachtwagen implements Serializable {
         this.status = status;
     }
 
-    public long getTyp_Id(){
-        return typ_Id;
+    public String getTyp_Id(){
+        return typ_Id+"";
     }
     public String getKenteken(){
         return kenteken;
     }
-    public Date getApk(){
-        return apk;
+    public String getApk(){
+        return apk+"";
     }
     public String getStatus(){
         return status;

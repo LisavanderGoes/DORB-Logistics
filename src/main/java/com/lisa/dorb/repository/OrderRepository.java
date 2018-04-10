@@ -53,8 +53,8 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO orders (adres, prijs, datum)" +
-            "VALUES ('', '', '');", nativeQuery = true)
+    @Query(value = "INSERT INTO orders (adres, prijs)" +
+            "VALUES ('', 0);", nativeQuery = true)
     void addRow();
 
     @Query(value = "SELECT order_Id FROM orders ORDER BY order_Id DESC LIMIT 1", nativeQuery = true)

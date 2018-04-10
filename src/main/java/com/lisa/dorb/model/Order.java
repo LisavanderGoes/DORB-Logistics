@@ -44,23 +44,23 @@ public class Order implements Serializable {
         this.rit_Id = rit_Id;
     }
 
-    public long getKlant_Id(){
-        return klant_Id;
+    public String getKlant_Id(){
+        return klant_Id +"";
     }
     public String getAdres(){
         return adres;
     }
-    public long getPrijs(){
-        return prijs;
+    public String getPrijs(){
+        return prijs+"";
     }
-    public Date getDatum(){
-        return datum;
+    public String getDatum(){
+        return datum+"";
     }
-    public long getPallet_Id(){
-        return pallet_Id;
+    public String getPallet_Id(){
+        return pallet_Id+"";
     }
-    public long getRit_Id(){
-        return rit_Id;
+    public String getRit_Id(){
+        return rit_Id+"";
     }
     public long getID() {
         return order_Id;

@@ -70,7 +70,7 @@ Chauffeurs:
   - werk rooster
     - order:
       - datum
-      - adres
+      - ruimte
       - vrachtwagen
       - order
   - route beschrijving
@@ -146,14 +146,14 @@ Luxemburg:
 
 (return km voor prijs, land voor orders, route voor chauffeurs)
 (maak een lijst met de adressen en laad ze dan in in google maps 
-en als hij daar is ga dan naar de volgende adres)
+en als hij daar is ga dan naar de volgende ruimte)
 
 
 ============================================
 [systeem]Orders (filter):
 
 Klant:
-- adres
+- ruimte
   - welk land (kortste route)
 - pallets (aantal)
 - datum (alle bestellingen worden in 1 dag wegebracht)
@@ -244,7 +244,7 @@ Orders:
 }
 (- vrachtwagen_Id (key) (??))
 (- chauffeur_Id (key) (??))
-- adres 
+- ruimte
 - prijs
 - datum
 - aantal pallets

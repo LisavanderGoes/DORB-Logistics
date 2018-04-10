@@ -20,7 +20,7 @@ public class PlannerCrud extends VerticalLayout {
     @Autowired
     PlannerRepository repository;
 
-    private VerticalLayout gridTable = new VerticalLayout();
+
     private List<Planner> list; //define inside methode otherwise null
     private Button deleteBtn;
     private Button addBtn;
@@ -33,6 +33,7 @@ public class PlannerCrud extends VerticalLayout {
         grid = crudUI.plannerGrid;
         deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
         addBtn = new Button("Toevoegen");
+
 
         grid.setCaption("Planners");
         grid.setSizeFull();
@@ -84,7 +85,7 @@ public class PlannerCrud extends VerticalLayout {
 
         grid.getEditor().setEnabled(true);
 
-        gridTable.addComponentsAndExpand(grid);
+        crudUI.table.addComponentsAndExpand(grid);
         addBtn.addClickListener(event -> {
             toevoegen();
         });
@@ -92,8 +93,8 @@ public class PlannerCrud extends VerticalLayout {
             delete(rowId, rowItem);
         });
 
-        gridTable.addComponents(addBtn, deleteBtn);
-        crudUI.parent.addComponentsAndExpand(gridTable);
+        crudUI.table.addComponents(addBtn, deleteBtn);
+        crudUI.parent.addComponentsAndExpand(crudUI.table);
     }
 
     private void setID(long id, Object item) {

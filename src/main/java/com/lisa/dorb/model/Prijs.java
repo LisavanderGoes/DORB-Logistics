@@ -13,7 +13,7 @@ public class Prijs implements Serializable {
     private long prijs_Id;
 
     @Column(name = "prijs")
-    private long prijs;
+    private String prijs;
 
     @Column(name = "wat")
     private String wat;
@@ -21,13 +21,13 @@ public class Prijs implements Serializable {
     protected Prijs() {
     }
 
-    public Prijs(long id, long prijs, String wat) {
+    public Prijs(long id, String prijs, String wat) {
         this.prijs_Id = id;
         this.prijs = prijs;
         this.wat = wat;
     }
 
-    public long getPrijs(){
+    public String getPrijs(){
         return prijs;
     }
     public String getWat(){
@@ -37,7 +37,7 @@ public class Prijs implements Serializable {
         return prijs_Id;
     }
 
-    public void setPrijs(long prijs) {
+    public void setPrijs(String prijs) {
         this.prijs = prijs;
     }
 

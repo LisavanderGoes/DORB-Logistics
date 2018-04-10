@@ -34,7 +34,15 @@ public class CrudUI extends VerticalLayout implements View {
     @Autowired
     ManagerCrud managerCrud;
     @Autowired
-    Crud crud;
+    OrderCrud orderCrud;
+    @Autowired
+    VrachtwagenCrud vrachtwagenCrud;
+    @Autowired
+    PrijsCrud prijsCrud;
+    @Autowired
+    PalletCrud palletCrud;
+    @Autowired
+    RitCrud ritCrud;
 
     //UI
     public VerticalLayout table = new VerticalLayout();
@@ -45,12 +53,22 @@ public class CrudUI extends VerticalLayout implements View {
     public Grid<Chauffeur> gridChauffeur = new Grid<>();
     public Grid<Planner> plannerGrid = new Grid<>();
     public Grid<Manager> managerGrid = new Grid<>();
+    public Grid<Order> gridOrder = new Grid<>();
+    public Grid<Vrachtwagen> vrachtwagenGrid = new Grid<>();
+    public Grid<Prijs> prijsGrid = new Grid<>();
+    public Grid<Pallet> palletGrid = new Grid<>();
+    public Grid<Rit> ritGrid = new Grid<>();
 
     public Button crudAdminBtn = new Button(strings.ADMIN);
     public Button crudKlantBtn = new Button(strings.KLANT);
     public Button crudChauffeurBtn = new Button(strings.CHAUFFEUR);
     public Button crudPlannerBtn = new Button(strings.PLANNER);
     public Button crudManagerBtn = new Button(strings.MANAGER);
+    public Button crudOrderBtn = new Button("Order");
+    public Button crudVrachtwagenBtn = new Button("Vrachtwagen");
+    public Button crudPrijsBtn = new Button("Prijs");
+    public Button crudPalletBtn = new Button("Pallet");
+    public Button crudRitBtn = new Button("Rit");
     public Button terugBtn = new Button("Terug");
     public Label send = new Label("");
 
@@ -75,8 +93,13 @@ public class CrudUI extends VerticalLayout implements View {
         crudChauffeurBtn.addClickListener(event -> startUI(strings.CHAUFFEUR));
         crudPlannerBtn.addClickListener(event -> startUI(strings.PLANNER));
         crudManagerBtn.addClickListener(event -> startUI(strings.MANAGER));
+        crudVrachtwagenBtn.addClickListener(event -> startUI("Vrachtwagen"));
+        crudOrderBtn.addClickListener(event -> startUI("Order"));
+        crudPrijsBtn.addClickListener(event -> startUI("Prijs"));
+        crudPalletBtn.addClickListener(event -> startUI("Pallet"));
+        crudRitBtn.addClickListener(event -> startUI("Rit"));
         terugBtn.addClickListener(event -> terugButtonClick());
-        buttons.addComponentsAndExpand(crudAdminBtn, crudKlantBtn, crudChauffeurBtn, crudPlannerBtn, crudManagerBtn, terugBtn);
+        buttons.addComponentsAndExpand(crudAdminBtn, crudKlantBtn, crudChauffeurBtn, crudPlannerBtn, crudManagerBtn, crudOrderBtn, crudVrachtwagenBtn, crudPrijsBtn, crudPalletBtn, crudRitBtn, terugBtn);
         parent.addComponent(buttons);
         parent.addComponent(send);
     }
@@ -103,6 +126,21 @@ public class CrudUI extends VerticalLayout implements View {
             case strings.MANAGER:
                 managerCrud.addTable();
                 break;
+            case "Order":
+                orderCrud.addTable();
+                break;
+            case "Vrachtwagen":
+                vrachtwagenCrud.addTable();
+                break;
+            case "Prijs":
+                prijsCrud.addTable();
+                break;
+            case "Pallet":
+                palletCrud.addTable();
+                break;
+            case "Rit":
+                ritCrud.addTable();
+                break;
             default:
                 break;
         }
@@ -115,6 +153,10 @@ public class CrudUI extends VerticalLayout implements View {
         gridChauffeur.removeAllColumns();
         plannerGrid.removeAllColumns();
         managerGrid.removeAllColumns();
+        gridOrder.removeAllColumns();
+        palletGrid.removeAllColumns();
+        prijsGrid.removeAllColumns();
+        ritGrid.removeAllColumns();
     }
 
     private void setupLayout() {
