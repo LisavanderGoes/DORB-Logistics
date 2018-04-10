@@ -1,42 +1,43 @@
 package com.lisa.dorb.layout.crudUI;
 
-import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.CrudUI;
+import com.lisa.dorb.model.Admin;
 import com.lisa.dorb.model.Manager;
-import com.lisa.dorb.model.Planner;
 import com.lisa.dorb.repository.ManagerRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.HorizontalLayout;
-import com.vaadin.ui.TextField;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.List;
 
 @SpringComponent
-public class ManagerCrud extends HorizontalLayout {
+public class ManagerCrud extends VerticalLayout {
 
     @Autowired
     CrudUI crudUI;
     @Autowired
-    ManagerRepository managerRepository;
+    ManagerRepository repository;
 
-    public List<Manager> managerList; //define inside methode otherwise null
+    private List<Manager> list; //define inside methode otherwise null
+    private Button deleteBtn;
+    private Button addBtn;
     private Grid<Manager> grid;
-    public Button deleteBtn= new Button("Verwijderen");
-    public Button addBtn = new Button("Toevoegen");
+    private long rowId;
+    private Object rowItem;
 
     public void addTable() {
-        managerList = managerList();
+        list = repository.findAll();
         grid = crudUI.managerGrid;
+        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
+        addBtn = new Button("Toevoegen");
+
         grid.setCaption("Managers");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         ListDataProvider<Manager> dataProvider =
-                DataProvider.ofCollection(managerList);
+                DataProvider.ofCollection(list);
 
         grid.setDataProvider(dataProvider);
 
@@ -87,7 +88,7 @@ public class ManagerCrud extends HorizontalLayout {
             toevoegen();
         });
         deleteBtn.addClickListener(event -> {
-            delete(crudUI.rowId, crudUI.rowItem);
+            delete(rowId, rowItem);
         });
 
         crudUI.table.addComponents(addBtn, deleteBtn);
@@ -95,160 +96,83 @@ public class ManagerCrud extends HorizontalLayout {
     }
 
     private void setID(long id, Object item) {
-        crudUI.rowId = id;
-        crudUI.rowItem = item;
+        rowId = id;
+        rowItem = item;
     }
 
     private void setWachtwoord(Manager model, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = updateWachtwoord(model, wachtwoord);
-        if(snd == null) {
+        long id = model.getID();
+        String snd;
+        try {
+            repository.updateWachtwoord(wachtwoord, id);
             model.setWachtwoord(wachtwoord);
-            grid.setItems(managerList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
+            grid.setItems(list);
+            snd = "";
+        } catch (Exception e) {
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
+        crudUI.send.setValue(snd);
     }
 
     private void setInlognaam(Manager model, String inlognaam) {
-        String snd = updateInlognaam(model, inlognaam);
-        if(snd == null) {
+        String snd;
+        long id = model.getID();
+        try {
+            repository.updateInlognaam(inlognaam, id);
             model.setInlognaam(inlognaam);
-            grid.setItems(managerList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
+            grid.setItems(list);
+            snd = "";
+        } catch (Exception e) {
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
+        crudUI.send.setValue(snd);
     }
 
     private void setAchternaam(Manager model, String achternaam) {
-        updateAchternaam(model, achternaam);
+        long id = model.getID();
+        repository.updateAchternaam(achternaam, id);
         model.setAchternaam(achternaam);
-        grid.setItems(managerList);
+        grid.setItems(list);
     }
 
     private void setTussenvoegsel(Manager model, String tussenvoegsel) {
-        updateTussenvoegsel(model, tussenvoegsel);
+        long id = model.getID();
+        repository.updateTussenvoegsel(tussenvoegsel, id);
         model.setTussenvoegsel(tussenvoegsel);
-        grid.setItems(managerList);
+        grid.setItems(list);
     }
 
     public void setVoornaam(Manager model, String voornaam){
-        updateVoornaam(model, voornaam);
+        long id = model.getID();
+        repository.updateVoornaam(voornaam, id);
         model.setVoornaam(voornaam);
-        grid.setItems(managerList);
+        grid.setItems(list);
     }
 
     private void toevoegen() {
-        String snd = addManagerRow();
-        if(snd == null) {
-            long id = getManagerId();
+        String snd;
+        try {
+            repository.addRow();
+            long id = getDBId();
             Manager model = new Manager(id, "", "", "", "", "");
-            managerList.add(model);
-            grid.setItems(managerList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
+            list.add(model);
+            grid.setItems(list);
+            snd = "";
+        } catch (Exception e) {
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
+        crudUI.send.setValue(snd);
     }
 
     private void delete(long id, Object item) {
-        deleteManagerRow(id);
-        managerList.remove(item);
-        grid.setItems(managerList);
+        repository.deleteRow(id);
+        list.remove(item);
+        grid.setItems(list);
     }
 
-    //region [Manager]
-    /**
-     * @return list of all managers
-     */
-    public List<Manager> managerList() {
-        return (List<Manager>) managerRepository.findAll();
+    private long getDBId() {
+        return repository.getId();
     }
 
-    /**
-     * @param model Manager model
-     * @param voornaam The new voornaam
-     */
-    public void updateVoornaam(Manager model, String voornaam) {
-        long id = model.getID();
-        managerRepository.updateVoornaam(voornaam, id);
-    }
-
-    /**
-     * @param model Manager model
-     * @param tussenvoegsel The new tussenvoegsel
-     */
-    public void updateTussenvoegsel(Manager model, String tussenvoegsel) {
-        long id = model.getID();
-        managerRepository.updateTussenvoegsel(tussenvoegsel, id);
-    }
-
-    /**
-     * @param model Manager model
-     * @param achternaam The new achternaam
-     */
-    public void updateAchternaam(Manager model, String achternaam) {
-        long id = model.getID();
-        managerRepository.updateAchternaam(achternaam, id);
-    }
-
-    /**
-     * @param model Manager model
-     * @param inlognaam The new inlognaam
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String updateInlognaam(Manager model, String inlognaam) {
-        long id = model.getID();
-        try {
-            managerRepository.updateInlognaam(inlognaam, id);
-        } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
-        }
-        return null;
-    }
-
-    /**
-     * @param model Manager model
-     * @param wachtwoord The new wachtwoord
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String updateWachtwoord(Manager model, String wachtwoord) {
-        long id = model.getID();
-        try {
-            managerRepository.updateWachtwoord(wachtwoord, id);
-        } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
-        }
-        return null;
-    }
-
-    /**
-     * @param i id from selection
-     */
-    public void deleteManagerRow(long i) {
-        long id = i;
-        managerRepository.deleteRow(id);
-    }
-
-    /**
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String addManagerRow() {
-        try {
-            managerRepository.addRow();
-        } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
-        }
-        return null;
-    }
-
-    /**
-     * @return last added id
-     */
-    public long getManagerId() {
-        return managerRepository.getId();
-    }
-    //endregion
 }

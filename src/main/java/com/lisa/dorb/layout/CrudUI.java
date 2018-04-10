@@ -37,7 +37,9 @@ public class CrudUI extends VerticalLayout implements View {
     Crud crud;
 
     //UI
-    public HorizontalLayout table = new HorizontalLayout();
+    public VerticalLayout table = new VerticalLayout();
+
+
     public Grid<Admin> gridAdmin = new Grid<>();
     public Grid<Klant> gridKlant = new Grid<>();
     public Grid<Chauffeur> gridChauffeur = new Grid<>();
@@ -50,12 +52,7 @@ public class CrudUI extends VerticalLayout implements View {
     public Button crudPlannerBtn = new Button(strings.PLANNER);
     public Button crudManagerBtn = new Button(strings.MANAGER);
     public Button terugBtn = new Button("Terug");
-    //public Button deleteBtn= new Button("Verwijderen");
-    //public Button addBtn = new Button("Toevoegen");
-    public Button test = new Button("test");
     public Label send = new Label("");
-    public long rowId;
-    public Object rowItem;
 
     @PostConstruct
     void init() {
@@ -64,12 +61,6 @@ public class CrudUI extends VerticalLayout implements View {
         addLayout();
         startUI(strings.ADMIN);
     }
-
-    private void test(){
-        table.addComponentsAndExpand(test);
-        parent.addComponentsAndExpand(table);
-    }
-
 
     private void addHeader() {
         Label header = new Label("ADMIN");

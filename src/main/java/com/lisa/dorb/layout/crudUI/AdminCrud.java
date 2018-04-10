@@ -1,6 +1,5 @@
 package com.lisa.dorb.layout.crudUI;
 
-import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.model.Admin;
 import com.lisa.dorb.repository.AdminRepository;
@@ -18,21 +17,28 @@ public class AdminCrud extends VerticalLayout {
     @Autowired
     CrudUI crudUI;
     @Autowired
-    AdminRepository adminRepository;
+    AdminRepository repository;
 
-    public List<Admin> adminList; //define inside methode otherwise null
-    public Button deleteBtn= new Button("Verwijderen");
-    public Button addBtn = new Button("Toevoegen");
+    private List<Admin> list; //define inside methode otherwise null
+    private Button deleteBtn;
+    private Button addBtn;
+    private Grid<Admin> grid;
+    private long rowId;
+    private Object rowItem;
 
     public void addTable() {
-        adminList = adminList();
-        crudUI.gridAdmin.setCaption("Admins");
-        crudUI.gridAdmin.setSizeFull();
-        crudUI.gridAdmin.setSelectionMode(Grid.SelectionMode.NONE);
-        ListDataProvider<Admin> dataProvider =
-                DataProvider.ofCollection(adminList);
+        list = repository.findAll();
+        grid = crudUI.gridAdmin;
+        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
+        addBtn = new Button("Toevoegen");
 
-        crudUI.gridAdmin.setDataProvider(dataProvider);
+        grid.setCaption("Admins");
+        grid.setSizeFull();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        ListDataProvider<Admin> dataProvider =
+                DataProvider.ofCollection(list);
+
+        grid.setDataProvider(dataProvider);
 
         TextField taskField1 = new TextField();
         TextField taskField2 = new TextField();
@@ -40,48 +46,48 @@ public class AdminCrud extends VerticalLayout {
         TextField taskField4 = new TextField();
         TextField taskField5 = new TextField();
 
-        crudUI.gridAdmin.addColumn(Admin::getID)
+        grid.addColumn(Admin::getID)
                 .setCaption("Id")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getVoornaam)
+        grid.addColumn(Admin::getVoornaam)
                 .setEditorComponent(taskField1, this::setVoornaam)
                 .setCaption("Voornaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getTussenvoegsel)
+        grid.addColumn(Admin::getTussenvoegsel)
                 .setEditorComponent(taskField2, this::setTussenvoegsel)
                 .setCaption("Tussenvoegsel")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getAchternaam)
+        grid.addColumn(Admin::getAchternaam)
                 .setEditorComponent(taskField3, this::setAchternaam)
                 .setCaption("Achternaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getInlognaam)
+        grid.addColumn(Admin::getInlognaam)
                 .setEditorComponent(taskField4, this::setInlognaam)
                 .setCaption("Inlognaam")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.addColumn(Admin::getWachtwoord)
+        grid.addColumn(Admin::getWachtwoord)
                 .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
                 .setCaption("Wachtwoord")
                 .setExpandRatio(2);
 
-        crudUI.gridAdmin.setSelectionMode(Grid.SelectionMode.SINGLE);
+        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        crudUI.gridAdmin.addItemClickListener(event ->
+        grid.addItemClickListener(event ->
                 setID(event.getItem().getID(), event.getItem()));
 
-        crudUI.gridAdmin.getEditor().setEnabled(true);
+        grid.getEditor().setEnabled(true);
 
-        crudUI.table.addComponentsAndExpand(crudUI.gridAdmin);
+        crudUI.table.addComponentsAndExpand(grid);
         addBtn.addClickListener(event -> {
             toevoegen();
         });
         deleteBtn.addClickListener(event -> {
-            delete(crudUI.rowId, crudUI.rowItem);
+            delete(rowId, rowItem);
         });
 
         crudUI.table.addComponents(addBtn, deleteBtn);
@@ -89,160 +95,90 @@ public class AdminCrud extends VerticalLayout {
     }
 
     private void setID(long id, Object item) {
-        crudUI.rowId = id;
-        crudUI.rowItem = item;
+        rowId = id;
+        rowItem = item;
     }
 
     private void setWachtwoord(Admin admin, String wachtwoord) {
         //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-        String snd = updateWachtwoord(admin, wachtwoord);
-        if(snd == null) {
+        long id = admin.getID();
+        String snd;
+        try {
+            repository.updateWachtwoord(wachtwoord, id);
             admin.setWachtwoord(wachtwoord);
-            crudUI.gridAdmin.setItems(adminList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
+            grid.setItems(list);
+            snd = "";
+        } catch (Exception e) {
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
+        crudUI.send.setValue(snd);
     }
 
     private void setInlognaam(Admin admin, String inlognaam) {
-        String snd = updateInlognaam(admin, inlognaam);
-        if(snd == null) {
+        String snd;
+        long id = admin.getID();
+        try {
+            repository.updateInlognaam(inlognaam, id);
             admin.setInlognaam(inlognaam);
-            crudUI.gridAdmin.setItems(adminList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
+            grid.setItems(list);
+            snd = "";
+        } catch (Exception e) {
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
+        crudUI.send.setValue(snd);
     }
 
     private void setAchternaam(Admin admin, String achternaam) {
-        updateAchternaam(admin, achternaam);
+        long id = admin.getID();
+        repository.updateAchternaam(achternaam, id);
         admin.setAchternaam(achternaam);
-        crudUI.gridAdmin.setItems(adminList);
+        grid.setItems(list);
     }
 
     private void setTussenvoegsel(Admin admin, String tussenvoegsel) {
-        updateTussenvoegsel(admin, tussenvoegsel);
+        long id = admin.getID();
+        repository.updateTussenvoegsel(tussenvoegsel, id);
         admin.setTussenvoegsel(tussenvoegsel);
-        crudUI.gridAdmin.setItems(adminList);
+        grid.setItems(list);
     }
 
-    public void setVoornaam(Admin admin, String voornaam){
-        updateVoornaam(admin, voornaam);
+    public void setVoornaam(Admin admin, String voornaam) {
+        long id = admin.getID();
+        repository.updateVoornaam(voornaam, id);
         admin.setVoornaam(voornaam);
-        crudUI.gridAdmin.setItems(adminList);
+        grid.setItems(list);
+    }
+
+    private void test(String s){
+        if(s == "a") {
+            crudUI.send.setValue(crudUI.send.getValue() + "L   ");
+        }
     }
 
     private void toevoegen() {
-        String snd = addAdminRow();
-        if(snd == null) {
-            long id = getAdminId();
+        String snd;
+        try {
+            repository.addRow();
+            long id = getDBId();
             Admin admin = new Admin(id, "", "", "", "", "");
-            adminList.add(admin);
-            crudUI.gridAdmin.setItems(adminList);
-            crudUI.send.setValue("");
-        }else {
-            crudUI.send.setValue(snd);
-        }
-    }
-
-    private void delete(long id, Object item) {
-        deleteAdminRow(id);
-        adminList.remove(item);
-        crudUI.gridAdmin.setItems(adminList);
-    }
-
-    //region [Admin]
-    /**
-     * @return list of all admins
-     */
-    public List<Admin> adminList() {
-        return (List<Admin>) adminRepository.findAll();
-    }
-
-    /**
-     * @param admin Admin model
-     * @param voornaam The new voornaam
-     */
-    public void updateVoornaam(Admin admin, String voornaam) {
-        long id = admin.getID();
-        adminRepository.updateVoornaam(voornaam, id);
-    }
-
-    /**
-     * @param admin Admin model
-     * @param tussenvoegsel The new tussenvoegsel
-     */
-    public void updateTussenvoegsel(Admin admin, String tussenvoegsel) {
-        long id = admin.getID();
-        adminRepository.updateTussenvoegsel(tussenvoegsel, id);
-    }
-
-    /**
-     * @param admin Admin model
-     * @param achternaam The new achternaam
-     */
-    public void updateAchternaam(Admin admin, String achternaam) {
-        long id = admin.getID();
-        adminRepository.updateAchternaam(achternaam, id);
-    }
-
-    /**
-     * @param admin Admin model
-     * @param inlognaam The new inlognaam
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String updateInlognaam(Admin admin, String inlognaam) {
-        long id = admin.getID();
-        try {
-            adminRepository.updateInlognaam(inlognaam, id);
+            list.add(admin);
+            grid.setItems(list);
+            snd = "";
         } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
-        return null;
+        crudUI.send.setValue(snd);
     }
 
-    /**
-     * @param admin Admin model
-     * @param wachtwoord The new wachtwoord
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String updateWachtwoord(Admin admin, String wachtwoord) {
-        long id = admin.getID();
-        try {
-            adminRepository.updateWachtwoord(wachtwoord, id);
-        } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        private void delete (long id, Object item){
+            repository.deleteRow(id);
+            list.remove(item);
+            grid.setItems(list);
         }
-        return null;
-    }
 
-    /**
-     * @param i id from selection
-     */
-    public void deleteAdminRow(long i) {
-        long id = i;
-        adminRepository.deleteRow(id);
-    }
-
-    /**
-     * @return null if no errors, a inlognaam with the exception
-     */
-    public String addAdminRow() {
-        try {
-            adminRepository.addRow();
-        } catch (Exception e) {
-            return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
+        private long getDBId() {
+            return repository.getId();
         }
-        return null;
-    }
 
-    /**
-     * @return last added id
-     */
-    public long getAdminId() {
-        return adminRepository.getId();
-    }
-    //endregion
+
 }
