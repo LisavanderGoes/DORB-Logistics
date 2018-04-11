@@ -20,18 +20,18 @@ public class LoginUI extends VerticalLayout implements View {
 
     @Autowired
     Login login;
-
     @Autowired
     TestUI testUI;
-
     @Autowired
     CrudUI crudUI;
+    @Autowired
+    OrderUI orderUI;
 
 
     //UI
     ComboBox status = new ComboBox("Inloggen als...");
     Button button = new Button("Inloggen");
-    Label label = new Label("label");
+    Label label = new Label("");
     TextField naam = new TextField("Loginnaam");
     PasswordField wachtwoord = new PasswordField("Wachtwoord");
 
@@ -57,7 +57,7 @@ public class LoginUI extends VerticalLayout implements View {
                         getUI().setContent(crudUI);
                         break;
                     case strings.KLANT:
-                        getUI().setContent(testUI);
+                        getUI().setContent(orderUI);
                         break;
                     case strings.CHAUFFEUR:
                         break;

@@ -2,6 +2,8 @@ package com.lisa.dorb;
 
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.layout.CrudUI;
+import com.lisa.dorb.layout.OrderUI;
+import com.lisa.dorb.model.Order;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;
 import com.vaadin.spring.navigator.SpringViewProvider;
@@ -13,11 +15,10 @@ public class Main extends UI {
 
     @Autowired
     LoginUI loginUI;
-
     @Autowired
     CrudUI crudUI;
-
-
+    @Autowired
+    OrderUI orderUI;
     @Autowired
     SpringViewProvider viewProvider;
 
@@ -28,7 +29,7 @@ public class Main extends UI {
     }
 
     private void in() {
-        setContent(crudUI);
+        setContent(orderUI);
     }
 
 }

@@ -81,7 +81,7 @@ public class CrudUI extends VerticalLayout implements View {
     }
 
     private void addHeader() {
-        Label header = new Label("ADMIN");
+        Label header = new Label("ADMINISTRATION");
         header.addStyleName(ValoTheme.LABEL_H1);
         parent.addComponent(header);
     }
@@ -99,6 +99,7 @@ public class CrudUI extends VerticalLayout implements View {
         crudPalletBtn.addClickListener(event -> startUI("Pallet"));
         crudRitBtn.addClickListener(event -> startUI("Rit"));
         terugBtn.addClickListener(event -> terugButtonClick());
+        terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         buttons.addComponentsAndExpand(crudAdminBtn, crudKlantBtn, crudChauffeurBtn, crudPlannerBtn, crudManagerBtn, crudOrderBtn, crudVrachtwagenBtn, crudPrijsBtn, crudPalletBtn, crudRitBtn, terugBtn);
         parent.addComponent(buttons);
         parent.addComponent(send);
