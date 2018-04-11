@@ -37,7 +37,7 @@ public class OrderUI extends VerticalLayout implements View {
     private void addContent() {
         try {
 //            route.getDistance("ede", "arnhem");
-            send.setValue(route.getDistance("ede", "arnhem"));
+            send.setValue(route.getAdres("ede", "arnhem"));
         } catch (Exception e) {
             e.printStackTrace();
 //            send.setValue("doet het niet");
