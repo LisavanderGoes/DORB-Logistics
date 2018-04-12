@@ -366,3 +366,26 @@ Wireframes
 
 - (bij alles kan uitloggen)
 
+===============================================
+ingelogd klanten
+20 pallets (max)
+altijd een bestelling in een vrachtwagen
+naar planner als datum niet klopt
+admin registreerd klanten
+
+offerte = extra validatie na orde maken
+
+
+ja
+planner probleem (die moet oplossen, zet naar dashboard)
+die dag als uitterste, 1 dag
+planners: plannen ritten dus met orders bezig zijn
+vaste dagen chauffeurs
+hashed
+systeem kan herplannen uiteindelijk maar eerst die planners dat
+inladen (chauffeurs)
+google maps gebruik
+
+rekening met de route niet de landen
+
+

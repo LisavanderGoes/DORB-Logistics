@@ -49,4 +49,5 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
 
     @Query(value = "SELECT vrachtwagen_Id FROM vrachtwagens ORDER BY vrachtwagen_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
 }

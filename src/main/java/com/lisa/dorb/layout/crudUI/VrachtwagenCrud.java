@@ -6,12 +6,12 @@ import com.lisa.dorb.repository.VrachtwagenRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.Grid;
-import com.vaadin.ui.TextField;
-import com.vaadin.ui.VerticalLayout;
+import com.vaadin.ui.*;
 import org.springframework.beans.factory.annotation.Autowired;
 
+import java.sql.Date;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.List;
 
 @SpringComponent
@@ -47,7 +47,7 @@ public class VrachtwagenCrud extends VerticalLayout {
 
         TextField taskField1 = new TextField();
         TextField taskField2 = new TextField();
-        TextField taskField3 = new TextField();
+        DateField taskField3 = new DateField();
         TextField taskField4 = new TextField();
         TextField taskField5 = new TextField();
 
@@ -92,6 +92,20 @@ public class VrachtwagenCrud extends VerticalLayout {
 
         crudUI.table.addComponents(addBtn, deleteBtn);
         crudUI.parent.addComponentsAndExpand(crudUI.table);
+    }
+
+    private void setApk(Vrachtwagen model, String datum) {
+        SimpleDateFormat formatter = new SimpleDateFormat("yyyy-MM-dd");
+        Date date = null;
+        try {
+            date = (Date) formatter.parse(datum);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        long id = model.getID();
+        repository.updateApk(date, id);
+        model.setApk(date);
+        grid.setItems(list);
     }
 
     private void setID(long id, Object item) {
