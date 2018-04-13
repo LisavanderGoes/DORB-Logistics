@@ -64,6 +64,12 @@
 		</dependency>
 
         <dependency>
+            <groupId>org.vaadin.ui</groupId>
+            <artifactId>numberfield</artifactId>
+            <version>0.2.0</version>
+        </dependency>
+
+        <dependency>
             <groupId>com.h2database</groupId>
             <artifactId>h2</artifactId>
             <scope>runtime</scope>
@@ -110,6 +116,10 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
+        <repository>
+            <id>vaadin-addons</id>
+            <url>http://maven.vaadin.com/vaadin-addons</url>
+        </repository>
 	</repositories>
 
 </project>

@@ -8,6 +8,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.vaadin.ui.NumberField;
+
 import javax.annotation.PostConstruct;
 
 @SpringComponent
@@ -30,7 +32,7 @@ public class OrderUI extends VerticalLayout implements View {
     private Button terugBtn = new Button("Annuleren");
     public Label send = new Label("");
     private TextField pallet = new TextField("Wat wilt u bestellen?");
-    private TextField aantal = new TextField("Hoeveel pallets?");
+    private NumberField aantal = new NumberField("Hoeveel pallets?");
     private Button order = new Button("Order maken");
 
     @PostConstruct
@@ -45,15 +47,33 @@ public class OrderUI extends VerticalLayout implements View {
     private void addOnclick() {
         terugBtn.addClickListener(event -> terugButtonClick());
         terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        order.addClickListener(event -> makeOrder());
+        order.addClickListener(event -> validation());
+    }
+
+    private void validation() {
+        try {
+            if (straatnaam.isEmpty() || plaats.isEmpty() || postcode.isEmpty() || provincie.isEmpty() || land.isEmpty() || datum.isEmpty() || pallet.isEmpty() || aantal.isEmpty()) {
+                send.setValue("Iets is niet ingevuld!");
+            } else if (aantal.getValue().contains(",") || aantal.getValue().contains(".")) {
+                send.setValue("De pallets kunnen alleen in hele worden besteld!");
+            } else if (Integer.parseInt(aantal.getValue()) <= 0) {
+                send.setValue("Er moet meer dan 0 besteld worden!");
+            } else if (Integer.parseInt(aantal.getValue()) > 20) {
+                send.setValue("Er kan niet meer dan 20 besteld worden!");
+            } else {
+                OrderItems.fullPalletAantal = Integer.parseInt(aantal.getValue());
+                OrderItems.fullDate = datum.getValue();
+                OrderItems.fullLand = land.getValue();
+                OrderItems.fullPallet = pallet.getValue();
+                OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
+                makeOrder();
+            }
+        }catch (Exception e){
+            send.setValue("Er is iets mis gegaan, probeer het opnieuw!");
+        }
     }
 
     private void makeOrder() {
-        OrderItems.fullPalletAantal = Integer.parseInt(aantal.getValue());
-        OrderItems.fullDate = datum.getValue();
-        OrderItems.fullLand = land.getValue();
-        OrderItems.fullPallet = pallet.getValue();
-        OrderItems.fullAdres = straatnaam.getValue()+plaats.getValue()+postcode.getValue()+provincie.getValue()+land.getValue();
         send.setValue(OrderItems.fullAdres);
     }
 
