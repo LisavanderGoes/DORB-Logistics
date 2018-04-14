@@ -49,4 +49,8 @@ public interface RitRepository extends JpaRepository<Rit, Long> {
 
     @Query(value = "SELECT rit_Id FROM rit ORDER BY rit_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
+    @Query(value = "SELECT rit_Id, ruimte, vrachtwagen_Id, chauffeur_Id FROM rit WHERE datum = :datum", nativeQuery = true)
+    List<Rit> getByDatum(@Param("datum") Date datum);
+
 }

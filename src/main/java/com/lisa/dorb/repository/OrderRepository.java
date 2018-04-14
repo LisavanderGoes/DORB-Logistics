@@ -59,4 +59,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT order_Id FROM orders ORDER BY order_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
+    @Query(value = "SELECT adres FROM orders WHERE rit_Id =:id", nativeQuery = true)
+    List<Order> getAdresByRit_Id(@Param("id") long id);
+
+    @Query(value = "SELECT land_Id FROM orders WHERE order_Id =:id", nativeQuery = true)
+    long getLand_IdById(@Param("id") long id);
 }

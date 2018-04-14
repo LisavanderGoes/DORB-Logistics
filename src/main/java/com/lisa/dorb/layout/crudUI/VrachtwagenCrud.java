@@ -66,7 +66,7 @@ public class VrachtwagenCrud extends VerticalLayout {
                 .setExpandRatio(2);
 
         grid.addColumn(Vrachtwagen::getApk)
-                //.setEditorComponent(taskField3, this::setApk)
+                //.setEditorComponent(taskField3, this::setRijbewijs)
                 .setCaption("Apk")
                 .setExpandRatio(2);
 

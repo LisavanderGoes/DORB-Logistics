@@ -6,4 +6,6 @@ public class strings {
     final public static String KLANT = "Klant";
     final public static String PLANNER = "Planner";
     public static final String MANAGER = "Manager";
+    public static final String ADRES_FROM = "Zijpendaalseweg 167, 6814 CJ Arnhem, Nederland";
+
 }

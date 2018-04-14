@@ -102,8 +102,8 @@ public class Route {
 
         ArrayList<Km> HomeToKm = new ArrayList<>();
         ArrayList<Float> KmtoHome = new ArrayList<>();
-        ArrayList<String> adr = new ArrayList<>(); //goede volgorde adres
-        ArrayList<Float> dis = new ArrayList<>(); //goede volgorde distance
+        ArrayList<String> adr = new ArrayList<>(); //goede volgende adres
+        ArrayList<Float> dis = new ArrayList<>(); //goede volgende distance
 
         for(String ad : adres){ //naar km en add to dis
             float km;
@@ -127,7 +127,7 @@ public class Route {
             }
         }
 
-        for(Float dst: dis){ //adres op dis volgorde
+        for(Float dst: dis){ //adres op dis volgende
             for (Km km: HomeToKm){
                 if(dst.equals(km.getKm())){
                     adr.add(km.getAdres());

@@ -2,7 +2,7 @@ DORB Logistics
 
 Wordt alles gebracht op de dag dat de klant aangeeft?
 Wat als die dag niet kan?
-Wat betekend apk tot, moet die dag de apk gedaan worden?
+Wat betekend rijbewijs tot, moet die dag de rijbewijs gedaan worden?
 Staan de werkdagen vast of moet er gekeken worden hoeveel ze al gewerkt hebben in een week?
 Moet wachtwoord gehashed zijn?
 Wat moeten planners doen? (rit inplannen?)
@@ -13,7 +13,7 @@ Moet de routbeschrijving google maps zijn?
 Moet het web zijn?
 Moet er rekening gehouden worden met de afstanden tussen de adressen?
 
-(hb je rekening gehouden met de apk?) (opgelost)
+(hb je rekening gehouden met de rijbewijs?) (opgelost)
 (werkdagen per week)
 (managers krijgen lijstjes)(vraag nader)
 
@@ -48,8 +48,8 @@ XF 430 FMT
 - rijbewijs (D)
 
 
-- kenteken
-- apk (datum) (nietbeschikbaar)
+- ruimte
+- rijbewijs (datum) (nietbeschikbaar)
 - beschikbaarheid (beschikbaar, nietbeschikbaar)
   - (nietbeschikbaar met onderhoud en als hij weg is)
   - (beschikbaar als hij er is)
@@ -258,7 +258,7 @@ Orders:
 - rekeningnummer)
 
 Typevrachtwagens:
-- typ_Id
+- type
 - type
 - ruimte
 - rijbewijs (key) (kunnen meerdere)
@@ -274,10 +274,10 @@ Rit:
 
 Vrachtwagens:
 - vrachtwagen_Id
-- typ_Id (key)
-- kenteken
-- apk tot
-- status (enum) (beschikbaar, onderhoud)
+- type (key)
+- ruimte
+- rijbewijs tot
+- grootst (enum) (beschikbaar, onderhoud)
 
 Rijbewijs:
 - rijbewijs
@@ -340,9 +340,9 @@ Planners:
 
 Vrachtwagens:
 - type vrachtwagen (spinner met alle opties van type vrachtwagen)
-- kenteken
-- apk tot
-- status (spinner v radiobutton)
+- ruimte
+- rijbewijs tot
+- grootst (spinner v radiobutton)
 
 Prijzen:
 - prijs
