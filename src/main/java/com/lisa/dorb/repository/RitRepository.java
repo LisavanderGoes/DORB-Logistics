@@ -1,6 +1,5 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Order;
 import com.lisa.dorb.model.Rit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -50,7 +49,7 @@ public interface RitRepository extends JpaRepository<Rit, Long> {
     @Query(value = "SELECT rit_Id FROM rit ORDER BY rit_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
 
-    @Query(value = "SELECT rit_Id, ruimte, vrachtwagen_Id, chauffeur_Id FROM rit WHERE datum = :datum", nativeQuery = true)
+    @Query(value = "SELECT * FROM rit WHERE datum = :datum", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
     List<Rit> getByDatum(@Param("datum") Date datum);
 
 }

@@ -2,6 +2,7 @@ package com.lisa.dorb.layout;
 
 
 import com.lisa.dorb.Saved.OrderItems;
+import com.lisa.dorb.function.OrderMaken;
 import com.lisa.dorb.function.Route;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -11,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.ui.NumberField;
 
 import javax.annotation.PostConstruct;
+import java.sql.Date;
 
 @SpringComponent
 public class OrderUI extends VerticalLayout implements View {
@@ -19,6 +21,8 @@ public class OrderUI extends VerticalLayout implements View {
     LoginUI loginUI;
     @Autowired
     Route route;
+    @Autowired
+    OrderMaken orderMaken;
 
     private VerticalLayout parent;
 
@@ -62,19 +66,19 @@ public class OrderUI extends VerticalLayout implements View {
                 send.setValue("Er kan niet meer dan 20 besteld worden!");
             } else {
                 OrderItems.fullPalletAantal = Integer.parseInt(aantal.getValue());
-                OrderItems.fullDate = datum.getValue();
+                OrderItems.fullDate = Date.valueOf(datum.getValue());
                 OrderItems.fullLand = land.getValue();
                 OrderItems.fullPallet = pallet.getValue();
                 OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
                 makeOrder();
             }
         }catch (Exception e){
-            send.setValue("Er is iets mis gegaan, probeer het opnieuw!");
+            send.setValue(e+"");
         }
     }
 
     private void makeOrder() {
-        send.setValue(OrderItems.fullAdres);
+            send.setValue(orderMaken.checkRit(OrderItems.fullPalletAantal, OrderItems.fullDate));
     }
 
     private void addContent() {

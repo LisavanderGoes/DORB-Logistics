@@ -5,7 +5,7 @@ import java.io.Serializable;
 import java.sql.Date;
 
 @Entity
-@Table(name = "vrachtwagens")
+@Table(name = "typevrachtwagens")
 public class VrachtwagenType implements Serializable {
 
     @Id
