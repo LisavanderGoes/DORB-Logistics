@@ -53,7 +53,8 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
     @Query(value = "SELECT typ_Id FROM vrachtwagens WHERE vrachtwagen_Id =:id", nativeQuery = true)
     long getTyp_IdById(@Param("id") long id);
 
-    @Query(value = "SELECT * FROM vrachtwagens WHERE typ_Id =:typ_Id AND status =:'beschikbaar'", nativeQuery = true)
-    List<Vrachtwagen> getIdByTyp_IdAndBeschikbaarheid(@Param("typ_Id") long typ_Id);
+    @Query(value = "SELECT * FROM vrachtwagens WHERE typ_Id =:typ_Id AND status =:'beschikbaar' AND apk != :datum", nativeQuery = true)
+    List<Vrachtwagen> getIdByTyp_IdAndBeschikbaarheidAndApk(@Param("typ_Id") long typ_Id, @Param("datum") Date datum);
+
 
 }
