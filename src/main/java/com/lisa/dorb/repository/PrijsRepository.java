@@ -39,4 +39,7 @@ public interface PrijsRepository extends JpaRepository<Prijs, Long> {
 
     @Query(value = "SELECT prijs_Id FROM prijzen ORDER BY prijs_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
+    @Query(value = "SELECT prijs FROM prijzen WHERE wat = :wat", nativeQuery = true)
+    long getPrijsByWat(@Param("wat") String wat);
 }

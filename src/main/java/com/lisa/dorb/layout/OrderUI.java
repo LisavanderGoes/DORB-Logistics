@@ -55,7 +55,7 @@ public class OrderUI extends VerticalLayout implements View {
     }
 
     private void validation() {
-        try {
+        //try {
             if (straatnaam.isEmpty() || plaats.isEmpty() || postcode.isEmpty() || provincie.isEmpty() || land.isEmpty() || datum.isEmpty() || pallet.isEmpty() || aantal.isEmpty()) {
                 send.setValue("Iets is niet ingevuld!");
             } else if (aantal.getValue().contains(",") || aantal.getValue().contains(".")) {
@@ -64,21 +64,26 @@ public class OrderUI extends VerticalLayout implements View {
                 send.setValue("Er moet meer dan 0 besteld worden!");
             } else if (Integer.parseInt(aantal.getValue()) > 20) {
                 send.setValue("Er kan niet meer dan 20 besteld worden!");
+                Notification error = new Notification(send.getValue());
+                error.setStyleName(ValoTheme.NOTIFICATION_ERROR);
+                error.show(send.getValue());
             } else {
                 OrderItems.fullPalletAantal = Integer.parseInt(aantal.getValue());
                 OrderItems.fullDate = Date.valueOf(datum.getValue());
                 OrderItems.fullLand = land.getValue();
                 OrderItems.fullPallet = pallet.getValue();
-                OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
+                //OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
+                OrderItems.fullAdres = straatnaam.getValue();
+                OrderItems.fullAdres = OrderItems.fullAdres.replaceAll("\\s+","");
                 makeOrder();
             }
-        }catch (Exception e){
-            send.setValue(e+"");
-        }
+//        }catch (Exception e){
+//            send.setValue(e+"");
+//        }
     }
 
     private void makeOrder() {
-            send.setValue(orderMaken.checkRit(OrderItems.fullPalletAantal, OrderItems.fullDate));
+            send.setValue(orderMaken.makeOrder(OrderItems.fullDate, OrderItems.fullAdres, OrderItems.fullLand, OrderItems.fullPalletAantal));
     }
 
     private void addContent() {
