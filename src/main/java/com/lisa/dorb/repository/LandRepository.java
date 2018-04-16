@@ -1,0 +1,18 @@
+package com.lisa.dorb.repository;
+
+import com.lisa.dorb.model.Land;
+import com.lisa.dorb.model.Prijs;
+import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
+import org.springframework.transaction.annotation.Transactional;
+
+import java.util.List;
+
+public interface LandRepository extends JpaRepository<Land, Long> {
+
+    @Query(value = "SELECT * FROM nationaliteit WHERE chauffeur_Id = :chauffeur_Id", nativeQuery = true)
+    List<Land> getAllByChauffeur_Id(@Param("chauffeur_Id") long chauffeur_Id);
+
+}

@@ -1,9 +1,6 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.model.Chauffeur;
-import com.lisa.dorb.model.Order;
-import com.lisa.dorb.model.Rit;
-import com.lisa.dorb.model.Vrachtwagen;
+import com.lisa.dorb.model.*;
 import com.lisa.dorb.repository.*;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +21,8 @@ public class OrderMaken {
     ChauffeurRepository chauffeurRepository;
     @Autowired
     OrderRepository orderRepository;
+    @Autowired
+    LandRepository landRepository;
 
 
     private List<Rit> newRitten = new ArrayList<>(); //Maak een list nooit null!!!!
@@ -100,6 +99,26 @@ public class OrderMaken {
 
     public Chauffeur findChauffeur(Date datum, long vrachtwagen_Id, long land_Id) {
         List<Chauffeur> allChauffeurs = new ArrayList<>();
+        String rijbewijs = vrachtwagenTypeRepository.getRijbewijsById(vrachtwagenRepository.getTyp_IdById(vrachtwagen_Id));
+        List<Rit> chauffeurList = ritRepository.getByDatum(datum);
+        for(Rit ritChauffeur: chauffeurList){
+            long chauffeur_Id = Integer.parseInt(ritChauffeur.getChauffeur_Id());
+            List<Chauffeur> chauffeursUsers = new ArrayList<>();
+            List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
+            for(Chauffeur user : user_IdByRijbewijs) {
+                List<Land> landen = landRepository.getAllByChauffeur_Id(user.getID());
+                for(Land land: landen){
+                    if(land.getLand_Id() == land_Id){
+                        chauffeursUsers.add(user);
+                    }
+                }
+            }
+            for(Chauffeur chauffeur : chauffeursUsers){
+                if(chauffeur_Id != chauffeur.getID()){
+                    allChauffeurs.add(chauffeur);
+                }
+            }
+        }
         if(!allChauffeurs.isEmpty()){
             return allChauffeurs.get(0);
         }
@@ -138,7 +157,7 @@ public class OrderMaken {
         return volgende;
     }
 
-
+//region [Rittencheck]
     //if rit !exists where datum == datum
             //return false
         //if rit exists where datum == datum
@@ -197,7 +216,25 @@ public class OrderMaken {
                                     //return true
 
                                         //check ook op het land van nieuwe orde
+//endregion
 
+//region [Chauffeurcheck]
+    //vrachtwagen_Id, land_Id*, datum
+    //get typ_Id van vrachtwagen where vrachtwagen_Id == vrachtwagen_Id
+    //get rijbewijs van Typevrachtwagens where typ_Id == typ_Id
+
+    //get chauffeur_Id van rit where datum == datum
+    //get user_Id van chauffeurs where rijbewijs == rijbewijs
+    //for(user :user_Id)
+        //get land_Id van nationaliteit where chauffeur_Id == user_Id
+        //for(land: land_Id)
+            //if land_Id == land_Id*
+                //add use_Id to list
+    //if chauffeur_Id == user_Id(list)
+        //return false
+    //if chauffeur_Id != user_Id
+        //add to list
+//endregion
 
 
 
