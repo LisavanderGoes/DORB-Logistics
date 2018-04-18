@@ -19,6 +19,9 @@ public interface KlantRepository extends CrudRepository<Klant, Long> {
     @Query(value = "SELECT * FROM klanten", nativeQuery = true)
     List<Klant> findAll();
 
+    @Query(value = "SELECT * FROM klanten WHERE user_Id = :id", nativeQuery = true)
+    Klant findAllById(@Param("id") long id);
+
 //    @Query(value = "SELECT wachtwoord FROM klanten WHERE inlognaam = ?1", nativeQuery = true)
 //    String findWachtwoordByInlognaam(String inlognaam);
 //

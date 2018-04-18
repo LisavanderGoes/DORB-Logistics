@@ -14,4 +14,7 @@ public interface LandenRepository extends JpaRepository<Landen, Long> {
 
     @Query(value = "SELECT land_Id FROM landen WHERE land = :landen", nativeQuery = true)
     long getLand_IdByLanden(@Param("landen") String landen);
+
+    @Query(value = "SELECT land FROM landen WHERE land_Id = :id", nativeQuery = true)
+    String getLandenByLand_Id(@Param("id") long id);
 }

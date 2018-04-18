@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 @Entity
 @Table(name = "nationaliteit")
-public class Land implements Serializable {
+public class Natio implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -17,10 +17,10 @@ public class Land implements Serializable {
     @Column(name = "land_Id")
     private long land_Id;
 
-    protected Land() {
+    protected Natio() {
     }
 
-    public Land(long id, long chauffeur_Id, long land_Id) {
+    public Natio(long id, long chauffeur_Id, long land_Id) {
         this.nat_Id = id;
         this.chauffeur_Id = chauffeur_Id;
         this.land_Id = land_Id;

@@ -13,8 +13,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query(value = "SELECT * FROM users", nativeQuery = true)
     List<User> findAll();
 
-    @Query(value = "SELECT user_Id FROM users WHERE inlognaam = :inlognaam AND wachtwoord = :wachtwoord", nativeQuery = true)
-    long findIdByInlognaamAndWachtwoord(@Param("inlognaam") String inlognaam, @Param("wachtwoord") String wachtwoord);
+    @Query(value = "SELECT * FROM users WHERE user_Id = :id", nativeQuery = true)
+    User findAllById(@Param("id") long id);
+
+    @Query(value = "SELECT * FROM users WHERE inlognaam = :inlognaam AND wachtwoord = :wachtwoord", nativeQuery = true)
+    User findAllByInlognaamAndWachtwoord(@Param("inlognaam") String inlognaam, @Param("wachtwoord") String wachtwoord);
 
 
 //    @Transactional

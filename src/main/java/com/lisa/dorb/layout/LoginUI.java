@@ -1,5 +1,6 @@
 package com.lisa.dorb.layout;
 
+import com.lisa.dorb.Saved.UserInfo;
 import com.lisa.dorb.function.Login;
 import com.lisa.dorb.model.Rol;
 import com.lisa.dorb.values.strings;
@@ -43,7 +44,7 @@ public class LoginUI extends VerticalLayout implements View {
 
     private void inloggen(){
         removeFromLogin();
-        if(login.login(naam.getValue(), wachtwoord.getValue()) != null || !login.login(naam.getValue(), wachtwoord.getValue()).isEmpty()) {
+        if(login.login(naam.getValue(), wachtwoord.getValue()) != null && !login.login(naam.getValue(), wachtwoord.getValue()).isEmpty()) {
             List<Rol> allRollen = login.login(naam.getValue(), wachtwoord.getValue());
             if (allRollen.size() > 1) {
                 for (Rol rol : allRollen) {
@@ -61,13 +62,13 @@ public class LoginUI extends VerticalLayout implements View {
                     login(rol.getRol());
                 }
             }
+            parent.addComponent(uitlogButton);
         } else {
             uitloggen();
         }
-        parent.addComponent(uitlogButton);
     }
 
-    public void login(String status){
+    private void login(String status){
         String send = "";
         try {
                 switch (status) {
@@ -89,6 +90,7 @@ public class LoginUI extends VerticalLayout implements View {
             send = ""+e;
             uitloggen();
         }
+        send = UserInfo.voornaam+" "+UserInfo.tussenvoegsel+" "+UserInfo.achternaam+" "+UserInfo.rol+" "+UserInfo.user_Id;
         label.setValue(send);
     }
 
@@ -103,6 +105,16 @@ public class LoginUI extends VerticalLayout implements View {
         wachtwoord.setValue("");
         label.setValue("");
         removeFromLogin();
+        removeFromUserInfo();
+    }
+
+    private void removeFromUserInfo() {
+        UserInfo.voornaam = "";
+        UserInfo.tussenvoegsel = "";
+        UserInfo.achternaam = "";
+        UserInfo.user_Id = 0;
+        UserInfo.rol = "";
+
     }
 
     private void addHeader() {

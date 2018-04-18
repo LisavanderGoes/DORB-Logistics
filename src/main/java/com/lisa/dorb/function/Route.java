@@ -4,7 +4,7 @@ package com.lisa.dorb.function;
 /*input: adres
 return:
     -Km **
-    -Land **
+    -Natio **
     -Route **
     -Adres **
 input: rit
@@ -60,10 +60,6 @@ public class Route {
         return km;
     }
 
-    public String getLand(String str_from, String str_to) throws Exception {
-        // laat mensen landen in verschillend vakje invullen en voeg dat dan bij de rest van het adres
-        return "";
-    }
 
     public String getAdres(String str_from, String str_to) throws Exception {
         // build a URL
@@ -131,7 +127,7 @@ public class Route {
             for (Km km: HomeToKm){
                 if(dst.equals(km.getKm())){
                     adr.add(km.getAdres());
-                    //orderUI.send.setValue(orderUI.send.getValue()+km.getAdres()+ "-+-");
+                    //orderUI.send.setValue(orderUI.send.getValue()+km.getOrder()+ "-+-");
                 }
             }
         }

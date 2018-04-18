@@ -1,13 +1,19 @@
 package com.lisa.dorb.function;
 
+import com.lisa.dorb.Saved.UserInfo;
+import com.lisa.dorb.layout.OrderUI;
 import com.lisa.dorb.model.*;
 import com.lisa.dorb.repository.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
+
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
+
 
 @SpringComponent
 public class OrderMaken {
@@ -23,29 +29,38 @@ public class OrderMaken {
     @Autowired
     OrderRepository orderRepository;
     @Autowired
-    LandRepository landRepository;
+    NatioRepository natioRepository;
     @Autowired
     PrijsRepository prijsRepository;
     @Autowired
     LandenRepository landenRepository;
     @Autowired
     Route route;
+    @Autowired
+    OrderUI orderUI;
 
     private List<Rit> newRitten = new ArrayList<>(); //Maak een list nooit null!!!!
 
-    String send = "";
+    private String send = "";
 
-    public String makeOrder(Date dat, String adr, String land, int palletAantal){
+    public NewOrder makeOrder(Date datum, String adr, String land, int palletAantal){
         //moet nog bestelling in
         //check voor dagen dat chauffeur werkt
-        long klant_Id;
-        String adres;
-        double prijs;
-        Date datum;
+        long klant_Id = UserInfo.user_Id;
+        String adres = "";
+        try {
+            adres = route.getAdres(strings.ADRES_FROM, adr);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        String prijs;
         long pallet_Id;
         long rit_Id;
+        long ruimte;
+        Order order;
+        Rit rit;
 
-        try {
+//        try {
             long land_Id = landenRepository.getLand_IdByLanden(land);
             float km = 0;
             try {
@@ -53,33 +68,46 @@ public class OrderMaken {
             } catch (Exception e) {
                 e.printStackTrace();
             }
+//        round(200.3456, 2);
 
-            if (checkRit(palletAantal, dat, land_Id) != null) {
-                    //get vars from checkrit en vul db
-                    return send;
+            prijs = String.valueOf(round(findPrijs(km, land, palletAantal), 2));
+            if (checkRit(palletAantal, datum, land_Id) != null) {
+                rit = checkRit(palletAantal, datum, land_Id);
+                order = new Order(0, klant_Id, adres, prijs, datum, 0, 0, land_Id, palletAantal);
+                return new NewOrder(order, rit);
             } else {
-                if (findVrachtwagen(dat, palletAantal, 0 , 0) != null) {
-                    //get vars from vrachtwagen
+                if (findVrachtwagen(datum, palletAantal, 1 , 0) != null) {
                     Vrachtwagen vrachtwagen;
                     Chauffeur chauffeur;
-                    long vrachtwagen_Id = findVrachtwagen(dat, palletAantal, 0 , 0).get(0).getID();
-                    if (findChauffeur(dat, vrachtwagen_Id, land_Id) != null) {
+                    long vrachtwagen_Id = findVrachtwagen(datum, palletAantal, 1 , 0).get(0).getID();
+                    if (findChauffeur(datum, vrachtwagen_Id, land_Id) != null) {
                         //get vars from chauffeur
-                        vrachtwagen = findVrachtwagen(dat, palletAantal, 0, 0).get(0);
-                        chauffeur = findChauffeur(dat, vrachtwagen_Id, land_Id).get(0);
-                        prijs = findPrijs(km, land, palletAantal);
-                        //to db
-                        send = "new rit added";
+                        vrachtwagen = findVrachtwagen(datum, palletAantal, 1, 0).get(0);
+                        chauffeur = findChauffeur(datum, vrachtwagen_Id, land_Id).get(0);
+                        order = new Order(0, klant_Id, adres, prijs, datum, 0, 0, land_Id, palletAantal);
+                        ruimte = vrachtwagenTypeRepository.getRuimteById(Long.parseLong(vrachtwagen.getTyp_Id())) - palletAantal;
+                        rit = new Rit(0, vrachtwagen.getID(), ruimte, datum, chauffeur.getID());
+                        return new NewOrder(order, rit);
+                    } else {
+                        orderUI.send.setValue(send);
                     }
+                } else {
+                    orderUI.send.setValue(send);
                 }
             }
-        }catch (Exception e){
-            return ""+e;
-        }
-        return send;
+//        }catch (Exception ignored){}
+        return null;
     }
 
-    public Rit checkRit(int palletAantal, Date datum, long landId){ //maak miss class
+    private static double round(double value, int places) {
+        if (places < 0) throw new IllegalArgumentException();
+
+        BigDecimal bd = new BigDecimal(value);
+        bd = bd.setScale(places, RoundingMode.HALF_UP);
+        return bd.doubleValue();
+    }
+
+    private Rit checkRit(int palletAantal, Date datum, long landId){ //maak miss class
         List<Rit> allRitten = ritRepository.getByDatum(datum);
             //get:
             Vrachtwagen vrachtwagen;
@@ -166,9 +194,9 @@ public class OrderMaken {
                 List<Chauffeur> chauffeursUsers = new ArrayList<>();
                 List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
                 for(Chauffeur user : user_IdByRijbewijs) {
-                    List<Land> landen = landRepository.getAllByChauffeur_Id(user.getID());
-                    for(Land land: landen){
-                        if(land.getLand_Id() == land_Id){
+                    List<Natio> landen = natioRepository.getAllByChauffeur_Id(user.getID());
+                    for(Natio natio : landen){
+                        if(natio.getLand_Id() == land_Id){
                             chauffeursUsers.add(user);
                         }
                     }
@@ -182,9 +210,9 @@ public class OrderMaken {
         } else{
             List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
             for(Chauffeur user : user_IdByRijbewijs) {
-                List<Land> landen = landRepository.getAllByChauffeur_Id(user.getID());
-                for(Land land: landen){
-                    if(land.getLand_Id() == land_Id){
+                List<Natio> landen = natioRepository.getAllByChauffeur_Id(user.getID());
+                for(Natio natio : landen){
+                    if(natio.getLand_Id() == land_Id){
                         allChauffeurs.add(user);
                     }
                 }
@@ -198,7 +226,12 @@ public class OrderMaken {
 
     private double findPrijs(float km, String land, long palletAantal){
         double prijsLand = Double.valueOf(prijsRepository.getPrijsByWat(land));
-        double prijsPallets = Double.valueOf(prijsRepository.getPrijsByWat(palletAantal+"Pallet"));
+        double prijsPallets;
+        if(palletAantal<= 6) {
+            prijsPallets = Double.valueOf(prijsRepository.getPrijsByWat(palletAantal + "Pallet"));
+        } else {
+            prijsPallets = Double.valueOf(prijsRepository.getPrijsByWat(6 + "Pallet"));
+        }
         return (prijsPallets * km) + prijsLand;
     }
 

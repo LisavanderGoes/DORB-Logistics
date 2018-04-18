@@ -122,10 +122,9 @@ public class OrderCrud extends VerticalLayout {
     }
 
     private void setPrijs(Order model, String prijs) {
-        long newLong = Long.parseLong(prijs);
         long id = model.getID();
-        repository.updatePrijs(newLong, id);
-        model.setPrijs(newLong);
+        repository.updatePrijs(prijs, id);
+        model.setPrijs(prijs);
         grid.setItems(list);
     }
 

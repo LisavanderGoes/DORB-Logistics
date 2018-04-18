@@ -15,11 +15,11 @@ public class Order implements Serializable {
     @Column(name = "klant_Id")
     private long klant_Id;
 
-    @Column(name = "adres")
+    @Column(name = "order")
     private String adres;
 
     @Column(name = "prijs")
-    private long prijs;
+    private String prijs;
 
 
     @Column(name = "datum")
@@ -34,10 +34,13 @@ public class Order implements Serializable {
     @Column(name = "land_Id")
     private long land_Id;
 
+    @Column(name = "palletAantal")
+    private long palletAantal;
+
     protected Order() {
     }
 
-    public Order(long id, long klant_Id, String adres, long prijs, Date datum, long pallet_Id, long rit_Id, long land_Id) {
+    public Order(long id, long klant_Id, String adres, String prijs, Date datum, long pallet_Id, long rit_Id, long land_Id, long palletAantal) {
         this.order_Id = id;
         this.klant_Id = klant_Id;
         this.adres = adres;
@@ -46,6 +49,7 @@ public class Order implements Serializable {
         this.pallet_Id = pallet_Id;
         this.rit_Id = rit_Id;
         this.land_Id = land_Id;
+        this.palletAantal = palletAantal;
     }
 
     public String getKlant_Id(){
@@ -55,7 +59,7 @@ public class Order implements Serializable {
         return adres;
     }
     public String getPrijs(){
-        return prijs+"";
+        return prijs;
     }
     public String getDatum(){
         return datum+"";
@@ -65,6 +69,9 @@ public class Order implements Serializable {
     }
     public String getRit_Id(){
         return rit_Id+"";
+    }
+    public String getPalletAantal(){
+        return palletAantal+"";
     }
     public long getLand_Id(){
         return land_Id;
@@ -81,7 +88,7 @@ public class Order implements Serializable {
         this.adres = adres;
     }
 
-    public void setPrijs(long prijs) {
+    public void setPrijs(String prijs) {
         this.prijs = prijs;
     }
 
@@ -94,6 +101,9 @@ public class Order implements Serializable {
     }
     public void setRit_Id(long rit_id) {
         this.rit_Id = rit_id;
+    }
+    public void setPalletAantal(long palletAantal) {
+        this.palletAantal = palletAantal;
     }
     public void setLand_Id(long land_Id) {
         this.land_Id = land_Id;

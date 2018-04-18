@@ -1,6 +1,5 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Land;
 import com.lisa.dorb.model.Rol;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;

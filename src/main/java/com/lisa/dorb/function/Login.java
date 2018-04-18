@@ -1,12 +1,11 @@
 package com.lisa.dorb.function;
 
+import com.lisa.dorb.Saved.UserInfo;
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.Rol;
+import com.lisa.dorb.model.User;
 import com.lisa.dorb.repository.*;
-import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
-import com.vaadin.ui.Button;
-import com.vaadin.ui.HorizontalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
 
@@ -31,14 +30,25 @@ public class Login {
     private List<Rol> getStatus(String naam, String wachtwoord) {
         List<Rol> allRollen;
         try {
-            long user_Id = userRepository.findIdByInlognaamAndWachtwoord(naam, wachtwoord);
-            allRollen = rolRepository.getAllByUser_Id(user_Id);
-
+            User user = userRepository.findAllByInlognaamAndWachtwoord(naam, wachtwoord);
+            allRollen = rolRepository.getAllByUser_Id(user.getID());
+            fillUserInfo(user, allRollen);
         }catch (Exception e){
             return null;
         }
 
         return allRollen;
+    }
+
+    private void fillUserInfo(User user, List<Rol> allRollen) {
+        UserInfo.voornaam = user.getVoornaam();
+        UserInfo.tussenvoegsel = user.getTussenvoegsel();
+        UserInfo.achternaam = user.getAchternaam();
+        UserInfo.user_Id = user.getID();
+        UserInfo.rol = "";
+        for(Rol rol: allRollen){
+            UserInfo.rol = UserInfo.rol+rol.getRol()+";";
+        }
     }
 
 }

@@ -84,7 +84,7 @@ Planners:
 - wachtwoord
 - pagina:
   - pallets in vrachtwagen (filter op datum)
-    - (filter alle orders van die dag op de km van hier vandaan, zet dat in volgorde)
+    - (filter alle orders van die dag op de rit van hier vandaan, zet dat in volgorde)
     - Lijst met orders en pallets
 
 Managers:
@@ -112,19 +112,19 @@ Klanten:
   - order maken pagina
 
 ============================================
-[Systeem]Prijs (input van aantal pallets, [systeem]route.km):
+[Systeem]Prijs (input van aantal pallets, [systeem]route.rit):
 
 1 Pallet:
-- +0,50 * km
+- +0,50 * rit
 
 2 v 3 Pallet:
-- +0,45 * km
+- +0,45 * rit
 
 4 v 5 Pallet:
-- +0,40 * km
+- +0,40 * rit
 
 6 -> Pallet:
-- +0,35 * km
+- +0,35 * rit
 
 Nederland:
 - +0,00
@@ -144,7 +144,7 @@ Luxemburg:
 ============================================
 [systeem]Route (input van adress):
 
-(return km voor user_Id, land voor orders, route voor chauffeurs)
+(return rit voor user_Id, natio voor orders, route voor chauffeurs)
 (maak een lijst met de adressen en laad ze dan in in google maps 
 en als hij daar is ga dan naar de volgende ruimte)
 
@@ -154,7 +154,7 @@ en als hij daar is ga dan naar de volgende ruimte)
 
 Klant:
 - ruimte
-  - welk land (kortste route)
+  - welk natio (kortste route)
 - pallets (aantal)
 - datum (alle bestellingen worden in 1 dag wegebracht)
 
@@ -166,19 +166,19 @@ Vrachtwagen (input aantal pallets, datum):
   - hoeveel pallets in vrachtwagen (pallets (na orde) - pallets die er geordend worden)
 (anders nog een vrachtwagen)
 
-Chauffeurs (input vrachtwagen, datum, [systeem]route.land)
+Chauffeurs (input vrachtwagen, datum, [systeem]route.natio)
 - rijbewijs
   - mag de chauffeur wel op de vrachtwagen
 - datum
   - kan de chauffeur op die datum
   - (kan de chauffeur wel in de week of heeft hij al gewerkt)
 - nationaliteit
-  - kan de chauffeur wel naar dat land?
+  - kan de chauffeur wel naar dat natio?
 
 Prijs (input pallets, [systeem]user_Id)
 - check pallets
-  - * km
-- check land 
+  - * rit
+- check natio
 
 Totaal (return)
 - Klant
@@ -198,7 +198,7 @@ Database:
 
 Nationaliteit:
 - nat_Id
-- land
+- natio
 
 Chauffeurs:
 - user_Id

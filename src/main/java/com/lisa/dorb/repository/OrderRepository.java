@@ -1,6 +1,5 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Admin;
 import com.lisa.dorb.model.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -29,7 +28,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE orders SET prijs = :prijs WHERE order_Id = :id", nativeQuery = true)
-    void updatePrijs(@Param("prijs") long prijs, @Param("id") long id);
+    void updatePrijs(@Param("prijs") String prijs, @Param("id") long id);
 
     @Transactional
     @Modifying(clearAutomatically = true)
