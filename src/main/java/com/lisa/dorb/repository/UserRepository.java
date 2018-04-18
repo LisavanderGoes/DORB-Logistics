@@ -1,24 +1,22 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Chauffeur;
 import com.lisa.dorb.model.Planner;
+import com.lisa.dorb.model.User;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
-import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
-public interface PlannerRepository extends JpaRepository<Planner, Long> {
+public interface UserRepository extends JpaRepository<User, Long> {
 
-    @Query(value = "SELECT * FROM planners", nativeQuery = true)
-    List<Planner> findAll();
+    @Query(value = "SELECT * FROM users", nativeQuery = true)
+    List<User> findAll();
 
-//    @Query(value = "SELECT wachtwoord FROM planners WHERE inlognaam = ?1", nativeQuery = true)
-//    String findWachtwoordByInlognaam(String inlognaam);
-//
+    @Query(value = "SELECT user_Id FROM users WHERE inlognaam = :inlognaam AND wachtwoord = :wachtwoord", nativeQuery = true)
+    long findIdByInlognaamAndWachtwoord(@Param("inlognaam") String inlognaam, @Param("wachtwoord") String wachtwoord);
+
+
 //    @Transactional
 //    @Modifying(clearAutomatically = true)
 //    @Query(value = "UPDATE planners SET voornaam = :voornaam WHERE user_Id = :id", nativeQuery = true)

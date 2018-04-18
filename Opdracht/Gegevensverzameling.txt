@@ -144,7 +144,7 @@ Luxemburg:
 ============================================
 [systeem]Route (input van adress):
 
-(return km voor chauffeur_Id, land voor orders, route voor chauffeurs)
+(return km voor user_Id, land voor orders, route voor chauffeurs)
 (maak een lijst met de adressen en laad ze dan in in google maps 
 en als hij daar is ga dan naar de volgende ruimte)
 
@@ -175,7 +175,7 @@ Chauffeurs (input vrachtwagen, datum, [systeem]route.land)
 - nationaliteit
   - kan de chauffeur wel naar dat land?
 
-Prijs (input pallets, [systeem]chauffeur_Id)
+Prijs (input pallets, [systeem]user_Id)
 - check pallets
   - * km
 - check land 
@@ -230,9 +230,9 @@ Managers:
 Prijzen:
 - prijs_Id
 - pallets
-- chauffeur_Id
+- user_Id
 - nat_Id (key)
-(oproepen met get chauffeur_Id where (landen/pallets) = ...)
+(oproepen met get user_Id where (landen/pallets) = ...)
 
 Orders:
 - order_Id
@@ -243,9 +243,9 @@ Orders:
 - rekeningnummer
 }
 (- vrachtwagen_Id (key) (??))
-(- chauffeur_Id (key) (??))
+(- user_Id (key) (??))
 - ruimte
-- chauffeur_Id
+- user_Id
 - datum
 - aantal pallets
 - rit_Id (key) (kunnen meerdere zijn)
@@ -270,7 +270,7 @@ Rit:
 - datum
 (- order (key) (kunnen meerdere))
 - vrachtwagen_Id (key)
-- chauffeur_Id (key)
+- user_Id (key)
 
 Vrachtwagens:
 - vrachtwagen_Id
@@ -345,7 +345,7 @@ Vrachtwagens:
 - grootst (spinner v radiobutton)
 
 Prijzen:
-- chauffeur_Id
+- user_Id
 
 =============================================
 Wireframes

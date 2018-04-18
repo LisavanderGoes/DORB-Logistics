@@ -1,6 +1,5 @@
 package com.lisa.dorb.layout;
 
-
 import com.lisa.dorb.Saved.OrderItems;
 import com.lisa.dorb.function.OrderMaken;
 import com.lisa.dorb.function.Route;
@@ -10,7 +9,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.vaadin.ui.NumberField;
-
 import javax.annotation.PostConstruct;
 import java.sql.Date;
 
@@ -55,7 +53,7 @@ public class OrderUI extends VerticalLayout implements View {
     }
 
     private void validation() {
-        //try {
+        try {
             if (straatnaam.isEmpty() || plaats.isEmpty() || postcode.isEmpty() || provincie.isEmpty() || land.isEmpty() || datum.isEmpty() || pallet.isEmpty() || aantal.isEmpty()) {
                 send.setValue("Iets is niet ingevuld!");
             } else if (aantal.getValue().contains(",") || aantal.getValue().contains(".")) {
@@ -72,14 +70,13 @@ public class OrderUI extends VerticalLayout implements View {
                 OrderItems.fullDate = Date.valueOf(datum.getValue());
                 OrderItems.fullLand = land.getValue();
                 OrderItems.fullPallet = pallet.getValue();
-                //OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
-                OrderItems.fullAdres = straatnaam.getValue();
+                OrderItems.fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
                 OrderItems.fullAdres = OrderItems.fullAdres.replaceAll("\\s+","");
                 makeOrder();
             }
-//        }catch (Exception e){
-//            send.setValue(e+"");
-//        }
+        }catch (Exception e){
+            send.setValue("Oeps! Er klopt iets niet!");
+        }
     }
 
     private void makeOrder() {

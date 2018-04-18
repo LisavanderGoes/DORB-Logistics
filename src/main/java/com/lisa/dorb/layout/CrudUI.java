@@ -112,21 +112,21 @@ public class CrudUI extends VerticalLayout implements View {
     private void startUI(String ui){
         removeAll();
         switch (ui) {
-            case strings.ADMIN:
-                adminCrud.addTable();
-                break;
-            case strings.KLANT:
-                klantCrud.addTable();
-                break;
-            case strings.CHAUFFEUR:
-                chauffeurCrud.addTable();
-                break;
-            case strings.PLANNER:
-                plannerCrud.addTable();
-                break;
-            case strings.MANAGER:
-                managerCrud.addTable();
-                break;
+//            case strings.ADMIN:
+//                adminCrud.addTable();
+//                break;
+//            case strings.KLANT:
+//                klantCrud.addTable();
+//                break;
+//            case strings.CHAUFFEUR:
+//                chauffeurCrud.addTable();
+//                break;
+//            case strings.PLANNER:
+//                plannerCrud.addTable();
+//                break;
+//            case strings.MANAGER:
+//                managerCrud.addTable();
+//                break;
             case "Order":
                 orderCrud.addTable();
                 break;
@@ -158,6 +158,7 @@ public class CrudUI extends VerticalLayout implements View {
         palletGrid.removeAllColumns();
         prijsGrid.removeAllColumns();
         ritGrid.removeAllColumns();
+        vrachtwagenGrid.removeAllColumns();
     }
 
     private void setupLayout() {

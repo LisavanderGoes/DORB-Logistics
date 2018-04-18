@@ -1,6 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.Login;
+import com.lisa.dorb.model.Rol;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -9,14 +10,12 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
 
 @SpringComponent
-//@Scope("prototype")
 public class LoginUI extends VerticalLayout implements View {
 
-    private VerticalLayout parent;
+    public VerticalLayout parent;
 
     @Autowired
     Login login;
@@ -27,10 +26,10 @@ public class LoginUI extends VerticalLayout implements View {
     @Autowired
     OrderUI orderUI;
 
-
     //UI
-    ComboBox status = new ComboBox("Inloggen als...");
-    Button button = new Button("Inloggen");
+    private HorizontalLayout buttons = new HorizontalLayout();
+    private Button button = new Button("Inloggen");
+    private Button uitlogButton = new Button("Uitloggen");
     Label label = new Label("");
     TextField naam = new TextField("Loginnaam");
     PasswordField wachtwoord = new PasswordField("Wachtwoord");
@@ -40,19 +39,38 @@ public class LoginUI extends VerticalLayout implements View {
         setupLayout();
         addHeader();
         addLayout();
-        setStatus();
     }
 
-    private void buttonClick(){
-            login();
+    private void inloggen(){
+        removeFromLogin();
+        if(login.login(naam.getValue(), wachtwoord.getValue()) != null || !login.login(naam.getValue(), wachtwoord.getValue()).isEmpty()) {
+            List<Rol> allRollen = login.login(naam.getValue(), wachtwoord.getValue());
+            if (allRollen.size() > 1) {
+                for (Rol rol : allRollen) {
+                    Button button = new Button(rol.getRol());
+                    button.addClickListener(new Button.ClickListener() {
+                        public void buttonClick(Button.ClickEvent event) {
+                            login(rol.getRol());
+                        }
+                    });
+                    buttons.addComponent(button);
+                }
+                parent.addComponents(buttons);
+            } else {
+                for (Rol rol : allRollen) {
+                    login(rol.getRol());
+                }
+            }
+        } else {
+            uitloggen();
+        }
+        parent.addComponent(uitlogButton);
     }
 
-    private void login(){
-        String send;
-        send = "";
+    public void login(String status){
+        String send = "";
         try {
-            if(login.login(naam.getValue(), wachtwoord.getValue(), status.getValue().toString())) {
-                switch (status.getValue().toString()) {
+                switch (status) {
                     case strings.ADMIN:
                         getUI().setContent(crudUI);
                         break;
@@ -60,30 +78,31 @@ public class LoginUI extends VerticalLayout implements View {
                         getUI().setContent(orderUI);
                         break;
                     case strings.CHAUFFEUR:
+                        send = "gelukt";
                         break;
                     case strings.PLANNER:
                         break;
                     default:
-                        send = "Iets is niet goed!";
                         break;
                 }
-            } else {
-                send = "Iets is niet goed!";
-            }
-        }catch (NullPointerException e){
-            send = "Null pointer exception:  Inloggen als... is leeg! of Repos is nog niet @Autowired";
+        }catch (Exception e){
+            send = ""+e;
+            uitloggen();
         }
-
         label.setValue(send);
     }
 
-    private void setStatus(){
-        List<String> states = new ArrayList<>();
-        states.add(strings.KLANT);
-        states.add(strings.CHAUFFEUR);
-        states.add(strings.ADMIN);
-        states.add(strings.PLANNER);
-        status.setItems(states);
+    private void removeFromLogin(){
+        buttons.removeAllComponents();
+        parent.removeComponent(buttons);
+    }
+
+    private void uitloggen() {
+        parent.removeComponent(uitlogButton);
+        naam.setValue("");
+        wachtwoord.setValue("");
+        label.setValue("");
+        removeFromLogin();
     }
 
     private void addHeader() {
@@ -93,9 +112,11 @@ public class LoginUI extends VerticalLayout implements View {
     }
 
     private void addLayout() {
-        button.addClickListener(event -> buttonClick());
+        button.addClickListener(event -> inloggen());
+        uitlogButton.addClickListener(event -> uitloggen());
         button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        parent.addComponents(naam, wachtwoord, status, button, label);
+        uitlogButton.addStyleName(ValoTheme.BUTTON_DANGER);
+        parent.addComponents(naam, wachtwoord, button, label);
     }
 
     private void setupLayout() {

@@ -1,91 +1,44 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.repository.AdminRepository;
-import com.lisa.dorb.repository.ChauffeurRepository;
-import com.lisa.dorb.repository.KlantRepository;
-import com.lisa.dorb.repository.PlannerRepository;
+import com.lisa.dorb.layout.LoginUI;
+import com.lisa.dorb.model.Rol;
+import com.lisa.dorb.repository.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
+import com.vaadin.ui.Button;
+import com.vaadin.ui.HorizontalLayout;
 import org.springframework.beans.factory.annotation.Autowired;
 
-@SpringComponent //werkt alleen als ie opgeroepen wordt door @autowire
+
+import java.util.List;
+
+@SpringComponent
 public class Login {
     @Autowired
-    KlantRepository klantRepository;
+    UserRepository userRepository;
     @Autowired
-    ChauffeurRepository chauffeurRepository;
+    RolRepository rolRepository;
     @Autowired
-    AdminRepository adminRepository;
-    @Autowired
-    PlannerRepository plannerRepository;
+    LoginUI loginUI;
 
-    public Boolean login(String naam, String wachtwoord, String status){
-
-        if(naam.equals("") || wachtwoord.equals("")){
-        } else{
-            switch (status){
-                case strings.ADMIN:
-                    return checkManager(naam, wachtwoord);
-                case strings.KLANT:
-                    return checkKlant(naam, wachtwoord);
-                case strings.CHAUFFEUR:
-                    return checkChauffeur(naam, wachtwoord);
-                case strings.PLANNER:
-                    return checkPlanner(naam, wachtwoord);
-            }
+    public List<Rol> login(String naam, String wachtwoord){
+        if(!naam.equals("") || !wachtwoord.equals("")){
+            return getStatus(naam, wachtwoord);
         }
-
         return null;
     }
 
-    public Boolean test(String naam, String wachtwoord){
-        String dbwachtwoord = adminRepository.findWachtwoordByInlognaam(naam);
+    private List<Rol> getStatus(String naam, String wachtwoord) {
+        List<Rol> allRollen;
+        try {
+            long user_Id = userRepository.findIdByInlognaamAndWachtwoord(naam, wachtwoord);
+            allRollen = rolRepository.getAllByUser_Id(user_Id);
 
-            if(wachtwoord.equals(dbwachtwoord)){
-                return true;
-            } else {
-                return false;
-            }
-    }
-
-    public Boolean checkChauffeur(String naam, String wachtwoord){
-        String dbwachtwoord = chauffeurRepository.findWachtwoordByInlognaam(naam);
-
-        if(wachtwoord.equals(dbwachtwoord)){
-            return true;
-        } else {
-            return false;
+        }catch (Exception e){
+            return null;
         }
+
+        return allRollen;
     }
 
-
-    public Boolean checkPlanner(String naam, String wachtwoord){
-        String dbwachtwoord = plannerRepository.findWachtwoordByInlognaam(naam);
-
-        if(wachtwoord.equals(dbwachtwoord)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Boolean checkKlant(String naam, String wachtwoord){
-        String dbwachtwoord = klantRepository.findWachtwoordByInlognaam(naam);
-
-        if(wachtwoord.equals(dbwachtwoord)){
-            return true;
-        } else {
-            return false;
-        }
-    }
-
-    public Boolean checkManager(String naam, String wachtwoord){
-        String dbwachtwoord = adminRepository.findWachtwoordByInlognaam(naam);
-
-        if(wachtwoord.equals(dbwachtwoord)){
-            return true;
-        } else {
-            return false;
-        }
-    }
 }

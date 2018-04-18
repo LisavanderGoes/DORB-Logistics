@@ -29,7 +29,7 @@ public class Main extends UI {
     }
 
     private void in() {
-        setContent(orderUI);
+        setContent(loginUI);
     }
 
 }
