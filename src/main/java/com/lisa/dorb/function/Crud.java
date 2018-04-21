@@ -66,24 +66,24 @@ public class Crud {
 
 
 
-    //region [Chauffeur]
-    public List<Chauffeur> chauffeursList() {
-        return (List<Chauffeur>) chauffeurRepository.findAll();
+    //region [chauffeur]
+    public List<chauffeur> chauffeursList() {
+        return (List<chauffeur>) chauffeurRepository.findAll();
     }
 
-    public void updateVoornaam(Chauffeur chauffeur, String voornaam) {
+    public void updateVoornaam(chauffeur chauffeur, String voornaam) {
         long id = chauffeur.getID();
         chauffeurRepository.updateVoornaam(voornaam, id);
     }
-    public void updateTussenvoegsel(Chauffeur chauffeur, String tussenvoegsel) {
+    public void updateTussenvoegsel(chauffeur chauffeur, String tussenvoegsel) {
         long id = chauffeur.getID();
         chauffeurRepository.updateTussenvoegsel(tussenvoegsel, id);
     }
-    public void updateAchternaam(Chauffeur chauffeur, String achternaam) {
+    public void updateAchternaam(chauffeur chauffeur, String achternaam) {
         long id = chauffeur.getID();
         chauffeurRepository.updateAchternaam(achternaam, id);
     }
-    public String updateInlognaam(Chauffeur chauffeur, String inlognaam) {
+    public String updateInlognaam(chauffeur chauffeur, String inlognaam) {
         long id = chauffeur.getID();
         try {
             chauffeurRepository.updateInlognaam(inlognaam, id);
@@ -92,7 +92,7 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(Chauffeur chauffeur, String wachtwoord) {
+    public String updateWachtwoord(chauffeur chauffeur, String wachtwoord) {
         long id = chauffeur.getID();
         try {
             chauffeurRepository.updateWachtwoord(wachtwoord, id);
@@ -101,7 +101,7 @@ public class Crud {
         }
         return null;
     }
-    public String updateRijbewijs(Chauffeur chauffeur, String rijbewijs) {
+    public String updateRijbewijs(chauffeur chauffeur, String rijbewijs) {
         long id = chauffeur.getID();
         try {
             chauffeurRepository.updateRijbewijs(rijbewijs, id);
@@ -110,7 +110,7 @@ public class Crud {
         }
         return null;
     }
-    public void updateWerkdagen(Chauffeur chauffeur, long werkdagen) {
+    public void updateWerkdagen(chauffeur chauffeur, long werkdagen) {
         long id = chauffeur.getID();
         chauffeurRepository.updateWerkdagen(werkdagen, id);
     }

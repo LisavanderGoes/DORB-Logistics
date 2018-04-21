@@ -2,17 +2,11 @@ package com.lisa.dorb.repository;
 
 import java.util.List;
 
-import com.lisa.dorb.model.Admin;
-import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 
-import com.lisa.dorb.model.Klant;
+import com.lisa.dorb.model.DB.Klant;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
-
-import javax.naming.NamingException;
 
 public interface KlantRepository extends CrudRepository<Klant, Long> {
 

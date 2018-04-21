@@ -1,15 +1,7 @@
 package com.lisa.dorb.layout.crudUI;
 
-import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Chauffeur;
-import com.lisa.dorb.repository.ChauffeurRepository;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @SpringComponent
 public class ChauffeurCrud extends VerticalLayout {
@@ -19,10 +11,10 @@ public class ChauffeurCrud extends VerticalLayout {
 //    @Autowired
 //    ChauffeurRepository repository;
 //
-//    public List<Chauffeur> list; //define inside methode otherwise null
+//    public List<chauffeur> list; //define inside methode otherwise null
 //    private Button deleteBtn;
 //    private Button addBtn;
-//    private Grid<Chauffeur> Grid;
+//    private Grid<chauffeur> Grid;
 //    private long rowId;
 //    private Object rowItem;
 //
@@ -35,7 +27,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        Grid.setCaption("Chauffeurs");
 //        Grid.setSizeFull();
 //        Grid.setSelectionMode(Grid.SelectionMode.NONE);
-//        ListDataProvider<Chauffeur> dataProvider =
+//        ListDataProvider<chauffeur> dataProvider =
 //                DataProvider.ofCollection(list);
 //
 //        Grid.setDataProvider(dataProvider);
@@ -48,41 +40,41 @@ public class ChauffeurCrud extends VerticalLayout {
 //        TextField taskField6 = new TextField();
 //        TextField taskField7 = new TextField();
 //
-//        Grid.addColumn(Chauffeur::getID)
+//        Grid.addColumn(chauffeur::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getVoornaam)
+//        Grid.addColumn(chauffeur::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getTussenvoegsel)
+//        Grid.addColumn(chauffeur::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getAchternaam)
+//        Grid.addColumn(chauffeur::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getRijbewijs)
+//        Grid.addColumn(chauffeur::getRijbewijs)
 //                .setEditorComponent(taskField6, this::setRijbewijs)
 //                .setCaption("Rijbewijs")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getWerkdagen)
+//        Grid.addColumn(chauffeur::getWerkdagen)
 //                .setEditorComponent(taskField7, this::setWerkdagen)
 //                .setCaption("Werkdagen")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getInlognaam)
+//        Grid.addColumn(chauffeur::getInlognaam)
 //                .setEditorComponent(taskField4, this::setInlognaam)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Chauffeur::getWachtwoord)
+//        Grid.addColumn(chauffeur::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
@@ -111,7 +103,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        rowItem = item;
 //    }
 //
-//    private void setWachtwoord(Chauffeur model, String wachtwoord) {
+//    private void setWachtwoord(chauffeur model, String wachtwoord) {
 //        //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //        long id = model.getID();
 //        String snd;
@@ -126,7 +118,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setInlognaam(Chauffeur model, String inlognaam) {
+//    private void setInlognaam(chauffeur model, String inlognaam) {
 //        String snd;
 //        long id = model.getID();
 //        try {
@@ -140,28 +132,28 @@ public class ChauffeurCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setAchternaam(Chauffeur model, String achternaam) {
+//    private void setAchternaam(chauffeur model, String achternaam) {
 //        long id = model.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        model.setAchternaam(achternaam);
 //        Grid.setItems(list);
 //    }
 //
-//    private void setTussenvoegsel(Chauffeur model, String tussenvoegsel) {
+//    private void setTussenvoegsel(chauffeur model, String tussenvoegsel) {
 //        long id = model.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        model.setTussenvoegsel(tussenvoegsel);
 //        Grid.setItems(list);
 //    }
 //
-//    public void setVoornaam(Chauffeur model, String voornaam){
+//    public void setVoornaam(chauffeur model, String voornaam){
 //        long id = model.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        model.setVoornaam(voornaam);
 //        Grid.setItems(list);
 //    }
 //
-//    public void setRijbewijs(Chauffeur model, String rijbewijs){
+//    public void setRijbewijs(chauffeur model, String rijbewijs){
 //        String snd;
 //        long id = model.getID();
 //        try {
@@ -175,7 +167,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    public void setWerkdagen(Chauffeur model, String werkdagen){
+//    public void setWerkdagen(chauffeur model, String werkdagen){
 //        Long newWerkdagen = Long.parseLong(werkdagen);
 //        long id = model.getID();
 //        repository.updateWerkdagen(newWerkdagen, id);
@@ -188,7 +180,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        try {
 //            repository.addRow();
 //            long i = getDBId();
-//            Chauffeur model = new Chauffeur(i, "", "", "", "", 0, "", "");
+//            chauffeur model = new chauffeur(i, "", "", "", "", 0, "", "");
 //            list.add(model);
 //            Grid.setItems(list);
 //            snd = "";

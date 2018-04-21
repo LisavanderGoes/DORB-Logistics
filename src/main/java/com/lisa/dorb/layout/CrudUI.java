@@ -1,7 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.layout.crudUI.*;
-import com.lisa.dorb.model.*;
+import com.lisa.dorb.model.DB.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;

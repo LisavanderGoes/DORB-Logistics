@@ -1,6 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Natio;
+import com.lisa.dorb.model.DB.Natio;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;

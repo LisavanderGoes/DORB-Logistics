@@ -1,7 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.model.NewOrder;
+import com.lisa.dorb.layout.Order.FactureUI;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -9,7 +9,6 @@ import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import javax.annotation.PostConstruct;
-import java.sql.Date;
 
 @SpringComponent
 public class TestUI extends VerticalLayout implements View {

@@ -1,4 +1,4 @@
-package com.lisa.dorb.Saved;
+package com.lisa.dorb.saved;
 
 public class UserInfo {
     static public String voornaam = "";

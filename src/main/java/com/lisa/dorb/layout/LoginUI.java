@@ -1,8 +1,10 @@
 package com.lisa.dorb.layout;
 
-import com.lisa.dorb.Saved.UserInfo;
+import com.lisa.dorb.layout.chauffeur.WerkroosterUI;
+import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.Login;
-import com.lisa.dorb.model.Rol;
+import com.lisa.dorb.layout.Order.OrderUI;
+import com.lisa.dorb.model.DB.Rol;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -26,11 +28,13 @@ public class LoginUI extends VerticalLayout implements View {
     CrudUI crudUI;
     @Autowired
     OrderUI orderUI;
+    @Autowired
+    WerkroosterUI werkroosterUI;
 
     //UI
     private HorizontalLayout buttons = new HorizontalLayout();
-    private Button button = new Button("Inloggen");
-    private Button uitlogButton = new Button("Uitloggen");
+    private Button loginBtn = new Button("Inloggen");
+    public Button uitlogButton = new Button("Uitloggen");
     Label label = new Label("");
     TextField naam = new TextField("Loginnaam");
     PasswordField wachtwoord = new PasswordField("Wachtwoord");
@@ -63,6 +67,7 @@ public class LoginUI extends VerticalLayout implements View {
                 }
             }
             parent.addComponent(uitlogButton);
+            loginBtn.setEnabled(false);
         } else {
             uitloggen();
         }
@@ -79,7 +84,9 @@ public class LoginUI extends VerticalLayout implements View {
                         getUI().setContent(orderUI);
                         break;
                     case strings.CHAUFFEUR:
-                        send = "gelukt";
+                        werkroosterUI.laadWerkrooster();
+                        werkroosterUI.setGrid();
+                        getUI().setContent(werkroosterUI);
                         break;
                     case strings.PLANNER:
                         break;
@@ -100,6 +107,7 @@ public class LoginUI extends VerticalLayout implements View {
     }
 
     private void uitloggen() {
+        loginBtn.setEnabled(true);
         parent.removeComponent(uitlogButton);
         naam.setValue("");
         wachtwoord.setValue("");
@@ -124,11 +132,11 @@ public class LoginUI extends VerticalLayout implements View {
     }
 
     private void addLayout() {
-        button.addClickListener(event -> inloggen());
+        loginBtn.addClickListener(event -> inloggen());
         uitlogButton.addClickListener(event -> uitloggen());
-        button.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        loginBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
         uitlogButton.addStyleName(ValoTheme.BUTTON_DANGER);
-        parent.addComponents(naam, wachtwoord, button, label);
+        parent.addComponents(naam, wachtwoord, loginBtn, label);
     }
 
     private void setupLayout() {

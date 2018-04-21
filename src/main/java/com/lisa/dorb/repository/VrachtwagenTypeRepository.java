@@ -1,14 +1,10 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Vrachtwagen;
-import com.lisa.dorb.model.VrachtwagenType;
+import com.lisa.dorb.model.DB.VrachtwagenType;
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.Date;
 import java.util.List;
 
 public interface VrachtwagenTypeRepository extends JpaRepository<VrachtwagenType, Long> {

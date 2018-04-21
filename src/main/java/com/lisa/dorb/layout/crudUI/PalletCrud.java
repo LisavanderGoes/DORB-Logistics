@@ -1,7 +1,7 @@
 package com.lisa.dorb.layout.crudUI;
 
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Pallet;
+import com.lisa.dorb.model.DB.Pallet;
 import com.lisa.dorb.repository.PalletRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;

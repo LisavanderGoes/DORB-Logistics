@@ -1,8 +1,7 @@
 package com.lisa.dorb.layout.crudUI;
 
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Order;
-import com.lisa.dorb.model.Planner;
+import com.lisa.dorb.model.DB.Order;
 import com.lisa.dorb.repository.OrderRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;

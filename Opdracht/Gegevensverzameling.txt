@@ -5,8 +5,8 @@ Wat als die dag niet kan?
 Wat betekend rijbewijs tot, moet die dag de rijbewijs gedaan worden?
 Staan de werkdagen vast of moet er gekeken worden hoeveel ze al gewerkt hebben in een week?
 Moet wachtwoord gehashed zijn?
-Wat moeten planners doen? (rit inplannen?)
-(Kunnen klanten alleen order per pallet maken?)(??)
+Wat moeten planners doen? (kenteken inplannen?)
+(Kunnen klanten alleen datum per adres maken?)(??)
 Wie moeten de vrachtwagen inladen?
 Moet een klant ingelogd zijn?
 Moet de routbeschrijving google maps zijn?
@@ -68,11 +68,11 @@ Chauffeurs:
 - wachtwoord
 - pagina:
   - werk rooster
-    - order:
+    - datum:
       - datum
       - ruimte
       - vrachtwagen
-      - order
+      - datum
   - route beschrijving
 
 Planners:
@@ -84,7 +84,7 @@ Planners:
 - wachtwoord
 - pagina:
   - pallets in vrachtwagen (filter op datum)
-    - (filter alle orders van die dag op de rit van hier vandaan, zet dat in volgorde)
+    - (filter alle orders van die dag op de kenteken van hier vandaan, zet dat in volgorde)
     - Lijst met orders en pallets
 
 Managers:
@@ -109,22 +109,22 @@ Klanten:
 - rekeningnummer
 - kan orders maken
 - pagina:
-  - order maken pagina
+  - datum maken pagina
 
 ============================================
-[Systeem]Prijs (input van aantal pallets, [systeem]route.rit):
+[Systeem]Prijs (input van aantal pallets, [systeem]route.kenteken):
 
 1 Pallet:
-- +0,50 * rit
+- +0,50 * kenteken
 
 2 v 3 Pallet:
-- +0,45 * rit
+- +0,45 * kenteken
 
 4 v 5 Pallet:
-- +0,40 * rit
+- +0,40 * kenteken
 
 6 -> Pallet:
-- +0,35 * rit
+- +0,35 * kenteken
 
 Nederland:
 - +0,00
@@ -144,7 +144,7 @@ Luxemburg:
 ============================================
 [systeem]Route (input van adress):
 
-(return rit voor user_Id, natio voor orders, route voor chauffeurs)
+(return kenteken voor user_Id, natio voor orders, route voor chauffeurs)
 (maak een lijst met de adressen en laad ze dan in in google maps 
 en als hij daar is ga dan naar de volgende ruimte)
 
@@ -177,7 +177,7 @@ Chauffeurs (input vrachtwagen, datum, [systeem]route.natio)
 
 Prijs (input pallets, [systeem]user_Id)
 - check pallets
-  - * rit
+  - * kenteken
 - check natio
 
 Totaal (return)
@@ -266,9 +266,9 @@ Typevrachtwagens:
 
 Rit:
 - rit_Id
-- ruimte (aantal pallets na order) (??)
+- ruimte (aantal pallets na datum) (??)
 - datum
-(- order (key) (kunnen meerdere))
+(- datum (key) (kunnen meerdere))
 - vrachtwagen_Id (key)
 - user_Id (key)
 
@@ -296,7 +296,7 @@ Curd:
 
 Orders:
 - verwijderen
-- (als meer moet moet hij weer door de order filter)
+- (als meer moet moet hij weer door de datum filter)
 
 Chauffeurs:
 - toevoegen
@@ -361,7 +361,7 @@ Wireframes
 
 - orders maken
 - werkrooster
-- pallet lijst
+- adres lijst
 - route beschrijving
 
 - (bij alles kan uitloggen)

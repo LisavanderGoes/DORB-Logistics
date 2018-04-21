@@ -1,6 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Rit;
+import com.lisa.dorb.model.DB.Rit;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -56,5 +56,8 @@ public interface RitRepository extends JpaRepository<Rit, Long> {
 
     @Query(value = "SELECT * FROM rit WHERE datum = :datum", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
     List<Rit> getByDatum(@Param("datum") Date datum);
+
+    @Query(value = "SELECT * FROM rit WHERE chauffeur_Id = :chauffeur_Id", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
+    List<Rit> getByChauffeur_Id(@Param("chauffeur_Id") long chauffeur_Id);
 
 }

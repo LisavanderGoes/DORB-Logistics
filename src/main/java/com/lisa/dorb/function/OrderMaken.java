@@ -1,8 +1,9 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.Saved.UserInfo;
-import com.lisa.dorb.layout.OrderUI;
+import com.lisa.dorb.saved.UserInfo;
+import com.lisa.dorb.layout.Order.OrderUI;
 import com.lisa.dorb.model.*;
+import com.lisa.dorb.model.DB.*;
 import com.lisa.dorb.repository.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -149,7 +150,7 @@ public class OrderMaken {
                                     } else {
                                         List<Chauffeur> allChauffeurs = null;
                                         List<Long> firstChauffeurs = findChauffeur(datum, vrachtwagen.getID(), landId);
-                                        List<Order> adressen = orderRepository.getAdresByRit_Id(rit_Id);
+                                        List<Order> adressen = orderRepository.getAllByRit_Id(rit_Id);
                                         if (!firstChauffeurs.isEmpty()) {
                                             for (Order adres : adressen) {
                                                 long land_Id = adres.getLand_Id();
@@ -212,11 +213,11 @@ public class OrderMaken {
                 newList.remove(chauffeur_Id);
 
 //                long chauffeur_Id = Integer.parseInt(ritChauffeur.getChauffeur_Id());
-//                List<Chauffeur> chauffeursUsers = new ArrayList<>();
-//                for(Chauffeur user : user_IdByRijbewijs) {
+//                List<chauffeur> chauffeursUsers = new ArrayList<>();
+//                for(chauffeur user : user_IdByRijbewijs) {
 //
 //                }
-//                for(Chauffeur chauffeur : chauffeursUsers){
+//                for(chauffeur chauffeur : chauffeursUsers){
 //                    if(chauffeur_Id != chauffeur.getID()){
 //                        allChauffeurs.add(chauffeur);
 //                    }
@@ -257,7 +258,7 @@ public class OrderMaken {
         if (volgende != null) {
             long typ_Id = vrachtwagenTypeRepository.getIdByVolgorde(volgende);
             List<Rit> vrachtwagenRit = ritRepository.getByDatum(datum);
-            List<Vrachtwagen> vrachtwagenList = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
+            List<Vrachtwagen> vrachtwagenList = vrachtwagenRepository.getAllByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
             if(!vrachtwagenRit.isEmpty()) {
                 for(Vrachtwagen vrachtwagen : vrachtwagenList){
                     newList.add(vrachtwagen.getID());
@@ -267,7 +268,7 @@ public class OrderMaken {
                         newList.remove(vrachtwagen_Id);
                     }
             } else{
-                List<Vrachtwagen> allVrachtwagens = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
+                List<Vrachtwagen> allVrachtwagens = vrachtwagenRepository.getAllByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
                 for(Vrachtwagen vrachtwagen : allVrachtwagens){
                     Long vrachtwagen_Id = Long.valueOf(vrachtwagen.getID());
                     newList.add(vrachtwagen_Id);

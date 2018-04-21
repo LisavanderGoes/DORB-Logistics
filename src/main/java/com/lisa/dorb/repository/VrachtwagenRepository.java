@@ -1,7 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.Order;
-import com.lisa.dorb.model.Vrachtwagen;
+import com.lisa.dorb.model.DB.Vrachtwagen;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -57,6 +56,8 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
     long getTyp_IdById(@Param("id") long id);
 
     @Query(value = "SELECT * FROM vrachtwagens WHERE typ_Id =:typ_Id AND apk !=:datum AND status =:status", nativeQuery = true)
-    List<Vrachtwagen> getIdByTyp_IdAndBeschikbaarheidAndApk(@Param("typ_Id") long typ_Id, @Param("datum") Date datum, @Param("status") String status);
+    List<Vrachtwagen> getAllByTyp_IdAndBeschikbaarheidAndApk(@Param("typ_Id") long typ_Id, @Param("datum") Date datum, @Param("status") String status);
 
+    @Query(value = "SELECT kenteken FROM vrachtwagens WHERE vrachtwagen_Id =:id", nativeQuery = true)
+    String getAllById(@Param("id") long id);
 }

@@ -1,15 +1,7 @@
 package com.lisa.dorb.layout.crudUI;
 
-import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.Klant;
-import com.lisa.dorb.repository.KlantRepository;
-import com.vaadin.data.provider.DataProvider;
-import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
-import org.springframework.beans.factory.annotation.Autowired;
-
-import java.util.List;
 
 @SpringComponent
 public class KlantCrud extends VerticalLayout {

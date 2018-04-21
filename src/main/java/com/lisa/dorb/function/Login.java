@@ -1,9 +1,9 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.Saved.UserInfo;
+import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.layout.LoginUI;
-import com.lisa.dorb.model.Rol;
-import com.lisa.dorb.model.User;
+import com.lisa.dorb.model.DB.Rol;
+import com.lisa.dorb.model.DB.User;
 import com.lisa.dorb.repository.*;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;

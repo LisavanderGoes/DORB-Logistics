@@ -1,11 +1,11 @@
-package com.lisa.dorb.model;
+package com.lisa.dorb.model.DB;
 
 import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(name = "managers")
-public class Manager implements Serializable {
+@Table(name = "admins")
+public class Admin implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -20,17 +20,16 @@ public class Manager implements Serializable {
     @Column(name = "achternaam")
     private String achternaam;
 
-
     @Column(name = "inlognaam")
     private String inlognaam;
 
     @Column(name = "wachtwoord")
     private String wachtwoord;
 
-    protected Manager() {
+    protected Admin() {
     }
 
-    public Manager(long id, String voornaam, String tussenvoegsel, String achternaam, String inlognaam, String wachtwoord) {
+    public Admin(long id, String voornaam, String tussenvoegsel, String achternaam, String inlognaam, String wachtwoord) {
         this.user_Id = id;
         this.voornaam = voornaam;
         this.tussenvoegsel = tussenvoegsel;

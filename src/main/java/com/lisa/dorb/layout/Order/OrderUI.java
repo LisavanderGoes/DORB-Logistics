@@ -1,8 +1,9 @@
-package com.lisa.dorb.layout;
+package com.lisa.dorb.layout.Order;
 
-import com.lisa.dorb.Saved.UserInfo;
+import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.OrderMaken;
 import com.lisa.dorb.function.Route;
+import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.NewOrder;
 import com.lisa.dorb.model.Pallets;
 import com.vaadin.data.provider.DataProvider;
@@ -33,10 +34,10 @@ public class OrderUI extends VerticalLayout implements View {
 
     private VerticalLayout parent;
     private List<Pallets> pallets = new ArrayList<>();
-    public Grid<Pallets> grid = new Grid<>();
     private String fullAdres;
 
     //UI
+    public Grid<Pallets> grid = new Grid<>();
     private TextField straatnaam = new TextField("Straatnaam+Huisnummer");
     private TextField plaats = new TextField("Plaats");
     private TextField postcode = new TextField("Postcode");
@@ -52,7 +53,6 @@ public class OrderUI extends VerticalLayout implements View {
 
     @PostConstruct
     void init() {
-        test();
         setupLayout();
         addHeader();
         addLayout();

@@ -13,7 +13,7 @@ return:
  */
 //Kijk naar km tussen 2 in 1 rit en tussen rit 2 en thuisbase.
 
-import com.lisa.dorb.layout.OrderUI;
+import com.lisa.dorb.layout.Order.OrderUI;
 import com.lisa.dorb.model.Km;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.json.JSONObject;
@@ -127,7 +127,7 @@ public class Route {
             for (Km km: HomeToKm){
                 if(dst.equals(km.getKm())){
                     adr.add(km.getAdres());
-                    //orderUI.send.setValue(orderUI.send.getValue()+km.getOrder()+ "-+-");
+                    //orderUI.send.setValue(orderUI.send.getValue()+km.getDatum()+ "-+-");
                 }
             }
         }

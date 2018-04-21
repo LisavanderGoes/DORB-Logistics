@@ -1,6 +1,10 @@
-package com.lisa.dorb.layout;
+package com.lisa.dorb.layout.Order;
 
+import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.*;
+import com.lisa.dorb.model.DB.Order;
+import com.lisa.dorb.model.DB.Pallet;
+import com.lisa.dorb.model.DB.Rit;
 import com.lisa.dorb.repository.*;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -103,7 +107,7 @@ public class FactureUI extends VerticalLayout implements View {
     }
 
     private void addHeader() {
-        Label header = new Label("ORDER");
+        Label header = new Label("FACATURE");
         header.addStyleName(ValoTheme.LABEL_H1);
         parent.addComponent(header);
     }
