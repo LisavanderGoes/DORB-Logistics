@@ -19,7 +19,7 @@ public interface KlantRepository extends CrudRepository<Klant, Long> {
     @Query(value = "SELECT * FROM klanten", nativeQuery = true)
     List<Klant> findAll();
 
-    @Query(value = "SELECT * FROM klanten WHERE user_Id = :id", nativeQuery = true)
+    @Query(value = "SELECT * FROM klanten WHERE Id = :id", nativeQuery = true)
     Klant findAllById(@Param("id") long id);
 
 //    @Query(value = "SELECT wachtwoord FROM klanten WHERE inlognaam = ?1", nativeQuery = true)
@@ -68,4 +68,10 @@ public interface KlantRepository extends CrudRepository<Klant, Long> {
 //    @Modifying(clearAutomatically = true)
 //    @Query(value = "UPDATE klanten SET rekeningnummer = :rekeningnummer WHERE user_Id = :id", nativeQuery = true)
 //    void updateRekeningummer(@Param("rekeningnummer") String rekeningummer, @Param("id") long id);
+
+    @Query(value = "SELECT Id FROM klanten WHERE user_Id =:id", nativeQuery = true)
+    long getIdByUser_Id(@Param("id") long id);
+
+    @Query(value = "SELECT user_Id FROM klanten WHERE Id =:id", nativeQuery = true)
+    long getUser_IdById(@Param("id") long id);
 }

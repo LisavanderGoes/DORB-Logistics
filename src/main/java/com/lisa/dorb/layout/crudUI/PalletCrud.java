@@ -97,17 +97,17 @@ public class PalletCrud extends VerticalLayout {
         long id = model.getID();
         long newLong = Long.parseLong(order_Id);
         repository.updateOrder_Id(newLong, id);
-        model.setPrijs(newLong);
+//        model.setPrijs(newLong);
         grid.setItems(list);
     }
 
     private void toevoegen() {
         String snd;
        try {
-            repository.addRow();
+//            repository.addRow();
             long id = getDBId();
-            Pallet model = new Pallet(id, 0, "");
-            list.add(model);
+//            Pallet model = new Pallet(id, 0, "");
+//            list.add(model);
             grid.setItems(list);
             snd = "";
         } catch (Exception e) {

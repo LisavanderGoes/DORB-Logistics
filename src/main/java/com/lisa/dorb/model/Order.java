@@ -15,18 +15,14 @@ public class Order implements Serializable {
     @Column(name = "klant_Id")
     private long klant_Id;
 
-    @Column(name = "order")
+    @Column(name = "adres")
     private String adres;
 
     @Column(name = "prijs")
     private String prijs;
 
-
     @Column(name = "datum")
     private Date datum;
-
-    @Column(name = "pallet_Id")
-    private long pallet_Id;
 
     @Column(name = "rit_Id")
     private long rit_Id;
@@ -34,19 +30,18 @@ public class Order implements Serializable {
     @Column(name = "land_Id")
     private long land_Id;
 
-    @Column(name = "palletAantal")
+    @Column(name = "pallet_aantal")
     private long palletAantal;
 
     protected Order() {
     }
 
-    public Order(long id, long klant_Id, String adres, String prijs, Date datum, long pallet_Id, long rit_Id, long land_Id, long palletAantal) {
+    public Order(long id, long klant_Id, String adres, String prijs, Date datum, long rit_Id, long land_Id, long palletAantal) {
         this.order_Id = id;
         this.klant_Id = klant_Id;
         this.adres = adres;
         this.prijs = prijs;
         this.datum = datum;
-        this.pallet_Id = pallet_Id;
         this.rit_Id = rit_Id;
         this.land_Id = land_Id;
         this.palletAantal = palletAantal;
@@ -63,9 +58,6 @@ public class Order implements Serializable {
     }
     public String getDatum(){
         return datum+"";
-    }
-    public String getPallet_Id(){
-        return pallet_Id+"";
     }
     public String getRit_Id(){
         return rit_Id+"";
@@ -96,9 +88,6 @@ public class Order implements Serializable {
         this.datum = datum;
     }
 
-    public void setPallet_Id(long pallet_Id) {
-        this.pallet_Id = pallet_Id;
-    }
     public void setRit_Id(long rit_id) {
         this.rit_Id = rit_id;
     }

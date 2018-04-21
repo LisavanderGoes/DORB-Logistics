@@ -95,7 +95,7 @@ public class RitCrud extends VerticalLayout {
     private void toevoegen() {
         String snd;
         try {
-            repository.addRow();
+//            repository.addRow();
             long id = getDBId();
             Rit model = new Rit(id, 0, 0, null, 0);
             list.add(model);

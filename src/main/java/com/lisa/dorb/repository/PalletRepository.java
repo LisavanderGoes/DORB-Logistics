@@ -32,10 +32,11 @@ public interface PalletRepository extends JpaRepository<Pallet, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO pallets (wat, order_Id)" +
-            "VALUES ('', 0);", nativeQuery = true)
-    void addRow();
+    @Query(value = "INSERT INTO pallets (wat, order_Id, aantal)" +
+            "VALUES (:wat, :order_Id, :aantal);", nativeQuery = true)
+    void addRow(@Param("wat") String wat, @Param("order_Id") long order_Id, @Param("aantal") long aantal);
 
     @Query(value = "SELECT pallet_Id FROM pallets ORDER BY pallet_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
 }

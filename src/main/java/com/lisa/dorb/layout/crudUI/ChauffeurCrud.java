@@ -22,23 +22,23 @@ public class ChauffeurCrud extends VerticalLayout {
 //    public List<Chauffeur> list; //define inside methode otherwise null
 //    private Button deleteBtn;
 //    private Button addBtn;
-//    private Grid<Chauffeur> grid;
+//    private Grid<Chauffeur> Grid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
 //        list = repository.findAll();
-//        grid = crudUI.gridChauffeur;
+//        Grid = crudUI.gridChauffeur;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
 //        addBtn = new Button("Toevoegen");
 //
-//        grid.setCaption("Chauffeurs");
-//        grid.setSizeFull();
-//        grid.setSelectionMode(Grid.SelectionMode.NONE);
+//        Grid.setCaption("Chauffeurs");
+//        Grid.setSizeFull();
+//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
 //        ListDataProvider<Chauffeur> dataProvider =
 //                DataProvider.ofCollection(list);
 //
-//        grid.setDataProvider(dataProvider);
+//        Grid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -48,53 +48,53 @@ public class ChauffeurCrud extends VerticalLayout {
 //        TextField taskField6 = new TextField();
 //        TextField taskField7 = new TextField();
 //
-//        grid.addColumn(Chauffeur::getID)
+//        Grid.addColumn(Chauffeur::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getVoornaam)
+//        Grid.addColumn(Chauffeur::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getTussenvoegsel)
+//        Grid.addColumn(Chauffeur::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getAchternaam)
+//        Grid.addColumn(Chauffeur::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getRijbewijs)
+//        Grid.addColumn(Chauffeur::getRijbewijs)
 //                .setEditorComponent(taskField6, this::setRijbewijs)
 //                .setCaption("Rijbewijs")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getWerkdagen)
+//        Grid.addColumn(Chauffeur::getWerkdagen)
 //                .setEditorComponent(taskField7, this::setWerkdagen)
 //                .setCaption("Werkdagen")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getInlognaam)
+//        Grid.addColumn(Chauffeur::getInlognaam)
 //                .setEditorComponent(taskField4, this::setInlognaam)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Chauffeur::getWachtwoord)
+//        Grid.addColumn(Chauffeur::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 //
-//        grid.addItemClickListener(event ->
+//        Grid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        grid.getEditor().setEnabled(true);
+//        Grid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(grid);
+//        crudUI.table.addComponentsAndExpand(Grid);
 //        addBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
@@ -118,7 +118,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        try {
 //            repository.updateWachtwoord(wachtwoord, id);
 //            model.setWachtwoord(wachtwoord);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -132,7 +132,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
 //            model.setInlognaam(inlognaam);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -144,21 +144,21 @@ public class ChauffeurCrud extends VerticalLayout {
 //        long id = model.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        model.setAchternaam(achternaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void setTussenvoegsel(Chauffeur model, String tussenvoegsel) {
 //        long id = model.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        model.setTussenvoegsel(tussenvoegsel);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    public void setVoornaam(Chauffeur model, String voornaam){
 //        long id = model.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        model.setVoornaam(voornaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    public void setRijbewijs(Chauffeur model, String rijbewijs){
@@ -167,7 +167,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        try {
 //            repository.updateRijbewijs(rijbewijs, id);
 //            model.setRijbewijs(rijbewijs);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        }catch (Exception e) {
 //            snd = "Rijbewijs kan alleen C of D zijn!";
@@ -180,7 +180,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //        long id = model.getID();
 //        repository.updateWerkdagen(newWerkdagen, id);
 //        model.setWerkdagen(newWerkdagen);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void toevoegen() {
@@ -190,7 +190,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //            long i = getDBId();
 //            Chauffeur model = new Chauffeur(i, "", "", "", "", 0, "", "");
 //            list.add(model);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -201,7 +201,7 @@ public class ChauffeurCrud extends VerticalLayout {
 //    private void delete(long id, Object item) {
 //        repository.deleteRow(id);
 //        list.remove(item);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private long getDBId() {

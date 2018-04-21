@@ -35,28 +35,31 @@ public class OrderMaken {
     @Autowired
     LandenRepository landenRepository;
     @Autowired
+    KlantRepository klantRepository;
+    @Autowired
     Route route;
     @Autowired
     OrderUI orderUI;
 
-    private List<Rit> newRitten = new ArrayList<>(); //Maak een list nooit null!!!!
-
     private String send = "";
 
-    public NewOrder makeOrder(Date datum, String adr, String land, int palletAantal){
+    public NewOrder makeOrder(Date datum, String adr, String land, List<Pallets> palletsList){
         //moet nog bestelling in
         //check voor dagen dat chauffeur werkt
-        long klant_Id = UserInfo.user_Id;
+        long klant_Id = klantRepository.getIdByUser_Id(UserInfo.user_Id);
         String adres = "";
         try {
             adres = route.getAdres(strings.ADRES_FROM, adr);
         } catch (Exception e) {
             e.printStackTrace();
         }
+        List<Pallet> pallet = new ArrayList<>();
+        int palletAantal = 0;
+        for(Pallets pallets: palletsList){
+            palletAantal = (int) (palletAantal + pallets.getAantal());
+            pallet.add(new Pallet(0, 0, pallets.getWat(), pallets.getAantal())); //miss aaltal pallets in db
+        }
         String prijs;
-        long pallet_Id;
-        long rit_Id;
-        long ruimte;
         Order order;
         Rit rit;
 
@@ -68,26 +71,24 @@ public class OrderMaken {
             } catch (Exception e) {
                 e.printStackTrace();
             }
-//        round(200.3456, 2);
 
             prijs = String.valueOf(round(findPrijs(km, land, palletAantal), 2));
             if (checkRit(palletAantal, datum, land_Id) != null) {
                 rit = checkRit(palletAantal, datum, land_Id);
-                order = new Order(0, klant_Id, adres, prijs, datum, 0, 0, land_Id, palletAantal);
-                return new NewOrder(order, rit);
+                order = new Order(0, klant_Id, adres, prijs, datum, 0, land_Id, palletAantal);
+                return new NewOrder(order, rit, pallet);
             } else {
                 if (findVrachtwagen(datum, palletAantal, 1 , 0) != null) {
                     Vrachtwagen vrachtwagen;
                     Chauffeur chauffeur;
-                    long vrachtwagen_Id = findVrachtwagen(datum, palletAantal, 1 , 0).get(0).getID();
+                    long vrachtwagen_Id = findVrachtwagen(datum, palletAantal, 1 , 0).get(0);
                     if (findChauffeur(datum, vrachtwagen_Id, land_Id) != null) {
                         //get vars from chauffeur
-                        vrachtwagen = findVrachtwagen(datum, palletAantal, 1, 0).get(0);
-                        chauffeur = findChauffeur(datum, vrachtwagen_Id, land_Id).get(0);
-                        order = new Order(0, klant_Id, adres, prijs, datum, 0, 0, land_Id, palletAantal);
-                        ruimte = vrachtwagenTypeRepository.getRuimteById(Long.parseLong(vrachtwagen.getTyp_Id())) - palletAantal;
-                        rit = new Rit(0, vrachtwagen.getID(), ruimte, datum, chauffeur.getID());
-                        return new NewOrder(order, rit);
+                        vrachtwagen = vrachtwagenRepository.findAllById(findVrachtwagen(datum, palletAantal, 1, 0).get(0));
+                        chauffeur = chauffeurRepository.findAllById(findChauffeur(datum, vrachtwagen_Id, land_Id).get(0));
+                        order = new Order(0, klant_Id, adres, prijs, datum, 0, land_Id, palletAantal);
+                        rit = new Rit(0, vrachtwagen.getID(), palletAantal, datum, chauffeur.getID());
+                        return new NewOrder(order, rit, pallet);
                     } else {
                         orderUI.send.setValue(send);
                     }
@@ -108,6 +109,7 @@ public class OrderMaken {
     }
 
     private Rit checkRit(int palletAantal, Date datum, long landId){ //maak miss class
+        List<Rit> newRitten = new ArrayList<>(); //Maak een list nooit null!!!!
         List<Rit> allRitten = ritRepository.getByDatum(datum);
             //get:
             Vrachtwagen vrachtwagen;
@@ -122,7 +124,7 @@ public class OrderMaken {
                         long ruimteTyp = vrachtwagenTypeRepository.getRuimteById(typ_Id);
                         send = "sad";
                         if (ruimteRit + palletAantal <= ruimteTyp) {
-                            rit.setRuimte(ruimteRit - palletAantal);
+                            rit.setRuimte(ruimteRit + palletAantal);
                             newRitten.add(rit);
                             send = "space";
                         } else {
@@ -132,7 +134,10 @@ public class OrderMaken {
                                 long volgende = vrachtwagenTypeRepository.getVolgordeById(typ_Id);
                                 if (findVrachtwagen(datum, palletAantal, volgende, ruimteRit) != null) {
                                     send = "not grootst";
-                                    vrachtwagen = findVrachtwagen(datum, palletAantal, volgende, ruimteRit).get(0);
+                                    vrachtwagen = vrachtwagenRepository.findAllById(findVrachtwagen(datum, palletAantal, volgende, ruimteRit).get(0));
+                                    rit.setVrachtwagen_Id(vrachtwagen.getID());
+                                    typ_Id = Integer.parseInt(vrachtwagen.getTyp_Id());
+                                    rit.setRuimte(ruimteRit + palletAantal);
                                     String rijbewijsTypeVrachtwagen = vrachtwagenTypeRepository.getRijbewijsById(typ_Id);
                                     String rijbewijsChauffeur = chauffeurRepository.getRijbewijsById(chauffeur_Id);
                                     if (rijbewijsChauffeur.equals(rijbewijsTypeVrachtwagen)) {
@@ -143,18 +148,18 @@ public class OrderMaken {
                                         send = "added to list with D";
                                     } else {
                                         List<Chauffeur> allChauffeurs = null;
-                                        List<Chauffeur> firstChauffeurs = findChauffeur(datum, vrachtwagen.getID(), landId);
+                                        List<Long> firstChauffeurs = findChauffeur(datum, vrachtwagen.getID(), landId);
                                         List<Order> adressen = orderRepository.getAdresByRit_Id(rit_Id);
-                                        if (firstChauffeurs != null) {
+                                        if (!firstChauffeurs.isEmpty()) {
                                             for (Order adres : adressen) {
                                                 long land_Id = adres.getLand_Id();
                                                 if (findChauffeur(datum, vrachtwagen.getID(), land_Id) != null) {
-                                                    List<Chauffeur> secondChauffeurs = findChauffeur(datum, vrachtwagen.getID(), land_Id);
+                                                    List<Long> secondChauffeurs = findChauffeur(datum, vrachtwagen.getID(), land_Id);
                                                     allChauffeurs = new ArrayList<>();
-                                                    for (Chauffeur second : secondChauffeurs) {
-                                                        for (Chauffeur first : firstChauffeurs) {
-                                                            if (second.getID() == first.getID()) {
-                                                                allChauffeurs.add(second);
+                                                    for (Long second : secondChauffeurs) {
+                                                        for (Long first : firstChauffeurs) {
+                                                            if (second == first) {
+                                                                allChauffeurs.add(chauffeurRepository.findAllById(second));
                                                             }
                                                         }
                                                     }
@@ -164,11 +169,14 @@ public class OrderMaken {
                                         if(allChauffeurs != null) {
                                             if (!allChauffeurs.isEmpty()) {
                                                 chauffeur = allChauffeurs.get(0);
+                                                rit.setChauffeur_Id(chauffeur.getID());
                                                 newRitten.add(rit);
                                                 send = "added chauffeur";
                                             }
                                         }
                                     }
+                                } else {
+                                    return null;
                                 }
                             }
                         }
@@ -183,43 +191,50 @@ public class OrderMaken {
         return null;
     }
 
-    private List<Chauffeur> findChauffeur(Date datum, long vrachtwagen_Id, long land_Id) {
+    private List<Long> findChauffeur(Date datum, long vrachtwagen_Id, long land_Id) {
         //check op werkdagen
         List<Chauffeur> allChauffeurs = new ArrayList<>();
         String rijbewijs = vrachtwagenTypeRepository.getRijbewijsById(vrachtwagenRepository.getTyp_IdById(vrachtwagen_Id));
         List<Rit> chauffeurList = ritRepository.getByDatum(datum);
+        List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
+        List<Long> newList = new ArrayList<>();
         if(!chauffeurList.isEmpty()) {
-            for(Rit ritChauffeur: chauffeurList){
-                long chauffeur_Id = Integer.parseInt(ritChauffeur.getChauffeur_Id());
-                List<Chauffeur> chauffeursUsers = new ArrayList<>();
-                List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
-                for(Chauffeur user : user_IdByRijbewijs) {
-                    List<Natio> landen = natioRepository.getAllByChauffeur_Id(user.getID());
-                    for(Natio natio : landen){
-                        if(natio.getLand_Id() == land_Id){
-                            chauffeursUsers.add(user);
-                        }
-                    }
-                }
-                for(Chauffeur chauffeur : chauffeursUsers){
-                    if(chauffeur_Id != chauffeur.getID()){
-                        allChauffeurs.add(chauffeur);
+            for(Chauffeur chauffeur: user_IdByRijbewijs){
+                List<Natio> landen = natioRepository.getAllByChauffeur_Id(chauffeur.getUser_Id());
+                for(Natio natio : landen){
+                    if(natio.getLand_Id() == land_Id){
+                        newList.add(chauffeur.getID());
                     }
                 }
             }
+            for(Rit rit: chauffeurList){
+                Long chauffeur_Id = Long.parseLong(rit.getChauffeur_Id());
+                newList.remove(chauffeur_Id);
+
+//                long chauffeur_Id = Integer.parseInt(ritChauffeur.getChauffeur_Id());
+//                List<Chauffeur> chauffeursUsers = new ArrayList<>();
+//                for(Chauffeur user : user_IdByRijbewijs) {
+//
+//                }
+//                for(Chauffeur chauffeur : chauffeursUsers){
+//                    if(chauffeur_Id != chauffeur.getID()){
+//                        allChauffeurs.add(chauffeur);
+//                    }
+//                }
+            }
         } else{
-            List<Chauffeur> user_IdByRijbewijs = chauffeurRepository.getAllByRijbewijs(rijbewijs);
-            for(Chauffeur user : user_IdByRijbewijs) {
-                List<Natio> landen = natioRepository.getAllByChauffeur_Id(user.getID());
+            for(Chauffeur chauffeur: user_IdByRijbewijs){
+                List<Natio> landen = natioRepository.getAllByChauffeur_Id(chauffeur.getUser_Id());
                 for(Natio natio : landen){
                     if(natio.getLand_Id() == land_Id){
-                        allChauffeurs.add(user);
+                        newList.add(chauffeur.getID());
                     }
                 }
             }
         }
-        if(!allChauffeurs.isEmpty()){
-            return allChauffeurs;
+        if(!newList.isEmpty()) {
+            send = "tot hier";
+            return newList;
         }
         return null;
     }
@@ -235,40 +250,39 @@ public class OrderMaken {
         return (prijsPallets * km) + prijsLand;
     }
 
-    private List<Vrachtwagen> findVrachtwagen(Date datum, int palletAantal, long volg, long ruimte) {
-        List<Vrachtwagen> allVrachtwagens = new ArrayList<>();
-        long volgende = checkVolgorde(volg, palletAantal,ruimte);
-        if (volgende != volg) {
+    private List<Long> findVrachtwagen(Date datum, int palletAantal, long volg, long ruimte) {
+
+        Long volgende = checkVolgorde(volg, palletAantal,ruimte);
+        List<Long> newList = new ArrayList<>();
+        if (volgende != null) {
             long typ_Id = vrachtwagenTypeRepository.getIdByVolgorde(volgende);
             List<Rit> vrachtwagenRit = ritRepository.getByDatum(datum);
+            List<Vrachtwagen> vrachtwagenList = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
             if(!vrachtwagenRit.isEmpty()) {
-                for (Rit rit : vrachtwagenRit) {
-                    List<Vrachtwagen> vrachtwagenList = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
-                    for (Vrachtwagen vrachtwagen : vrachtwagenList) {
-                        if (Integer.parseInt(rit.getVrachtwagen_Id()) != vrachtwagen.getID()) {
-                            allVrachtwagens.add(vrachtwagen);
-                        } else {
-                            send = "problem here";
-                        }
-                    }
+                for(Vrachtwagen vrachtwagen : vrachtwagenList){
+                    newList.add(vrachtwagen.getID());
                 }
+                    for (Rit rit : vrachtwagenRit) {
+                        Long vrachtwagen_Id = Long.parseLong(rit.getVrachtwagen_Id());
+                        newList.remove(vrachtwagen_Id);
+                    }
             } else{
-                allVrachtwagens = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
+                List<Vrachtwagen> allVrachtwagens = vrachtwagenRepository.getIdByTyp_IdAndBeschikbaarheidAndApk(typ_Id, datum, "beschikbaar");
+                for(Vrachtwagen vrachtwagen : allVrachtwagens){
+                    Long vrachtwagen_Id = Long.valueOf(vrachtwagen.getID());
+                    newList.add(vrachtwagen_Id);
+                }
                 send = "geen ritten die datum";
             }
-        } else{
-            send = "here is problem";
         }
-        if(!allVrachtwagens.isEmpty()){
+        if(!newList.isEmpty()){
             send = "tot hier";
-            return allVrachtwagens;
-        } else {
-            send = "still null";
+            return newList;
         }
         return null;
     }
 
-    private long checkVolgorde(long volgende, int palletAantal, long ruimteRit){
+    private Long checkVolgorde(Long volgende, int palletAantal, long ruimteRit){
         volgende = volgende + 1;
         long typ_Id = vrachtwagenTypeRepository.getIdByVolgorde(volgende);
         long ruimte = vrachtwagenTypeRepository.getRuimteById(typ_Id);
@@ -278,9 +292,10 @@ public class OrderMaken {
             String grootst = vrachtwagenTypeRepository.getGrootstById(typ_Id);
             if (!grootst.equals("true")) {
                 volgende = checkVolgorde(volgende, palletAantal, ruimteRit);
+                return volgende;
             }
         }
-        return volgende;
+        return null;
     }
 
 //region [Rittencheck]

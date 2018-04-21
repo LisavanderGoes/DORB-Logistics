@@ -9,16 +9,10 @@ public class Chauffeur implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    private long id;
+
+    @Column(name = "user_Id")
     private long user_Id;
-
-    @Column(name = "voornaam")
-    private String voornaam;
-
-    @Column(name = "tussenvoegsel")
-    private String tussenvoegsel;
-
-    @Column(name = "achternaam")
-    private String achternaam;
 
     @Column(name = "rijbewijs")
     private String rijbewijs;
@@ -26,79 +20,40 @@ public class Chauffeur implements Serializable {
     @Column(name = "werkdagen")
     private long werkdagen;
 
-    @Column(name = "inlognaam")
-    private String inlognaam;
-
-    @Column(name = "wachtwoord")
-    private String wachtwoord;
-
     protected Chauffeur() {
     }
 
-    public Chauffeur(long id, String voornaam, String tussenvoegsel, String achternaam, String rijbewijs, long werkdagen, String inlognaam, String wachtwoord) {
-        this.user_Id = id;
-        this.voornaam = voornaam;
-        this.tussenvoegsel = tussenvoegsel;
-        this.achternaam = achternaam;
+    public Chauffeur(long id, long user_Id, String rijbewijs, long werkdagen) {
+        this.id = id;
+        this.user_Id = user_Id;
         this.rijbewijs = rijbewijs;
         this.werkdagen = werkdagen;
-        this.inlognaam = inlognaam;
-        this.wachtwoord = wachtwoord;
     }
 
     @Override
     public String toString() {
-        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", user_Id, voornaam, achternaam);
+        return String.format("Customer[id=%d, firstName='%s', lastName='%s']", user_Id);
     }
 
-    public String getWachtwoord(){
-        return wachtwoord;
-    }
-    public String getVoornaam(){
-        return voornaam;
-    }
-    public String getTussenvoegsel(){
-        return tussenvoegsel;
-    }
-    public String getAchternaam(){
-        return achternaam;
-    }
-    public String getInlognaam(){
-        return inlognaam;
-    }
     public String getRijbewijs(){
         return rijbewijs;
+    }
+    public long getUser_Id(){
+        return user_Id;
     }
     public String getWerkdagen(){
         String s = String.valueOf(werkdagen);
         return s;
     }
     public long getID() {
-        return user_Id;
-    }
-
-    public void setVoornaam(String voornaam) {
-        this.voornaam = voornaam;
-    }
-
-    public void setTussenvoegsel(String tussenvoegsel) {
-        this.tussenvoegsel = tussenvoegsel;
-    }
-
-    public void setAchternaam(String achternaam) {
-        this.achternaam = achternaam;
-    }
-
-    public void setInlognaam(String inlognaam) {
-        this.inlognaam = inlognaam;
-    }
-
-    public void setWachtwoord(String wachtwoord) {
-        this.wachtwoord = wachtwoord;
+        return id;
     }
 
     public void setRijbewijs(String rijbewijs) {
         this.rijbewijs = rijbewijs;
+    }
+    public void setUser_Id(long user_Id) {
+        this.user_Id = user_Id;
     }
 
     public void setWerkdagen(long werkdagen) {

@@ -22,23 +22,23 @@ public class AdminCrud extends VerticalLayout {
 //    private List<Admin> list; //define inside methode otherwise null
 //    private Button deleteBtn;
 //    private Button addBtn;
-//    private Grid<Admin> grid;
+//    private Grid<Admin> Grid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
 //        list = repository.findAll();
-//        grid = crudUI.gridAdmin;
+//        Grid = crudUI.gridAdmin;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
 //        addBtn = new Button("Toevoegen");
 //
-//        grid.setCaption("Admins");
-//        grid.setSizeFull();
-//        grid.setSelectionMode(Grid.SelectionMode.NONE);
+//        Grid.setCaption("Admins");
+//        Grid.setSizeFull();
+//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
 //        ListDataProvider<Admin> dataProvider =
 //                DataProvider.ofCollection(list);
 //
-//        grid.setDataProvider(dataProvider);
+//        Grid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -46,43 +46,43 @@ public class AdminCrud extends VerticalLayout {
 //        TextField taskField4 = new TextField();
 //        TextField taskField5 = new TextField();
 //
-//        grid.addColumn(Admin::getID)
+//        Grid.addColumn(Admin::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Admin::getVoornaam)
+//        Grid.addColumn(Admin::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Admin::getTussenvoegsel)
+//        Grid.addColumn(Admin::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Admin::getAchternaam)
+//        Grid.addColumn(Admin::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Admin::getInlognaam)
+//        Grid.addColumn(Admin::getInlognaam)
 //                .setEditorComponent(taskField4, this::setInlognaam)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Admin::getWachtwoord)
+//        Grid.addColumn(Admin::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 //
-//        grid.addItemClickListener(event ->
+//        Grid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        grid.getEditor().setEnabled(true);
+//        Grid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(grid);
+//        crudUI.table.addComponentsAndExpand(Grid);
 //        addBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
@@ -106,7 +106,7 @@ public class AdminCrud extends VerticalLayout {
 //        try {
 //            repository.updateWachtwoord(wachtwoord, id);
 //            admin.setWachtwoord(wachtwoord);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -120,7 +120,7 @@ public class AdminCrud extends VerticalLayout {
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
 //            admin.setInlognaam(inlognaam);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -132,21 +132,21 @@ public class AdminCrud extends VerticalLayout {
 //        long id = admin.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        admin.setAchternaam(achternaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void setTussenvoegsel(Admin admin, String tussenvoegsel) {
 //        long id = admin.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        admin.setTussenvoegsel(tussenvoegsel);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    public void setVoornaam(Admin admin, String voornaam) {
 //        long id = admin.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        admin.setVoornaam(voornaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void test(String s){
@@ -162,7 +162,7 @@ public class AdminCrud extends VerticalLayout {
 //            long id = getDBId();
 //            Admin admin = new Admin(id, "", "", "", "", "");
 //            list.add(admin);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -173,7 +173,7 @@ public class AdminCrud extends VerticalLayout {
 //        private void delete (long id, Object item){
 //            repository.deleteRow(id);
 //            list.remove(item);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //        }
 //
 //        private long getDBId() {

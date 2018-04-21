@@ -24,24 +24,24 @@ public class PlannerCrud extends VerticalLayout {
 //    private List<Planner> list; //define inside methode otherwise null
 //    private Button deleteBtn;
 //    private Button addBtn;
-//    private Grid<Planner> grid;
+//    private Grid<Planner> Grid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
 //        list = repository.findAll();
-//        grid = crudUI.plannerGrid;
+//        Grid = crudUI.plannerGrid;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
 //        addBtn = new Button("Toevoegen");
 //
 //
-//        grid.setCaption("Planners");
-//        grid.setSizeFull();
-//        grid.setSelectionMode(Grid.SelectionMode.NONE);
+//        Grid.setCaption("Planners");
+//        Grid.setSizeFull();
+//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
 //        ListDataProvider<Planner> dataProvider =
 //                DataProvider.ofCollection(list);
 //
-//        grid.setDataProvider(dataProvider);
+//        Grid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -49,43 +49,43 @@ public class PlannerCrud extends VerticalLayout {
 //        TextField taskField4 = new TextField();
 //        TextField taskField5 = new TextField();
 //
-//        grid.addColumn(Planner::getID)
+//        Grid.addColumn(Planner::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Planner::getVoornaam)
+//        Grid.addColumn(Planner::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Planner::getTussenvoegsel)
+//        Grid.addColumn(Planner::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Planner::getAchternaam)
+//        Grid.addColumn(Planner::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Planner::getInlognaam)
+//        Grid.addColumn(Planner::getInlognaam)
 //                .setEditorComponent(taskField4, this::setInlognaam)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Planner::getWachtwoord)
+//        Grid.addColumn(Planner::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 //
-//        grid.addItemClickListener(event ->
+//        Grid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        grid.getEditor().setEnabled(true);
+//        Grid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(grid);
+//        crudUI.table.addComponentsAndExpand(Grid);
 //        addBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
@@ -109,7 +109,7 @@ public class PlannerCrud extends VerticalLayout {
 //        try {
 //            repository.updateWachtwoord(wachtwoord, id);
 //            model.setWachtwoord(wachtwoord);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -123,7 +123,7 @@ public class PlannerCrud extends VerticalLayout {
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
 //            model.setInlognaam(inlognaam);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -135,21 +135,21 @@ public class PlannerCrud extends VerticalLayout {
 //        long id = model.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        model.setAchternaam(achternaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void setTussenvoegsel(Planner model, String tussenvoegsel) {
 //        long id = model.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        model.setTussenvoegsel(tussenvoegsel);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    public void setVoornaam(Planner model, String voornaam){
 //        long id = model.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        model.setVoornaam(voornaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void toevoegen() {
@@ -159,7 +159,7 @@ public class PlannerCrud extends VerticalLayout {
 //            long id = getDBId();
 //            Planner model = new Planner(id, "", "", "", "", "");
 //            list.add(model);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -170,7 +170,7 @@ public class PlannerCrud extends VerticalLayout {
 //    private void delete(long id, Object item) {
 //        repository.deleteRow(id);
 //        list.remove(item);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private long getDBId() {

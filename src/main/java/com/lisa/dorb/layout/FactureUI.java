@@ -1,20 +1,16 @@
 package com.lisa.dorb.layout;
 
-import com.lisa.dorb.Saved.OrderItems;
-import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.function.Route;
-import com.lisa.dorb.model.NewOrder;
-import com.lisa.dorb.model.VrachtwagenType;
+import com.lisa.dorb.model.*;
 import com.lisa.dorb.repository.*;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.vaadin.ui.NumberField;
 
 import javax.annotation.PostConstruct;
 import java.sql.Date;
+import java.util.List;
 
 @SpringComponent
 public class FactureUI extends VerticalLayout implements View {
@@ -29,8 +25,15 @@ public class FactureUI extends VerticalLayout implements View {
     VrachtwagenTypeRepository vrachtwagenTypeRepository;
     @Autowired
     LandenRepository landenRepository;
+    @Autowired
+    RitRepository ritRepository;
+    @Autowired
+    OrderRepository orderRepository;
+    @Autowired
+    PalletRepository palletRepository;
 
     private VerticalLayout parent;
+    private NewOrder newOrder;
 
     //UI
     private Label klant = new Label("");
@@ -40,8 +43,6 @@ public class FactureUI extends VerticalLayout implements View {
     private Label datum = new Label("");
     private Label pallet = new Label("");
     private Label palletAantal = new Label("");
-    private Label land = new Label("");
-
     private Label send = new Label("");
     private Button terugBtn = new Button("Annuleren");
     private Button order = new Button("Akoord");
@@ -60,27 +61,45 @@ public class FactureUI extends VerticalLayout implements View {
         order.addClickListener(event -> akoord());
     }
 
-    public void setComponents(NewOrder order){
-        klant.setValue(userRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getVoornaam() +" " +
-                userRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getTussenvoegsel() +" " +
-                userRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getAchternaam() +" ");
+    void setComponents(NewOrder order){
+        klant.setValue(userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getVoornaam() +" " +
+                userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getTussenvoegsel() +" " +
+                userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getAchternaam() +" ");
         reknmr.setValue(klantRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getRekeningnummer());
         adres.setValue(order.getOrder().getAdres());
-        prijs.setValue(order.getOrder().getPrijs());
+        prijs.setValue(order.getOrder().getPrijs() + " euro");
         datum.setValue(order.getOrder().getDatum());
-        pallet.setValue(order.getOrder().getPallet_Id()); //en stuff
+        for(Pallet pallets : order.getPallet()) {
+            pallet.setValue(pallet.getValue() + pallets.getWat() + "/");
+        }
         palletAantal.setValue(order.getOrder().getPalletAantal());
-        land.setValue(landenRepository.getLandenByLand_Id(order.getOrder().getLand_Id()));
+        newOrder = order;
     }
 
     private void akoord() {
+        Long rit_Id;
+        if(newOrder.getRit().getID() != 0){
+            Rit rit = newOrder.getRit();
+            ritRepository.updateAll(Integer.parseInt(rit.getChauffeur_Id()), Integer.parseInt(rit.getVrachtwagen_Id()), Integer.parseInt(rit.getRuimte()), rit.getID());
+            rit_Id = rit.getID();
+        } else {
+            Rit rit = newOrder.getRit();
+            //error: [solved] chauffeur_Id is niet het user_Id
+            ritRepository.addRow(Integer.parseInt(rit.getChauffeur_Id()), Integer.parseInt(rit.getVrachtwagen_Id()), Integer.parseInt(rit.getRuimte()), Date.valueOf(rit.getDatum()));
+            rit_Id = ritRepository.getId();
+        }
+        Order order = newOrder.getOrder();
+        //in order model is rit_Id nog steeds 0
+        //error: [solved] klant_Id is niet het user_Id
+        orderRepository.addRow(order.getAdres(), order.getPrijs(), Integer.parseInt(order.getKlant_Id()), Date.valueOf(order.getDatum()), rit_Id, order.getLand_Id(), Integer.parseInt(order.getPalletAantal()));
+        long order_Id = orderRepository.getId();
+        List<Pallet> pallets = newOrder.getPallet();
+        //in pallet model is order_Id nog steeds 0
+        for(Pallet pallet : pallets) {
+            palletRepository.addRow(pallet.getWat(), order_Id, Integer.parseInt(pallet.getAantal()));
+        }
         send.setValue("U bent akoord gegaan!");
-        //to db
-        //first rit
-        //then pallet
-        //get id from both
-        //set new id in order
-        //order to db
+        terugBtn.setCaption("Terug naar login");
     }
 
     private void addHeader() {
@@ -98,8 +117,7 @@ public class FactureUI extends VerticalLayout implements View {
         datum.setCaption("Datum:");
         pallet.setCaption("Bestelt:");
         palletAantal.setCaption("Aantal:");
-        land.setCaption("Land:");
-        layout1.addComponents(klant, reknmr, adres, prijs, datum, pallet, palletAantal, land);
+        layout1.addComponents(klant, reknmr, adres, prijs, datum, pallet, palletAantal);
 
         VerticalLayout layout2 = new VerticalLayout();
         layout2.addComponents(order, terugBtn, send);
@@ -111,6 +129,8 @@ public class FactureUI extends VerticalLayout implements View {
     }
 
     private void terugButtonClick() {
+        send.setValue("");
+        terugBtn.setCaption("Annuleren");
         getUI().setContent(loginUI);
     }
 

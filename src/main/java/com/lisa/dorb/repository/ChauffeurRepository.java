@@ -69,9 +69,15 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
     @Query(value = "SELECT user_Id FROM chauffeurs ORDER BY user_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
 
-    @Query(value = "SELECT rijbewijs FROM chauffeurs WHERE user_Id = :id", nativeQuery = true)
+    @Query(value = "SELECT rijbewijs FROM chauffeurs WHERE id = :id", nativeQuery = true)
     String getRijbewijsById(@Param("id") long id);
 
     @Query(value = "SELECT * FROM chauffeurs WHERE rijbewijs = :rijbewijs", nativeQuery = true)
     List<Chauffeur> getAllByRijbewijs(@Param("rijbewijs") String rijbewijs);
+
+    @Query(value = "SELECT * FROM chauffeurs WHERE id = :id", nativeQuery = true)
+    Chauffeur findAllById(@Param("id") long id);
+
+    @Query(value = "SELECT Id FROM chauffeurs WHERE user_Id =:id", nativeQuery = true)
+    long getIdByUser_Id(@Param("id") long id);
 }

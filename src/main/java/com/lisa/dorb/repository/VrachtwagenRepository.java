@@ -16,6 +16,9 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
     @Query(value = "SELECT * FROM vrachtwagens", nativeQuery = true)
     List<Vrachtwagen> findAll();
 
+    @Query(value = "SELECT * FROM vrachtwagens WHERE vrachtwagen_Id = :id", nativeQuery = true)
+    Vrachtwagen findAllById(@Param("id") long id);
+
     @Transactional
     @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE vrachtwagens SET kenteken = :kenteken WHERE vrachtwagen_Id = :id", nativeQuery = true)

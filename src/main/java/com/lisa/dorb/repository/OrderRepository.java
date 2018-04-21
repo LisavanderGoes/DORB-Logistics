@@ -52,9 +52,9 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO orders (adres, prijs)" +
-            "VALUES ('', 0);", nativeQuery = true)
-    void addRow();
+    @Query(value = "INSERT INTO orders (adres, prijs, klant_Id, datum, rit_Id, land_Id, pallet_aantal)" +
+            "VALUES (:adres, :prijs, :klant_Id, :datum, :rit_Id, :land_Id, :pallet_aantal);", nativeQuery = true)
+    void addRow(@Param("adres") String adres, @Param("prijs") String prijs, @Param("klant_Id") long klant_Id, @Param("datum") Date datum, @Param("rit_Id") long rit_Id, @Param("land_Id") long land_Id, @Param("pallet_aantal") long pallet_aantal);
 
     @Query(value = "SELECT order_Id FROM orders ORDER BY order_Id DESC LIMIT 1", nativeQuery = true)
     long getId();

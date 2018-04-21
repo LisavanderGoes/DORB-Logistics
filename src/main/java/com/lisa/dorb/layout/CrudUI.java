@@ -1,6 +1,5 @@
 package com.lisa.dorb.layout;
 
-import com.lisa.dorb.function.Crud;
 import com.lisa.dorb.layout.crudUI.*;
 import com.lisa.dorb.model.*;
 import com.lisa.dorb.values.strings;
@@ -9,10 +8,8 @@ import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.lang.Nullable;
 
 import javax.annotation.PostConstruct;
-import java.util.List;
 
 @SpringComponent
 public class CrudUI extends VerticalLayout implements View {

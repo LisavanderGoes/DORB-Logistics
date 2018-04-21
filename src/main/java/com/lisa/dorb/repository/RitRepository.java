@@ -36,15 +36,20 @@ public interface RitRepository extends JpaRepository<Rit, Long> {
     void updateChauffeur_Id(@Param("chauffeur_Id") long chauffeur_Id, @Param("id") long id);
 
     @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE rit SET chauffeur_Id = :chauffeur_Id, ruimte = :ruimte, vrachtwagen_Id = :vrachtwagen_Id WHERE rit_Id = :id", nativeQuery = true)
+    void updateAll(@Param("chauffeur_Id") long chauffeur_Id, @Param("vrachtwagen_Id") long vrachtwagen_Id, @Param("ruimte") long ruimte, @Param("id") long id);
+
+    @Transactional
     @Modifying
     @Query(value = "DELETE FROM rit WHERE rit_Id =:id", nativeQuery = true)
     void deleteRow(@Param("id") long id);
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO rit (ruimte, vrachtwagen_Id, chauffeur_Id)" +
-            "VALUES (0, 0, 0);", nativeQuery = true)
-    void addRow();
+    @Query(value = "INSERT INTO rit (ruimte, vrachtwagen_Id, chauffeur_Id, datum)" +
+            "VALUES (:ruimte, :vrachtwagen_Id, :chauffeur_Id, :datum);", nativeQuery = true)
+    void addRow(@Param("chauffeur_Id") long chauffeur_Id, @Param("vrachtwagen_Id") long vrachtwagen_Id, @Param("ruimte") long ruimte, @Param("datum") Date datum);
 
     @Query(value = "SELECT rit_Id FROM rit ORDER BY rit_Id DESC LIMIT 1", nativeQuery = true)
     long getId();

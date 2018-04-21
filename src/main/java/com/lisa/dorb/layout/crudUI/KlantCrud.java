@@ -22,23 +22,23 @@ public class KlantCrud extends VerticalLayout {
 //    public List<Klant> list; //define inside methode otherwise null
 //    public Button deleteBtn;
 //    public Button addBtn;
-//    private Grid<Klant> grid;
+//    private Grid<Klant> Grid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
 //        list = repository.findAll();
-//        grid = crudUI.gridKlant;
+//        Grid = crudUI.gridKlant;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
 //        addBtn = new Button("Toevoegen");
 //
-//        grid.setCaption("Klanten");
-//        grid.setSizeFull();
-//        grid.setSelectionMode(Grid.SelectionMode.NONE);
+//        Grid.setCaption("Klanten");
+//        Grid.setSizeFull();
+//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
 //        ListDataProvider<Klant> dataProvider =
 //                DataProvider.ofCollection(list);
 //
-//        grid.setDataProvider(dataProvider);
+//        Grid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -47,48 +47,48 @@ public class KlantCrud extends VerticalLayout {
 //        TextField taskField4 = new TextField();
 //        TextField taskField5 = new TextField();
 //
-//        grid.addColumn(Klant::getID)
+//        Grid.addColumn(Klant::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getVoornaam)
+//        Grid.addColumn(Klant::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getTussenvoegsel)
+//        Grid.addColumn(Klant::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getAchternaam)
+//        Grid.addColumn(Klant::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getRekeningnummer)
+//        Grid.addColumn(Klant::getRekeningnummer)
 //                .setEditorComponent(taskField6, this::setRekeningnummer)
 //                .setCaption("Rekeningnummer")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getInlognaam)
+//        Grid.addColumn(Klant::getInlognaam)
 //                .setEditorComponent(taskField4, this::setInlognaam)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        grid.addColumn(Klant::getWachtwoord)
+//        Grid.addColumn(Klant::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
 //
-//        grid.addItemClickListener(event ->
+//        Grid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        grid.getEditor().setEnabled(true);
+//        Grid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(grid);
+//        crudUI.table.addComponentsAndExpand(Grid);
 //        addBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
@@ -119,7 +119,7 @@ public class KlantCrud extends VerticalLayout {
 //        try {
 //            repository.updateWachtwoord(wachtwoord, id);
 //            klant.setWachtwoord(wachtwoord);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -133,7 +133,7 @@ public class KlantCrud extends VerticalLayout {
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
 //            klant.setInlognaam(inlognaam);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -145,21 +145,21 @@ public class KlantCrud extends VerticalLayout {
 //        long id = klant.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        klant.setAchternaam(achternaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void setTussenvoegsel(Klant klant, String tussenvoegsel) {
 //        long id = klant.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        klant.setTussenvoegsel(tussenvoegsel);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    public void setVoornaam(Klant klant, String voornaam){
 //        long id = klant.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        klant.setVoornaam(voornaam);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private void test(String s){
@@ -175,7 +175,7 @@ public class KlantCrud extends VerticalLayout {
 //            long id = getDBId();
 //            Klant model = new Klant(id, "", "", "", "", "", "");
 //            list.add(model);
-//            grid.setItems(list);
+//            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -186,7 +186,7 @@ public class KlantCrud extends VerticalLayout {
 //    private void delete(long id, Object item) {
 //        repository.deleteRow(id);
 //        list.remove(item);
-//        grid.setItems(list);
+//        Grid.setItems(list);
 //    }
 //
 //    private long getDBId() {

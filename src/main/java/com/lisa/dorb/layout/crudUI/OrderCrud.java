@@ -75,11 +75,6 @@ public class OrderCrud extends VerticalLayout {
                 .setCaption("Datum")
                 .setExpandRatio(2);
 
-        grid.addColumn(Order::getPallet_Id)
-                .setEditorComponent(taskField5, this::setPallet_Id) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-                .setCaption("Pallet_Id")
-                .setExpandRatio(2);
-
         grid.addColumn(Order::getRit_Id)
                 .setEditorComponent(taskField6, this::setRit_Id) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
                 .setCaption("Rit_Id")
@@ -139,14 +134,6 @@ public class OrderCrud extends VerticalLayout {
         long id = model.getID();
         repository.updateDatum(date, id);
         model.setDatum(date);
-        grid.setItems(list);
-    }
-
-    public void setPallet_Id(Order model, String pallet_Id){
-        long newLong = Long.parseLong(pallet_Id);
-        long id = model.getID();
-        repository.updatePallet_Id(newLong, id);
-        model.setPallet_Id(newLong);
         grid.setItems(list);
     }
 
