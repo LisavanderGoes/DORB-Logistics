@@ -69,8 +69,8 @@ public class ChauffeurCrud extends VerticalLayout {
 //                .setCaption("Werkdagen")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(chauffeur::getInlognaam)
-//                .setEditorComponent(taskField4, this::setInlognaam)
+//        Grid.addColumn(chauffeur::getUser_Id)
+//                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
@@ -118,12 +118,12 @@ public class ChauffeurCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setInlognaam(chauffeur model, String inlognaam) {
+//    private void setUser_Id(chauffeur model, String inlognaam) {
 //        String snd;
 //        long id = model.getID();
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
-//            model.setInlognaam(inlognaam);
+//            model.setUser_Id(inlognaam);
 //            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {

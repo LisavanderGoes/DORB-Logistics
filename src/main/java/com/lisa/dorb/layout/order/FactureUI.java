@@ -1,10 +1,10 @@
-package com.lisa.dorb.layout.Order;
+package com.lisa.dorb.layout.order;
 
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.*;
-import com.lisa.dorb.model.DB.Order;
-import com.lisa.dorb.model.DB.Pallet;
-import com.lisa.dorb.model.DB.Rit;
+import com.lisa.dorb.model.db.Order;
+import com.lisa.dorb.model.db.Pallet;
+import com.lisa.dorb.model.db.Rit;
 import com.lisa.dorb.repository.*;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;

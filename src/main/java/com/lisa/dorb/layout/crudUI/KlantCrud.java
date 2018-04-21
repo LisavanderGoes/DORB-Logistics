@@ -63,8 +63,8 @@ public class KlantCrud extends VerticalLayout {
 //                .setCaption("Rekeningnummer")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getInlognaam)
-//                .setEditorComponent(taskField4, this::setInlognaam)
+//        Grid.addColumn(Klant::getUser_Id)
+//                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
@@ -119,12 +119,12 @@ public class KlantCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setInlognaam(Klant klant, String inlognaam) {
+//    private void setUser_Id(Klant klant, String inlognaam) {
 //        String snd;
 //        long id = klant.getID();
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
-//            klant.setInlognaam(inlognaam);
+//            klant.setUser_Id(inlognaam);
 //            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {

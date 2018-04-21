@@ -57,8 +57,8 @@ public class ManagerCrud extends VerticalLayout {
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Manager::getInlognaam)
-//                .setEditorComponent(taskField4, this::setInlognaam)
+//        Grid.addColumn(Manager::getUser_Id)
+//                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
@@ -106,12 +106,12 @@ public class ManagerCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setInlognaam(Manager model, String inlognaam) {
+//    private void setUser_Id(Manager model, String inlognaam) {
 //        String snd;
 //        long id = model.getID();
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
-//            model.setInlognaam(inlognaam);
+//            model.setUser_Id(inlognaam);
 //            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {

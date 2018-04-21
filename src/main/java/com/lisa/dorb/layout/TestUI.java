@@ -1,7 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.layout.Order.FactureUI;
+import com.lisa.dorb.layout.order.FactureUI;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;

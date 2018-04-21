@@ -1,9 +1,10 @@
 package com.lisa.dorb.function;
 
+import com.lisa.dorb.model.db.users.Chauffeur;
 import com.lisa.dorb.saved.UserInfo;
-import com.lisa.dorb.layout.Order.OrderUI;
+import com.lisa.dorb.layout.order.OrderUI;
 import com.lisa.dorb.model.*;
-import com.lisa.dorb.model.DB.*;
+import com.lisa.dorb.model.db.*;
 import com.lisa.dorb.repository.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -192,7 +193,7 @@ public class OrderMaken {
         return null;
     }
 
-    private List<Long> findChauffeur(Date datum, long vrachtwagen_Id, long land_Id) {
+    public List<Long> findChauffeur(Date datum, long vrachtwagen_Id, long land_Id) {
         //check op werkdagen
         List<Chauffeur> allChauffeurs = new ArrayList<>();
         String rijbewijs = vrachtwagenTypeRepository.getRijbewijsById(vrachtwagenRepository.getTyp_IdById(vrachtwagen_Id));
@@ -251,7 +252,7 @@ public class OrderMaken {
         return (prijsPallets * km) + prijsLand;
     }
 
-    private List<Long> findVrachtwagen(Date datum, int palletAantal, long volg, long ruimte) {
+    public List<Long> findVrachtwagen(Date datum, int palletAantal, long volg, long ruimte) {
 
         Long volgende = checkVolgorde(volg, palletAantal,ruimte);
         List<Long> newList = new ArrayList<>();
@@ -310,7 +311,7 @@ public class OrderMaken {
         // get typ_Id from vrachtwagen where vrachtwagen_Id == vrachtwagen_Id
         // get ruimte van vrachtwagenType where typ_Id == typ_Id
         // if ruimte + palletAantal !> ruimte vrachtwagenType
-            //DB update rit in ruimte where rit_Id == rit_Id
+            //db update rit in ruimte where rit_Id == rit_Id
             //return true
         // if ruimte + palletAantal > ruimte vrachtwagenType
             // get grootst van vrachtwagenType
@@ -350,11 +351,11 @@ public class OrderMaken {
                                             //if findChauffeur(datum, vrachtwagen_Id, land) == null
                                                 //return false
                                             //if findChauffeur(datum, vrachtwagen_Id, land) != null
-                                                //DB update rit in vrachtwagen_Id && ruimte && chauffeur_Id where rit_Id == rit_Id
+                                                //db update rit in vrachtwagen_Id && ruimte && chauffeur_Id where rit_Id == rit_Id
                                                 //return true
 
                                 //if rijbewijs_Id == rijbewijs_Id
-                                    //DB update rit in vrachtwagen_Id && ruimte where rit_Id == rit_Id
+                                    //db update rit in vrachtwagen_Id && ruimte where rit_Id == rit_Id
                                     //return true
 
                                         //check ook op het land van nieuwe orde

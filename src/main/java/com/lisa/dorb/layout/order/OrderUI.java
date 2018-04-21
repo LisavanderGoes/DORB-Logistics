@@ -1,4 +1,4 @@
-package com.lisa.dorb.layout.Order;
+package com.lisa.dorb.layout.order;
 
 import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.OrderMaken;
@@ -49,7 +49,7 @@ public class OrderUI extends VerticalLayout implements View {
     public Button addBtn = new Button("+");
     private TextField pallet = new TextField("Wat wilt u bestellen?");
     private NumberField aantal = new NumberField("Hoeveel pallets?");
-    private Button order = new Button("Order maken");
+    private Button order = new Button("order maken");
 
     @PostConstruct
     void init() {

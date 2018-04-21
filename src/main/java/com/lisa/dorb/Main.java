@@ -2,7 +2,7 @@ package com.lisa.dorb;
 
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.layout.Order.OrderUI;
+import com.lisa.dorb.layout.order.OrderUI;
 import com.lisa.dorb.layout.TestUI;
 import com.vaadin.server.VaadinRequest;
 import com.vaadin.spring.annotation.SpringUI;

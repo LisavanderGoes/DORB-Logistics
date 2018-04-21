@@ -1,4 +1,4 @@
-package com.lisa.dorb.model.DB;
+package com.lisa.dorb.model.db;
 
 import javax.persistence.*;
 import java.io.Serializable;

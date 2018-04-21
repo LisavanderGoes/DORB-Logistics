@@ -1,12 +1,7 @@
 package com.lisa.dorb.model;
 
-import com.lisa.dorb.model.DB.Order;
-import com.lisa.dorb.model.DB.Pallet;
-import com.lisa.dorb.model.DB.Rit;
-
 import java.io.Serializable;
 import java.sql.Date;
-import java.util.List;
 
 
 public class Werkrooster implements Serializable {

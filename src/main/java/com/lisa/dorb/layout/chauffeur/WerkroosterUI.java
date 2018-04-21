@@ -3,9 +3,9 @@ package com.lisa.dorb.layout.chauffeur;
 import com.lisa.dorb.function.OrderMaken;
 import com.lisa.dorb.function.Route;
 import com.lisa.dorb.layout.LoginUI;
-import com.lisa.dorb.layout.Order.FactureUI;
-import com.lisa.dorb.model.DB.Order;
-import com.lisa.dorb.model.DB.Rit;
+import com.lisa.dorb.layout.order.FactureUI;
+import com.lisa.dorb.model.db.Order;
+import com.lisa.dorb.model.db.Rit;
 import com.lisa.dorb.model.Werkrooster;
 import com.lisa.dorb.repository.*;
 import com.lisa.dorb.saved.UserInfo;
@@ -59,13 +59,13 @@ public class WerkroosterUI extends VerticalLayout implements View {
         addHeader();
         addLayout();
         addOnclick();
-//        setGrid();
+//        setGridOrder();
     }
 
     public void laadWerkrooster() {
         long chauffeur_Id = chauffeurRepository.getIdByUser_Id(UserInfo.user_Id);
         for(Rit rit: ritRepository.getByChauffeur_Id(chauffeur_Id)){
-            String kenteken = vrachtwagenRepository.getAllById(Integer.parseInt(rit.getVrachtwagen_Id()));
+            String kenteken = vrachtwagenRepository.getKentekenById(Integer.parseInt(rit.getVrachtwagen_Id()));
             String adressen = "";
             long i = 0;
             List<String> adres = new ArrayList<>();

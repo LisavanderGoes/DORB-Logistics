@@ -57,8 +57,8 @@ public class AdminCrud extends VerticalLayout {
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getInlognaam)
-//                .setEditorComponent(taskField4, this::setInlognaam)
+//        Grid.addColumn(Admin::getUser_Id)
+//                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
@@ -106,12 +106,12 @@ public class AdminCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setInlognaam(Admin admin, String inlognaam) {
+//    private void setUser_Id(Admin admin, String inlognaam) {
 //        String snd;
 //        long id = admin.getID();
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
-//            admin.setInlognaam(inlognaam);
+//            admin.setUser_Id(inlognaam);
 //            Grid.setItems(list);
 //            snd = "";
 //        } catch (Exception e) {

@@ -1,6 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.DB.Prijs;
+import com.lisa.dorb.model.db.Prijs;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;

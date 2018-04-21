@@ -1,6 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.DB.Chauffeur;
+import com.lisa.dorb.model.db.users.Chauffeur;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -75,4 +75,7 @@ public interface ChauffeurRepository extends JpaRepository<Chauffeur, Long> {
 
     @Query(value = "SELECT Id FROM chauffeurs WHERE user_Id =:id", nativeQuery = true)
     long getIdByUser_Id(@Param("id") long id);
+
+    @Query(value = "SELECT user_Id FROM chauffeurs WHERE id = :id", nativeQuery = true)
+    long findUser_IdAllById(@Param("id") long id);
 }

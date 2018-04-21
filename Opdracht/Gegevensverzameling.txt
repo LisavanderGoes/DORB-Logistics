@@ -64,7 +64,7 @@ Chauffeurs:
 - tussenvoegsel
 - achternaam
 - werkdagen (min 1, max 5)
-- inlognaam
+- user_Id
 - wachtwoord
 - pagina:
   - werk rooster
@@ -80,7 +80,7 @@ Planners:
 - voornaam
 - tusselvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 - pagina:
   - pallets in vrachtwagen (filter op datum)
@@ -208,7 +208,7 @@ Chauffeurs:
 - rijbewijs (key) (kunnen meerdere)
 - nat_Id (key) (kunnen meerdere)
 - werkdagen (aantal)
-- inlognaam
+- user_Id
 - wachtwoord
 
 Planners:
@@ -216,7 +216,7 @@ Planners:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Managers:
@@ -224,7 +224,7 @@ Managers:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Prijzen:
@@ -307,35 +307,35 @@ Chauffeurs:
 - rijbewijs (spinner v radiobutton)
 - nationaliteit (spinner met alle opties van nationaliteit)
 - werkdagen (aantal)
-- inlognaam
+- user_Id
 - wachtwoord
 
 Managers:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Admins:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Klanten:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Planners:
 - voornaam
 - tussenvoegsel
 - achternaam
-- inlognaam
+- user_Id
 - wachtwoord
 
 Vrachtwagens:

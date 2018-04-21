@@ -1,7 +1,8 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.layout.crudUI.*;
-import com.lisa.dorb.model.DB.*;
+import com.lisa.dorb.model.db.*;
+import com.lisa.dorb.model.db.users.*;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -61,7 +62,7 @@ public class CrudUI extends VerticalLayout implements View {
     public Button crudChauffeurBtn = new Button(strings.CHAUFFEUR);
     public Button crudPlannerBtn = new Button(strings.PLANNER);
     public Button crudManagerBtn = new Button(strings.MANAGER);
-    public Button crudOrderBtn = new Button("Order");
+    public Button crudOrderBtn = new Button("order");
     public Button crudVrachtwagenBtn = new Button("Vrachtwagen");
     public Button crudPrijsBtn = new Button("Prijs");
     public Button crudPalletBtn = new Button("Pallet");
@@ -91,7 +92,7 @@ public class CrudUI extends VerticalLayout implements View {
         crudPlannerBtn.addClickListener(event -> startUI(strings.PLANNER));
         crudManagerBtn.addClickListener(event -> startUI(strings.MANAGER));
         crudVrachtwagenBtn.addClickListener(event -> startUI("Vrachtwagen"));
-        crudOrderBtn.addClickListener(event -> startUI("Order"));
+        crudOrderBtn.addClickListener(event -> startUI("order"));
         crudPrijsBtn.addClickListener(event -> startUI("Prijs"));
         crudPalletBtn.addClickListener(event -> startUI("Pallet"));
         crudRitBtn.addClickListener(event -> startUI("Rit"));
@@ -124,7 +125,7 @@ public class CrudUI extends VerticalLayout implements View {
 //            case strings.MANAGER:
 //                managerCrud.addTable();
 //                break;
-            case "Order":
+            case "order":
                 orderCrud.addTable();
                 break;
             case "Vrachtwagen":

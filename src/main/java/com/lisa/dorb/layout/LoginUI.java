@@ -3,8 +3,8 @@ package com.lisa.dorb.layout;
 import com.lisa.dorb.layout.chauffeur.WerkroosterUI;
 import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.Login;
-import com.lisa.dorb.layout.Order.OrderUI;
-import com.lisa.dorb.model.DB.Rol;
+import com.lisa.dorb.layout.order.OrderUI;
+import com.lisa.dorb.model.db.Rol;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -30,6 +30,8 @@ public class LoginUI extends VerticalLayout implements View {
     OrderUI orderUI;
     @Autowired
     WerkroosterUI werkroosterUI;
+    @Autowired
+    PlannerUI plannerUI;
 
     //UI
     private HorizontalLayout buttons = new HorizontalLayout();
@@ -89,6 +91,9 @@ public class LoginUI extends VerticalLayout implements View {
                         getUI().setContent(werkroosterUI);
                         break;
                     case strings.PLANNER:
+                        plannerUI.laadOrderPlanner();
+                        plannerUI.setGridOrder();
+                        getUI().setContent(plannerUI);
                         break;
                     default:
                         break;
@@ -97,7 +102,6 @@ public class LoginUI extends VerticalLayout implements View {
             send = ""+e;
             uitloggen();
         }
-        send = UserInfo.voornaam+" "+UserInfo.tussenvoegsel+" "+UserInfo.achternaam+" "+UserInfo.rol+" "+UserInfo.user_Id;
         label.setValue(send);
     }
 

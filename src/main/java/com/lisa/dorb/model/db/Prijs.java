@@ -1,8 +1,7 @@
-package com.lisa.dorb.model.DB;
+package com.lisa.dorb.model.db;
 
 import javax.persistence.*;
 import java.io.Serializable;
-import java.sql.Date;
 
 @Entity
 @Table(name = "prijzen")

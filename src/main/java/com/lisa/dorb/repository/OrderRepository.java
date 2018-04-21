@@ -1,6 +1,6 @@
 package com.lisa.dorb.repository;
 
-import com.lisa.dorb.model.DB.Order;
+import com.lisa.dorb.model.db.Order;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -64,4 +64,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Query(value = "SELECT land_Id FROM orders WHERE order_Id =:id", nativeQuery = true)
     long getLand_IdById(@Param("id") long id);
+
+    @Query(value = "SELECT * FROM orders WHERE order_Id =:id", nativeQuery = true)
+    Order getAllById(@Param("id") long id);
 }
