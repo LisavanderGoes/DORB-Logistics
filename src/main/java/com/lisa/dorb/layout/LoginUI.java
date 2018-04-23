@@ -1,6 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.layout.chauffeur.WerkroosterUI;
+import com.lisa.dorb.layout.planner.PlannerUI;
 import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.Login;
 import com.lisa.dorb.layout.order.OrderUI;
@@ -91,8 +92,7 @@ public class LoginUI extends VerticalLayout implements View {
                         getUI().setContent(werkroosterUI);
                         break;
                     case strings.PLANNER:
-                        plannerUI.laadOrderPlanner();
-                        plannerUI.setGridOrder();
+                        plannerUI.startUI(strings.ORDER);
                         getUI().setContent(plannerUI);
                         break;
                     default:

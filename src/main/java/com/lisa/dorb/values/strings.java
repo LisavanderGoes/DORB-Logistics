@@ -10,5 +10,6 @@ public class strings {
     public static final String UITLOGGEN = "Uitloggen";
     public static final String INLOGGEN = "Inloggen";
     public static final String ADRES_FROM = "Zijpendaalseweg167,6814CJArnhem,Nederland";
-
+    public static final String ORDER = "order";
+    public static final String USERS = "users";
 }

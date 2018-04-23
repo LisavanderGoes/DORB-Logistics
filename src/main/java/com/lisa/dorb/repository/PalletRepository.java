@@ -25,6 +25,11 @@ public interface PalletRepository extends JpaRepository<Pallet, Long> {
     void updateOrder_Id(@Param("order_Id") long order_Id, @Param("id") long id);
 
     @Transactional
+    @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE pallets SET aantal = :aantal WHERE pallet_Id = :id", nativeQuery = true)
+    void updateAantal(@Param("aantal") long aantal, @Param("id") long id);
+
+    @Transactional
     @Modifying
     @Query(value = "DELETE FROM pallets WHERE pallet_Id =:id", nativeQuery = true)
     void deleteRow(@Param("id") long id);
@@ -37,5 +42,8 @@ public interface PalletRepository extends JpaRepository<Pallet, Long> {
 
     @Query(value = "SELECT pallet_Id FROM pallets ORDER BY pallet_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
+
+    @Query(value = "SELECT * FROM pallets WHERE order_Id = :id", nativeQuery = true)
+    List<Pallet> getAllByOrder_Id(@Param("id") long id);
 
 }

@@ -1,33 +1,28 @@
-package com.lisa.dorb.layout;
+package com.lisa.dorb.layout.planner.sideLayout;
 
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.function.Route;
 import com.lisa.dorb.layout.order.FactureUI;
+import com.lisa.dorb.layout.planner.PlannerUI;
 import com.lisa.dorb.model.OrderPlanner;
 import com.lisa.dorb.model.db.Order;
+import com.lisa.dorb.model.db.Pallet;
 import com.lisa.dorb.model.db.Rit;
 import com.lisa.dorb.model.db.users.User;
 import com.lisa.dorb.repository.*;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
-import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import javax.annotation.PostConstruct;
 import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
 @SpringComponent
-public class PlannerUI extends VerticalLayout implements View {
+public class OrdersLayout extends VerticalLayout {
 
-    @Autowired
-    LoginUI loginUI;
-    @Autowired
-    Route route;
     @Autowired
     OrderMaken orderMaken;
     @Autowired
@@ -41,33 +36,37 @@ public class PlannerUI extends VerticalLayout implements View {
     @Autowired
     VrachtwagenRepository vrachtwagenRepository;
     @Autowired
+    VrachtwagenTypeRepository vrachtwagenTypeRepository;
+    @Autowired
     KlantRepository klantRepository;
     @Autowired
     UserRepository userRepository;
+    @Autowired
+    PalletRepository palletRepository;
+    @Autowired
+    PlannerUI plannerUI;
 
-    private VerticalLayout parent;
+
     private List<OrderPlanner> orderList = new ArrayList<>();
+    private List<Pallet> palletsList = new ArrayList<>();
 
     private long rowId;
     private Object rowItem;
 
 
     //UI
+    private HorizontalLayout gridLayout = new HorizontalLayout();
     public Grid<OrderPlanner> grid = new Grid<>();
-    private Button terugBtn = new Button("Terug");
+    private Grid<Pallet> gridDetail = new Grid<>();
     private Button chauffeurBtn = new Button("Verander chauffeur");
-    private Button vrachtwagenBtn = new Button("Verander vrahtwagen");
+    private Button vrachtwagenBtn = new Button("Verander vrachtwagen/ in onderhoud zetten");
+    private Button detailsBtn = new Button("Details");
     public Label send = new Label("");
 
-    @PostConstruct
-    void init() {
-        setupLayout();
-        addHeader();
-        addLayout();
-        addOnclick();
-    }
 
     public void laadOrderPlanner() {
+        addOnclick();
+        addLayout();
         for(Order order : orderRepository.findAll()){
             User chauffeur = userRepository.findAllById(chauffeurRepository.findUser_IdAllById(Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getChauffeur_Id())));
             User klant = userRepository.findAllById(klantRepository.findAllById(Integer.parseInt(order.getKlant_Id())).getUser_Id());
@@ -82,7 +81,12 @@ public class PlannerUI extends VerticalLayout implements View {
         grid.setItems(orderList);
     }
 
-    public void setGridOrder() { //rit_Id erbij
+    private void laadDetails(long rowId) {
+        palletsList = palletRepository.getAllByOrder_Id(rowId);
+        gridDetail.setItems(palletsList);
+    }
+
+    public void setGridOrder() {
         grid.setCaption("Pallets");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -90,6 +94,7 @@ public class PlannerUI extends VerticalLayout implements View {
                 DataProvider.ofCollection(orderList);
 
         grid.setDataProvider(dataProvider);
+
 
         grid.addColumn(OrderPlanner::getRit_Id)
                 .setCaption("Rit Id")
@@ -123,7 +128,53 @@ public class PlannerUI extends VerticalLayout implements View {
                 setID(event.getItem().getId(), event.getItem()));
 
         grid.getEditor().setEnabled(false);
-        parent.addComponentsAndExpand(grid);
+        gridLayout.addComponentsAndExpand(grid);
+    }
+
+    private void setGridDetails() {
+        Grid<Pallet> grid = gridDetail;
+        grid.setCaption("Details");
+        grid.setSizeFull();
+        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        ListDataProvider<Pallet> dataProvider =
+                DataProvider.ofCollection(palletsList);
+
+        grid.setDataProvider(dataProvider);
+
+        TextField taskField = new TextField();
+
+        grid.addColumn(Pallet::getWat)
+                .setCaption("Wat?")
+                .setExpandRatio(2);
+
+        grid.addColumn(Pallet::getAantal)
+                .setEditorComponent(taskField, this::setAantal)
+                .setCaption("Aantal")
+                .setExpandRatio(2);
+
+        grid.getEditor().setEnabled(true);
+        gridLayout.addComponentsAndExpand(grid);
+    }
+
+    private void setAantal(Pallet pallet, String aantal) {
+        int allAantalInOrder = Integer.parseInt(aantal) - Integer.parseInt(pallet.getAantal());
+        for(Pallet pallets : palletRepository.getAllByOrder_Id(Integer.parseInt(pallet.getOrder_Id()))){
+            allAantalInOrder = allAantalInOrder + Integer.parseInt(pallets.getAantal());
+        }
+        if(allAantalInOrder <= 20) {
+            long ruimte = vrachtwagenTypeRepository.getRuimteById(vrachtwagenRepository.getTyp_IdById(Integer.parseInt(ritRepository.getById(Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getRit_Id())).getVrachtwagen_Id())));
+            if (allAantalInOrder > ruimte) {
+                Order order = orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id()));
+                List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), allAantalInOrder, 1, 0);
+                List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), vrachtwagen.get(0), order.getLand_Id());
+                ritRepository.updateChauffeur_Id(chauffeurs.get(0), Integer.parseInt(order.getRit_Id()));
+                ritRepository.updateVrachtwagen_Id(vrachtwagen.get(0), Integer.parseInt(order.getRit_Id()));
+                reload();
+            }
+        }
+        palletRepository.updateAantal(Integer.parseInt(aantal), pallet.getID());
+        pallet.setAantal(Integer.parseInt(aantal));
+        gridDetail.setItems(palletsList);
     }
 
     private void setID(long id, Object item) {
@@ -147,6 +198,7 @@ public class PlannerUI extends VerticalLayout implements View {
         List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), Integer.parseInt(rit.getRuimte()), 1, 0);
         long vrachtwagen_Id = vrachtwagen.get(0);
         ritRepository.updateVrachtwagen_Id(vrachtwagen_Id, rit_Id);
+        vrachtwagenRepository.updateStatus("onderhoud", Integer.parseInt(rit.getVrachtwagen_Id()));
         reload();
     }
 
@@ -156,10 +208,16 @@ public class PlannerUI extends VerticalLayout implements View {
     }
 
     private void addOnclick() {
-        terugBtn.addClickListener(event -> terugButtonClick());
         chauffeurBtn.addClickListener(event -> changeChauffeur((int) rowId));
         vrachtwagenBtn.addClickListener(event -> changeVrachtwagen((int) rowId));
-        terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        detailsBtn.addClickListener(event -> details());
+    }
+
+    private void details() {
+        palletsList.clear();
+        gridDetail.removeAllColumns();
+        laadDetails(rowId);
+        setGridDetails();
     }
 
     private void sendError(String send){
@@ -168,29 +226,17 @@ public class PlannerUI extends VerticalLayout implements View {
         Notification.show(send);
     }
 
-    private void addHeader() {
-        Label header = new Label("WERKROOSTER");
-        header.addStyleName(ValoTheme.LABEL_H1);
-        parent.addComponent(header);
-    }
-
     private void addLayout() {
-        HorizontalLayout layout2 = new HorizontalLayout();
-        layout2.addComponents(chauffeurBtn, vrachtwagenBtn, terugBtn, send);
+        gridLayout = plannerUI.gridLayout;
+        grid = plannerUI.gridOrders;
+        gridDetail = plannerUI.gridDetail;
+        orderList = plannerUI.orderList;
+        palletsList = plannerUI.palletsList;
 
-        parent.addComponent(layout2);
-    }
+        HorizontalLayout layout2 = plannerUI.buttons;
+        layout2.addComponents(chauffeurBtn, vrachtwagenBtn, detailsBtn, send);
 
-    private void terugButtonClick() {
-        orderList.clear();
-        grid.removeAllColumns();
-        getUI().setContent(loginUI);
-    }
-
-    private void setupLayout() {
-        parent = new VerticalLayout();
-        parent.setDefaultComponentAlignment(Alignment.MIDDLE_CENTER);
-        addComponentsAndExpand(parent);
+        plannerUI.parent.addComponent(layout2);
     }
 }
 
