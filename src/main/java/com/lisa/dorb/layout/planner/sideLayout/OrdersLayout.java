@@ -176,7 +176,7 @@ public class OrdersLayout extends VerticalLayout {
      * @param aantal = nieuwe aantal
      */
     private void setAantal(Pallet pallet, String aantal) {
-        int allAantalInOrder = Integer.parseInt(aantal);
+        int allAantalInOrder = Integer.parseInt(aantal) ;
         for(Pallet pallets : palletRepository.getAllByOrder_Id(Integer.parseInt(pallet.getOrder_Id()))){
             allAantalInOrder = allAantalInOrder + Integer.parseInt(pallets.getAantal());
         }
