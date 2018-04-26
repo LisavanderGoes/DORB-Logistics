@@ -2,8 +2,13 @@ package com.lisa.dorb.layout.planner;
 
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.layout.planner.sideLayout.OrdersLayout;
+import com.lisa.dorb.layout.planner.sideLayout.UsersLayout;
+import com.lisa.dorb.layout.planner.sideLayout.VrachtwagenLayout;
 import com.lisa.dorb.model.OrderPlanner;
+import com.lisa.dorb.model.UserDetails;
+import com.lisa.dorb.model.VrachtwagenPlanner;
 import com.lisa.dorb.model.db.Pallet;
+import com.lisa.dorb.model.db.users.User;
 import com.lisa.dorb.values.strings;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -22,22 +27,33 @@ public class PlannerUI extends VerticalLayout implements View {
     LoginUI loginUI;
     @Autowired
     OrdersLayout ordersLayout;
+    @Autowired
+    UsersLayout usersLayout;
+    @Autowired
+    VrachtwagenLayout vrachtwagenLayout;
 
 
-    public VerticalLayout parent;
     public List<OrderPlanner> orderList = new ArrayList<>();
     public List<Pallet> palletsList = new ArrayList<>();
+    public List<User> userList = new ArrayList<>();
+    public List<UserDetails> rolList = new ArrayList<>();
+    public List<VrachtwagenPlanner> vrachtwagenList = new ArrayList<>();
 
 
     //UI
+    public VerticalLayout parent;
     public HorizontalLayout gridLayout = new HorizontalLayout();
     public HorizontalLayout buttons = new HorizontalLayout();
-    public Grid<OrderPlanner> gridOrders = new Grid<>();
-    public Grid<Pallet> gridDetail = new Grid<>();
+    public Grid<OrderPlanner> ordersGrid = new Grid<>();
+    public Grid<Pallet> palletsGrid = new Grid<>();
+    public Grid<User> usersGrid = new Grid<>();
+    public Grid<UserDetails> rolGrid = new Grid<>();
+    public Grid<VrachtwagenPlanner> vrachtwagenGrid = new Grid<>();
 
     private Button terugBtn = new Button("Terug");
-    private Button orderBtn = new Button("Orders");
+    private Button orderBtn = new Button("Orders/Ritten");
     private Button userBtn = new Button("Gebruikers");
+    private Button vrachwtagenBtn = new Button("Vrachtwagen");
     public Label send = new Label("");
 
     @PostConstruct
@@ -52,6 +68,7 @@ public class PlannerUI extends VerticalLayout implements View {
         terugBtn.addClickListener(event -> terugButtonClick());
         orderBtn.addClickListener(event -> startUI(strings.ORDER));
         userBtn.addClickListener(event -> startUI(strings.USERS));
+        vrachwtagenBtn.addClickListener(event -> startUI(strings.VRACHTWAGEN));
         terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
     }
 
@@ -69,16 +86,16 @@ public class PlannerUI extends VerticalLayout implements View {
 
     private void addLayout() {
         HorizontalLayout layout2 = new HorizontalLayout();
-        layout2.addComponents(orderBtn, userBtn, terugBtn, send);
+        layout2.addComponents(orderBtn, userBtn, vrachwtagenBtn, terugBtn, send);
 
         parent.addComponent(layout2);
         parent.addComponentsAndExpand(gridLayout);
     }
 
     private void terugButtonClick() {
-        gridLayout.removeComponent(gridDetail);
+        gridLayout.removeComponent(palletsGrid);
         orderList.clear();
-        gridOrders.removeAllColumns();
+        ordersGrid.removeAllColumns();
         getUI().setContent(loginUI);
     }
 
@@ -92,22 +109,17 @@ public class PlannerUI extends VerticalLayout implements View {
         removeAll();
         switch (ui) {
             case strings.ORDER:
-                ordersLayout.laadOrderPlanner();
+                ordersLayout.start();
                 ordersLayout.setGridOrder();
                 break;
             case strings.USERS:
+                usersLayout.start();
+                usersLayout.setGridUsers();
                 break;
-//            case "Prijs":
-//                prijsCrud.addTable();
-//                break;
-//            case "Pallet":
-//                palletCrud.addTable();
-//                break;
-//            case "Rit":
-//                ritCrud.addTable();
-//                break;
-//            default:
-//                break;
+            case strings.VRACHTWAGEN:
+                vrachtwagenLayout.start();
+                vrachtwagenLayout.setGrid();
+                break;
         }
     }
 
@@ -115,8 +127,12 @@ public class PlannerUI extends VerticalLayout implements View {
         gridLayout.removeAllComponents();
         buttons.removeAllComponents();
         orderList.clear();
-        gridOrders.removeAllColumns();
-        gridDetail.removeAllColumns();
+        userList.clear();
+        vrachtwagenList.clear();
+        ordersGrid.removeAllColumns();
+        palletsGrid.removeAllColumns();
+        usersGrid.removeAllColumns();
+        vrachtwagenGrid.removeAllColumns();
     }
 }
 

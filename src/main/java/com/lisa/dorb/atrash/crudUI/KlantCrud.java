@@ -1,4 +1,4 @@
-package com.lisa.dorb.layout.crudUI;
+package com.lisa.dorb.atrash.crudUI;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -11,26 +11,26 @@ public class KlantCrud extends VerticalLayout {
 //    @Autowired
 //    KlantRepository repository;
 //
-//    public List<Klant> list; //define inside methode otherwise null
+//    public List<Klant> vrachtwagenList; //define inside methode otherwise null
 //    public Button deleteBtn;
-//    public Button addBtn;
-//    private Grid<Klant> Grid;
+//    public Button toevoegenBtn;
+//    private werkroosterGrid<Klant> werkroosterGrid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
-//        list = repository.findAll();
-//        Grid = crudUI.gridKlant;
+//        vrachtwagenList = repository.findAll();
+//        werkroosterGrid = crudUI.gridKlant;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
-//        addBtn = new Button("Toevoegen");
+//        toevoegenBtn = new Button("Toevoegen");
 //
-//        Grid.setCaption("Klanten");
-//        Grid.setSizeFull();
-//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
+//        werkroosterGrid.setCaption("Klanten");
+//        werkroosterGrid.setSizeFull();
+//        werkroosterGrid.setSelectionMode(werkroosterGrid.SelectionMode.NONE);
 //        ListDataProvider<Klant> dataProvider =
-//                DataProvider.ofCollection(list);
+//                DataProvider.ofCollection(vrachtwagenList);
 //
-//        Grid.setDataProvider(dataProvider);
+//        werkroosterGrid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -39,56 +39,56 @@ public class KlantCrud extends VerticalLayout {
 //        TextField taskField4 = new TextField();
 //        TextField taskField5 = new TextField();
 //
-//        Grid.addColumn(Klant::getID)
+//        werkroosterGrid.addColumn(Klant::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getVoornaam)
+//        werkroosterGrid.addColumn(Klant::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getTussenvoegsel)
+//        werkroosterGrid.addColumn(Klant::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getAchternaam)
+//        werkroosterGrid.addColumn(Klant::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getRekeningnummer)
+//        werkroosterGrid.addColumn(Klant::getRekeningnummer)
 //                .setEditorComponent(taskField6, this::setRekeningnummer)
 //                .setCaption("Rekeningnummer")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getUser_Id)
+//        werkroosterGrid.addColumn(Klant::getUser_Id)
 //                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Klant::getWachtwoord)
+//        werkroosterGrid.addColumn(Klant::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        werkroosterGrid.setSelectionMode(werkroosterGrid.SelectionMode.SINGLE);
 //
-//        Grid.addItemClickListener(event ->
+//        werkroosterGrid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        Grid.getEditor().setEnabled(true);
+//        werkroosterGrid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(Grid);
-//        addBtn.addClickListener(event -> {
+//        crudUI.table.addComponentsAndExpand(werkroosterGrid);
+//        toevoegenBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
 //        deleteBtn.addClickListener(event -> {
 //            delete(rowId, rowItem);
 //        });
 //
-//        crudUI.table.addComponents(addBtn, deleteBtn);
+//        crudUI.table.addComponents(toevoegenBtn, deleteBtn);
 //        crudUI.parent.addComponentsAndExpand(crudUI.table);
 //    }
 //
@@ -96,7 +96,7 @@ public class KlantCrud extends VerticalLayout {
 //        long id = klant.getID();
 //        repository.updateRekeningummer(rekeningnummer, id);
 //        klant.setRekeningnummer(rekeningnummer);
-//        crudUI.gridKlant.setItems(list);
+//        crudUI.gridKlant.setItems(vrachtwagenList);
 //    }
 //
 //    private void setID(long id, Object item) {
@@ -109,9 +109,9 @@ public class KlantCrud extends VerticalLayout {
 //        long id = klant.getID();
 //        String snd;
 //        try {
-//            repository.updateWachtwoord(wachtwoord, id);
+//            repository.updateRol(wachtwoord, id);
 //            klant.setWachtwoord(wachtwoord);
-//            Grid.setItems(list);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -125,7 +125,7 @@ public class KlantCrud extends VerticalLayout {
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
 //            klant.setUser_Id(inlognaam);
-//            Grid.setItems(list);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -137,21 +137,21 @@ public class KlantCrud extends VerticalLayout {
 //        long id = klant.getID();
 //        repository.updateAchternaam(achternaam, id);
 //        klant.setAchternaam(achternaam);
-//        Grid.setItems(list);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
 //    private void setTussenvoegsel(Klant klant, String tussenvoegsel) {
 //        long id = klant.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
 //        klant.setTussenvoegsel(tussenvoegsel);
-//        Grid.setItems(list);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
 //    public void setVoornaam(Klant klant, String voornaam){
 //        long id = klant.getID();
 //        repository.updateVoornaam(voornaam, id);
 //        klant.setVoornaam(voornaam);
-//        Grid.setItems(list);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
 //    private void test(String s){
@@ -166,8 +166,8 @@ public class KlantCrud extends VerticalLayout {
 //            repository.addRow();
 //            long id = getDBId();
 //            Klant model = new Klant(id, "", "", "", "", "", "");
-//            list.add(model);
-//            Grid.setItems(list);
+//            vrachtwagenList.add(model);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -177,8 +177,8 @@ public class KlantCrud extends VerticalLayout {
 //
 //    private void delete(long id, Object item) {
 //        repository.deleteRow(id);
-//        list.remove(item);
-//        Grid.setItems(list);
+//        vrachtwagenList.remove(item);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
 //    private long getDBId() {

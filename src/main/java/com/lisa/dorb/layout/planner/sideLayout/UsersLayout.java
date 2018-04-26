@@ -1,14 +1,14 @@
 package com.lisa.dorb.layout.planner.sideLayout;
 
-import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.layout.order.FactureUI;
 import com.lisa.dorb.layout.planner.PlannerUI;
-import com.lisa.dorb.model.OrderPlanner;
-import com.lisa.dorb.model.db.Order;
-import com.lisa.dorb.model.db.Pallet;
-import com.lisa.dorb.model.db.Rit;
+import com.lisa.dorb.layout.planner.ToevoegenUsersLayout;
+import com.lisa.dorb.model.UserDetails;
+import com.lisa.dorb.model.db.Natio;
+import com.lisa.dorb.model.db.Rol;
+import com.lisa.dorb.model.db.users.Chauffeur;
 import com.lisa.dorb.model.db.users.User;
 import com.lisa.dorb.repository.*;
+import com.lisa.dorb.values.strings;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -16,7 +16,6 @@ import com.vaadin.ui.*;
 import com.vaadin.ui.themes.ValoTheme;
 import org.springframework.beans.factory.annotation.Autowired;
 
-import java.sql.Date;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,198 +23,347 @@ import java.util.List;
 public class UsersLayout extends VerticalLayout {
 
     @Autowired
-    OrderMaken orderMaken;
-    @Autowired
-    FactureUI factureUI;
-    @Autowired
-    RitRepository ritRepository;
-    @Autowired
-    ChauffeurRepository chauffeurRepository;
-    @Autowired
-    OrderRepository orderRepository;
-    @Autowired
-    VrachtwagenRepository vrachtwagenRepository;
-    @Autowired
-    VrachtwagenTypeRepository vrachtwagenTypeRepository;
+    PlannerUI plannerUI;
     @Autowired
     KlantRepository klantRepository;
     @Autowired
     UserRepository userRepository;
     @Autowired
-    PalletRepository palletRepository;
+    RolRepository rolRepository;
     @Autowired
-    PlannerUI plannerUI;
+    ChauffeurRepository chauffeurRepository;
+    @Autowired
+    ToevoegenUsersLayout toevoegenUsersLayout;
+    @Autowired
+    NatioRepository natioRepository;
+    @Autowired
+    LandenRepository landenRepository;
 
 
-    private List<OrderPlanner> orderList = new ArrayList<>();
-    private List<Pallet> palletsList = new ArrayList<>();
+    private List<User> userList = new ArrayList<>();
+    private List<UserDetails> rolList = new ArrayList<>();
 
     private long rowId;
-    private Object rowItem;
-
 
     //UI
+    private ComboBox rijbewijsBox = new ComboBox();
+    private ComboBox rollenBox = new ComboBox();
     private HorizontalLayout gridLayout = new HorizontalLayout();
-    public Grid<OrderPlanner> grid = new Grid<>();
-    private Grid<Pallet> gridDetail = new Grid<>();
-    private Button chauffeurBtn = new Button("Verander chauffeur");
-    private Button vrachtwagenBtn = new Button("Verander vrachtwagen/ in onderhoud zetten");
+    public Grid<User> userGrid = new Grid<>();
+    private Grid<UserDetails> rolGrid = new Grid<>();
+    private Button rijbewijsBtn = new Button("Verander rijbewijs");
+    private Button rollenBtn = new Button("Verander rol");
+    private Button deleteBtn = new Button("Verwijder");
+    private Button addBtn = new Button("Toevoegen");
     private Button detailsBtn = new Button("Details");
     public Label send = new Label("");
 
 
-    public void laadOrderPlanner() {
+    public void start() {
         addOnclick();
         addLayout();
-        for(Order order : orderRepository.findAll()){
-            User chauffeur = userRepository.findAllById(chauffeurRepository.findUser_IdAllById(Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getChauffeur_Id())));
-            User klant = userRepository.findAllById(klantRepository.findAllById(Integer.parseInt(order.getKlant_Id())).getUser_Id());
-            orderList.add(new OrderPlanner(order.getID(),
-                    Integer.parseInt(order.getRit_Id()),
-                    klant.getVoornaam() + " " + klant.getTussenvoegsel() + " " + klant.getAchternaam(),
-                    Date.valueOf(order.getDatum()),
-                    vrachtwagenRepository.getKentekenById(Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getVrachtwagen_Id())),
-                    order.getAdres(),
-                    chauffeur.getVoornaam() + " " + chauffeur.getTussenvoegsel() + " " + chauffeur.getAchternaam()));
-        }
-        grid.setItems(orderList);
+        laadUsers();
+        laadCombobox();
     }
 
+    private void laadCombobox(){
+        List<String> rijbewijsList = new ArrayList<>();
+        rijbewijsList.add("C");
+        rijbewijsList.add("D");
+        rijbewijsBox.setItems(rijbewijsList);
+        List<String> statusList = new ArrayList<>();
+        statusList.add("chauffeur");
+        statusList.add("manager");
+        statusList.add("klant");
+        statusList.add("planner");
+        rollenBox.setItems(statusList);
+    }
+
+    private void laadUsers() {
+        userList = userRepository.findAll();
+        userGrid.setItems(userList);
+    }
+
+    /**
+     * @param rowId = user_Id
+     */
     private void laadDetails(long rowId) {
-        palletsList = palletRepository.getAllByOrder_Id(rowId);
-        gridDetail.setItems(palletsList);
+        String rekeningnummer = "";
+        long werkdagen = 0;
+        String rijbewijs = "";
+        String landen = "";
+
+        TextField taskField3 = new TextField();
+        TextField taskField4 = new TextField();
+        try {
+
+            String status = "";
+            for (Rol rol : rolRepository.getAllByUser_Id(rowId)) {
+                status = status + rol.getRol();
+            }
+            switch (status) {
+                case strings.KLANT:
+                    rekeningnummer = klantRepository.findAllByUser_Id(rowId).getRekeningnummer();
+                    rolGrid.addColumn(UserDetails::getRekeningnummer)
+                            .setEditorComponent(taskField4, this::setRekeningnummer)
+                            .setCaption("Rekeningnummer")
+                            .setExpandRatio(2);
+                    break;
+                case strings.CHAUFFEUR:
+                    Chauffeur chauffeur = chauffeurRepository.findAllByUser_Id(rowId);
+                    werkdagen = Long.parseLong(chauffeur.getWerkdagen());
+                    rijbewijs = chauffeur.getRijbewijs();
+                    for(Natio nation : natioRepository.getAllByChauffeur_Id(rowId)){
+                        landen = landen + "/" + landenRepository.getLandenByLand_Id(nation.getLand_Id());
+                    }
+                    rolGrid.addColumn(UserDetails::getRijbewijs)
+                            .setCaption("Rijbewijs")
+                            .setExpandRatio(2);
+                    rolGrid.addColumn(UserDetails::getWerkdagen)
+                            .setEditorComponent(taskField3, this::setWerkdagen)
+                            .setCaption("Werkdagen")
+                            .setExpandRatio(2);
+                    rolGrid.addColumn(UserDetails::getLanden)
+                            .setCaption("Nationaliteit rijbewijs")
+                            .setExpandRatio(2);
+                    break;
+                default:
+                    break;
+            }
+            for (Rol rol : rolRepository.getAllByUser_Id(rowId)) {
+                rolList.add(new UserDetails(rol.getID(), rol.getUser_Id(), rol.getRol(), rijbewijs, werkdagen, rekeningnummer, landen));
+            }
+
+            rolGrid.addColumn(UserDetails::getRol)
+                    .setCaption("Rol")
+                    .setExpandRatio(2);
+
+            rolGrid.setItems(rolList);
+        }catch (Exception ignore){}
     }
 
-    public void setGridOrder() {
-        grid.setCaption("Pallets");
-        grid.setSizeFull();
-        grid.setSelectionMode(Grid.SelectionMode.NONE);
-        ListDataProvider<OrderPlanner> dataProvider =
-                DataProvider.ofCollection(orderList);
+    /**
+     * @param userDetails = userDetails(model)
+     * @param werkdagen = nieuwe werkdagen
+     */
+    private void setWerkdagen(UserDetails userDetails, String werkdagen) {
+        long id = userDetails.getUser_Id();
+        chauffeurRepository.updateWerkdagen(Integer.parseInt(werkdagen), id);
+        rolList.clear();
+        rolGrid.removeAllColumns();
+        laadDetails(id);
+    }
 
-        grid.setDataProvider(dataProvider);
+    /**
+     * @param userDetails = userDetails(model)
+     * @param rekeningnummer = nieuwe rekeningnummer
+     */
+    private void setRekeningnummer(UserDetails userDetails, String rekeningnummer) {
+        long id = userDetails.getUser_Id();
+        klantRepository.updateRekeningummer(rekeningnummer, id);
+        rolList.clear();
+        rolGrid.removeAllColumns();
+        laadDetails(id);
+    }
 
+    public void setGridUsers() {
+        userGrid = plannerUI.usersGrid;
 
-        grid.addColumn(OrderPlanner::getRit_Id)
-                .setCaption("Rit Id")
+        userGrid.setCaption("Gebruikers");
+        userGrid.setSizeFull();
+        userGrid.setSelectionMode(Grid.SelectionMode.NONE);
+        ListDataProvider<User> dataProvider =
+                DataProvider.ofCollection(userList);
+
+        userGrid.setDataProvider(dataProvider);
+
+        TextField taskField1 = new TextField();
+        TextField taskField2 = new TextField();
+        TextField taskField3 = new TextField();
+        TextField taskField4 = new TextField();
+        TextField taskField5 = new TextField();
+
+        userGrid.addColumn(User::getID)
+                .setCaption("Id")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getKlantnaam)
-                .setCaption("Naam klant")
+        userGrid.addColumn(User::getVoornaam)
+                .setEditorComponent(taskField1, this::setVoornaam)
+                .setCaption("Voornaam")
                 .setExpandRatio(2);
 
-
-        grid.addColumn(OrderPlanner::getAdres)
-                .setCaption("Adressen")
+        userGrid.addColumn(User::getTussenvoegsel)
+                .setEditorComponent(taskField2, this::setTussenvoegsel)
+                .setCaption("Tussenvoegsel")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getDatum)
-                .setCaption("Datum")
+        userGrid.addColumn(User::getAchternaam)
+                .setEditorComponent(taskField3, this::setAchternaam)
+                .setCaption("Achternaam")
                 .setExpandRatio(2);
 
-
-        grid.addColumn(OrderPlanner::getKenteken)
-                .setCaption("Vrachtwagen")
+        userGrid.addColumn(User::getInlognaam)
+                .setEditorComponent(taskField4, this::setInlognaam)
+                .setCaption("Inlognaam")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getNaamChauffeur)
-                .setCaption("Chauffeur")
+        userGrid.addColumn(User::getWachtwoord)
+                .setEditorComponent(taskField5, this::setWachtwoord)
+                .setCaption("Wachtwoord")
                 .setExpandRatio(2);
 
-        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        userGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        grid.addItemClickListener(event ->
-                setID(event.getItem().getId(), event.getItem()));
+        userGrid.addItemClickListener(event ->
+                setID(event.getItem().getID()));
 
-        grid.getEditor().setEnabled(false);
-        gridLayout.addComponentsAndExpand(grid);
+        userGrid.getEditor().setEnabled(true);
+        gridLayout.addComponentsAndExpand(userGrid);
+    }
+
+    private void toevoegen() {
+        try {
+            plannerUI.getUI().setContent(toevoegenUsersLayout);
+        }catch (Exception ignore){
+        }
+    }
+
+    /**
+     * @param id = user_Id
+     */
+    private void delete (long id){
+        try {
+            for (Rol rol : rolRepository.getAllByUser_Id(id)) {
+                switch (rol.getRol()) {
+                    case strings.KLANT:
+                        klantRepository.deleteRow(id);
+                        break;
+                    case strings.CHAUFFEUR:
+                        chauffeurRepository.deleteRow(id);
+                        natioRepository.deleteRow(id);
+                        break;
+                    default:
+                        break;
+                }
+            }
+            rolRepository.deleteRowUser_Id(id);
+            userRepository.deleteRow(id);
+            reload();
+        }catch (Exception e){
+            sendError("Hij kan niet verwijderd worden!");
+        }
+    }
+
+    /**
+     * @param user = user(model)
+     * @param achternaam = nieuwe achternaam
+     */
+    private void setAchternaam(User user, String achternaam) {
+        long id = user.getID();
+        userRepository.updateAchternaam(achternaam, id);
+        reload();
+    }
+
+    /**
+     * @param user = user(model)
+     * @param tussenvoegsel = nieuwe tussenvoegsel
+     */
+    private void setTussenvoegsel(User user, String tussenvoegsel) {
+        long id = user.getID();
+        userRepository.updateTussenvoegsel(tussenvoegsel, id);
+        reload();
+    }
+
+    /**
+     * @param user = user(model)
+     * @param voornaam = nieuwe voornaam
+     */
+    public void setVoornaam(User user, String voornaam) {
+        long id = user.getID();
+        userRepository.updateVoornaam(voornaam, id);
+        reload();
+    }
+
+    /**
+     * @param user = user(model)
+     * @param wachtwoord = nieuwe wachtwoord
+     */
+    private void setWachtwoord(User user, String wachtwoord) {
+        long id = user.getID();
+        try {
+            userRepository.updateWachtwoord(wachtwoord, id);
+            reload();
+        } catch (Exception e) {
+            sendError("Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!");
+        }
+    }
+
+    /**
+     * @param user = user(model)
+     * @param inlognaam = nieuwe inlognaam
+     */
+    private void setInlognaam(User user, String inlognaam) {
+        long id = user.getID();
+        try {
+            userRepository.updateInlognaam(inlognaam, id);
+            reload();
+        } catch (Exception e) {
+            sendError("Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!");
+        }
     }
 
     private void setGridDetails() {
-        Grid<Pallet> grid = gridDetail;
-        grid.setCaption("Details");
+        Grid<UserDetails> grid = rolGrid;
+        grid.setCaption("Rollen");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
-        ListDataProvider<Pallet> dataProvider =
-                DataProvider.ofCollection(palletsList);
+        ListDataProvider<UserDetails> dataProvider =
+                DataProvider.ofCollection(rolList);
 
         grid.setDataProvider(dataProvider);
-
-        TextField taskField = new TextField();
-
-        grid.addColumn(Pallet::getWat)
-                .setCaption("Wat?")
-                .setExpandRatio(2);
-
-        grid.addColumn(Pallet::getAantal)
-                .setEditorComponent(taskField, this::setAantal)
-                .setCaption("Aantal")
-                .setExpandRatio(2);
 
         grid.getEditor().setEnabled(true);
         gridLayout.addComponentsAndExpand(grid);
     }
 
-    private void setAantal(Pallet pallet, String aantal) {
-        int allAantalInOrder = Integer.parseInt(aantal) - Integer.parseInt(pallet.getAantal());
-        for(Pallet pallets : palletRepository.getAllByOrder_Id(Integer.parseInt(pallet.getOrder_Id()))){
-            allAantalInOrder = allAantalInOrder + Integer.parseInt(pallets.getAantal());
-        }
-        if(allAantalInOrder <= 20) {
-            long ruimte = vrachtwagenTypeRepository.getRuimteById(vrachtwagenRepository.getTyp_IdById(Integer.parseInt(ritRepository.getById(Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getRit_Id())).getVrachtwagen_Id())));
-            if (allAantalInOrder > ruimte) {
-                Order order = orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id()));
-                List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), allAantalInOrder, 1, 0);
-                List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), vrachtwagen.get(0), order.getLand_Id());
-                ritRepository.updateChauffeur_Id(chauffeurs.get(0), Integer.parseInt(order.getRit_Id()));
-                ritRepository.updateVrachtwagen_Id(vrachtwagen.get(0), Integer.parseInt(order.getRit_Id()));
-                reload();
-            }
-        }
-        palletRepository.updateAantal(Integer.parseInt(aantal), pallet.getID());
-        pallet.setAantal(Integer.parseInt(aantal));
-        gridDetail.setItems(palletsList);
-    }
-
-    private void setID(long id, Object item) {
+    private void setID(long id) {
         rowId = id;
-        rowItem = item;
-    }
-
-    private void changeChauffeur(int order_Id) {
-        Order order = orderRepository.getAllById(order_Id);
-        List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getVrachtwagen_Id()), order.getLand_Id());
-        long rit_Id = Integer.parseInt(order.getRit_Id());
-        long chauffeur_Id = chauffeurs.get(0);
-        ritRepository.updateChauffeur_Id(chauffeur_Id, rit_Id);
-        reload();
-    }
-
-    private void changeVrachtwagen(int order_Id) {
-        Order order = orderRepository.getAllById(order_Id);
-        long rit_Id = Integer.parseInt(order.getRit_Id());
-        Rit rit = ritRepository.getById(rit_Id);
-        List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), Integer.parseInt(rit.getRuimte()), 1, 0);
-        long vrachtwagen_Id = vrachtwagen.get(0);
-        ritRepository.updateVrachtwagen_Id(vrachtwagen_Id, rit_Id);
-        vrachtwagenRepository.updateStatus("onderhoud", Integer.parseInt(rit.getVrachtwagen_Id()));
-        reload();
     }
 
     private void reload(){
-        orderList.clear();
-        laadOrderPlanner();
+        userList.clear();
+        laadUsers();
     }
 
     private void addOnclick() {
-        chauffeurBtn.addClickListener(event -> changeChauffeur((int) rowId));
-        vrachtwagenBtn.addClickListener(event -> changeVrachtwagen((int) rowId));
+        rollenBtn.addClickListener(event -> setRol(String.valueOf(rollenBox.getValue()), rowId));
+        rijbewijsBtn.addClickListener(event -> setRijbewijs(String.valueOf(rijbewijsBox.getValue()), rowId));
         detailsBtn.addClickListener(event -> details());
+        addBtn.addClickListener(event -> toevoegen());
+        deleteBtn.addClickListener(event -> delete(rowId));
+    }
+
+    /**
+     * @param rijbewijs = nieuwe rijbewijs
+     * @param rowId = user_Id
+     */
+    private void setRijbewijs(String rijbewijs, long rowId) {
+        chauffeurRepository.updateRijbewijs(rijbewijs, rowId);
+        rolList.clear();
+        rolGrid.removeAllColumns();
+        laadDetails(rowId);
+    }
+
+    private void setRol(String rollen, long rowId) {
+        rolRepository.updateRol(rollen, rowId);
+        rolList.clear();
+        rolGrid.removeAllColumns();
+        laadDetails(rowId);
     }
 
     private void details() {
-        palletsList.clear();
-        gridDetail.removeAllColumns();
+        rolList.clear();
+        rolGrid.removeAllColumns();
         laadDetails(rowId);
         setGridDetails();
     }
@@ -228,15 +376,21 @@ public class UsersLayout extends VerticalLayout {
 
     private void addLayout() {
         gridLayout = plannerUI.gridLayout;
-        grid = plannerUI.gridOrders;
-        gridDetail = plannerUI.gridDetail;
-        orderList = plannerUI.orderList;
-        palletsList = plannerUI.palletsList;
+        userGrid = plannerUI.usersGrid;
+        rolGrid = plannerUI.rolGrid;
+        userList = plannerUI.userList;
+        rolList = plannerUI.rolList;
 
         HorizontalLayout layout2 = plannerUI.buttons;
-        layout2.addComponents(chauffeurBtn, vrachtwagenBtn, detailsBtn, send);
+        layout2.addComponents(deleteBtn, addBtn, detailsBtn, send);
+
+        VerticalLayout layout3 = new VerticalLayout();
+        layout2.addComponents(rijbewijsBox, rijbewijsBtn);
+        gridLayout.addComponent(layout3);
 
         plannerUI.parent.addComponent(layout2);
     }
+
+
 }
 

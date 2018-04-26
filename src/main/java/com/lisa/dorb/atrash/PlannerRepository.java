@@ -1,6 +1,6 @@
-package com.lisa.dorb.repository;
+package com.lisa.dorb.atrash;
 
-import com.lisa.dorb.model.db.users.Planner;
+import com.lisa.dorb.atrash.Planner;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 
@@ -37,7 +37,7 @@ public interface PlannerRepository extends JpaRepository<Planner, Long> {
 //    @Transactional
 //    @Modifying(clearAutomatically = true)
 //    @Query(value = "UPDATE planners SET wachtwoord = :wachtwoord WHERE user_Id = :id", nativeQuery = true)
-//    void updateWachtwoord(@Param("wachtwoord") String wachtwoord, @Param("id") long id);
+//    void updateRol(@Param("wachtwoord") String wachtwoord, @Param("id") long id);
 //
 //    @Transactional
 //    @Modifying

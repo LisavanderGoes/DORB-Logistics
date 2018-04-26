@@ -1,18 +1,6 @@
 package com.lisa.dorb.function;
 
 
-/*input: adres
-return:
-    -Km **
-    -Natio **
-    -Route **
-    -Adres **
-input: rit
-return:
-    -lijst met verst ** (stem af met maps)
- */
-//Kijk naar km tussen 2 in 1 rit en tussen rit 2 en thuisbase.
-
 import com.lisa.dorb.layout.order.OrderUI;
 import com.lisa.dorb.model.Km;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -30,10 +18,16 @@ public class Route {
 
     private static final String API_KEY = "AIzaSyAU7XaF6rJn7F6oITjKukT-Z5hi0bs95PI";
 
+    /**
+     * @param str_from = adres van vertrek
+     * @param str_to = adres van bestemming
+     * @return string van km tussen de twee adressen
+     * @throws Exception
+     */
     public String getDistance(String str_from, String str_to) throws Exception {
         // build a URL
-        String s = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=nl-NL&avoid=tolls&key=" + API_KEY;
-        URL url = new URL(s);
+        String api = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=nl-NL&avoid=tolls&key=" + API_KEY;
+        URL url = new URL(api);
 
         // read from the URL
         Scanner scan = new Scanner(url.openStream());
@@ -61,6 +55,12 @@ public class Route {
     }
 
 
+    /**
+     * @param str_from = adres van vertrek
+     * @param str_to = adres van bestemming
+     * @return het adres van bestemming
+     * @throws Exception
+     */
     public String getAdres(String str_from, String str_to) throws Exception {
         // build a URL
         String s = "https://maps.googleapis.com/maps/api/distancematrix/json?origins=" + str_from + "&destinations=" + str_to + "&mode=driving&language=nl-NL&avoid=tolls&key=" + API_KEY;
@@ -85,8 +85,14 @@ public class Route {
         return adres;
     }
 
-    public ArrayList<String> ritLijst(String str_from, ArrayList<String> adres){ //doe in model
-        //get all from list
+    /**
+     * (niet in gebruik)
+     * @param str_from = adres van vertrek
+     * @param adres = list met adressen
+     * @return lijst met adressen op goede volgorde
+     */
+    public ArrayList<String> ritLijst(String str_from, ArrayList<String> adres){
+        //get all from vrachtwagenList
         //vergelijk
             //krijg km tussen thuis en adres
             //laad in lijst
@@ -149,6 +155,12 @@ public class Route {
 //        }
     }
 
+    /**
+     * (niet in gebruik)
+     * @param str_from = adres van vertrek
+     * @param waypoint = lijst met adressen waar route langskomt
+     * @return url voor een map
+     */
     public String setMaps(String str_from, ArrayList<String> waypoint){
         //laat eerst 1 rout zien als bij bestemming klik button voor volgende bestemming
         StringBuilder waypoints = new StringBuilder();

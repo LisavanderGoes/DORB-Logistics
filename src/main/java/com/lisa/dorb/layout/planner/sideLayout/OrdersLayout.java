@@ -1,7 +1,6 @@
 package com.lisa.dorb.layout.planner.sideLayout;
 
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.layout.order.FactureUI;
 import com.lisa.dorb.layout.planner.PlannerUI;
 import com.lisa.dorb.model.OrderPlanner;
 import com.lisa.dorb.model.db.Order;
@@ -26,8 +25,6 @@ public class OrdersLayout extends VerticalLayout {
     @Autowired
     OrderMaken orderMaken;
     @Autowired
-    FactureUI factureUI;
-    @Autowired
     RitRepository ritRepository;
     @Autowired
     ChauffeurRepository chauffeurRepository;
@@ -51,22 +48,27 @@ public class OrdersLayout extends VerticalLayout {
     private List<Pallet> palletsList = new ArrayList<>();
 
     private long rowId;
-    private Object rowItem;
 
 
     //UI
     private HorizontalLayout gridLayout = new HorizontalLayout();
-    public Grid<OrderPlanner> grid = new Grid<>();
-    private Grid<Pallet> gridDetail = new Grid<>();
+    public Grid<OrderPlanner> orderGrid = new Grid<>();
+    private Grid<Pallet> detailGrid = new Grid<>();
     private Button chauffeurBtn = new Button("Verander chauffeur");
-    private Button vrachtwagenBtn = new Button("Verander vrachtwagen/ in onderhoud zetten");
+    private Button vrachtwagenBtn = new Button("Verander vrachtwagen");
     private Button detailsBtn = new Button("Details");
+    private ComboBox chauffeurBox = new ComboBox();
+    private ComboBox vrachtwagenBox = new ComboBox();
     public Label send = new Label("");
 
 
-    public void laadOrderPlanner() {
+    public void start() {
         addOnclick();
         addLayout();
+        laadOrderPlanner();
+    }
+
+    private void laadOrderPlanner() {
         for(Order order : orderRepository.findAll()){
             User chauffeur = userRepository.findAllById(chauffeurRepository.findUser_IdAllById(Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getChauffeur_Id())));
             User klant = userRepository.findAllById(klantRepository.findAllById(Integer.parseInt(order.getKlant_Id())).getUser_Id());
@@ -76,63 +78,76 @@ public class OrdersLayout extends VerticalLayout {
                     Date.valueOf(order.getDatum()),
                     vrachtwagenRepository.getKentekenById(Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getVrachtwagen_Id())),
                     order.getAdres(),
-                    chauffeur.getVoornaam() + " " + chauffeur.getTussenvoegsel() + " " + chauffeur.getAchternaam()));
+                    chauffeur.getVoornaam() + " " + chauffeur.getTussenvoegsel() + " " + chauffeur.getAchternaam(),
+                    Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getRuimte()),
+                    Double.parseDouble(order.getPrijs())));
         }
-        grid.setItems(orderList);
+        orderGrid.setItems(orderList);
     }
 
+    /**
+     * @param rowId = order_Id
+     */
     private void laadDetails(long rowId) {
         palletsList = palletRepository.getAllByOrder_Id(rowId);
-        gridDetail.setItems(palletsList);
+        detailGrid.setItems(palletsList);
     }
 
     public void setGridOrder() {
-        grid.setCaption("Pallets");
-        grid.setSizeFull();
-        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        orderGrid.setCaption("Orders");
+        orderGrid.setSizeFull();
+        orderGrid.setSelectionMode(Grid.SelectionMode.NONE);
         ListDataProvider<OrderPlanner> dataProvider =
                 DataProvider.ofCollection(orderList);
 
-        grid.setDataProvider(dataProvider);
+        orderGrid.setDataProvider(dataProvider);
 
 
-        grid.addColumn(OrderPlanner::getRit_Id)
+        orderGrid.addColumn(OrderPlanner::getRit_Id)
                 .setCaption("Rit Id")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getKlantnaam)
+        orderGrid.addColumn(OrderPlanner::getRuimte)
+                .setCaption("Pallets in rit")
+                .setExpandRatio(2);
+
+        orderGrid.addColumn(OrderPlanner::getKlantnaam)
                 .setCaption("Naam klant")
                 .setExpandRatio(2);
 
 
-        grid.addColumn(OrderPlanner::getAdres)
+        orderGrid.addColumn(OrderPlanner::getAdres)
                 .setCaption("Adressen")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getDatum)
+        orderGrid.addColumn(OrderPlanner::getPrijs)
+                .setCaption("Prijs")
+                .setExpandRatio(2);
+
+        orderGrid.addColumn(OrderPlanner::getDatum)
                 .setCaption("Datum")
                 .setExpandRatio(2);
 
 
-        grid.addColumn(OrderPlanner::getKenteken)
+        orderGrid.addColumn(OrderPlanner::getKenteken)
                 .setCaption("Vrachtwagen")
                 .setExpandRatio(2);
 
-        grid.addColumn(OrderPlanner::getNaamChauffeur)
+        orderGrid.addColumn(OrderPlanner::getNaamChauffeur)
                 .setCaption("Chauffeur")
                 .setExpandRatio(2);
 
-        grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+        orderGrid.setSelectionMode(Grid.SelectionMode.SINGLE);
 
-        grid.addItemClickListener(event ->
-                setID(event.getItem().getId(), event.getItem()));
+        orderGrid.addItemClickListener(event ->
+                setID(event.getItem().getId()));
 
-        grid.getEditor().setEnabled(false);
-        gridLayout.addComponentsAndExpand(grid);
+        orderGrid.getEditor().setEnabled(false);
+        gridLayout.addComponentsAndExpand(orderGrid);
     }
 
     private void setGridDetails() {
-        Grid<Pallet> grid = gridDetail;
+        Grid<Pallet> grid = detailGrid;
         grid.setCaption("Details");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
@@ -156,50 +171,37 @@ public class OrdersLayout extends VerticalLayout {
         gridLayout.addComponentsAndExpand(grid);
     }
 
+    /**
+     * @param pallet = pallet(model)
+     * @param aantal = nieuwe aantal
+     */
     private void setAantal(Pallet pallet, String aantal) {
-        int allAantalInOrder = Integer.parseInt(aantal) - Integer.parseInt(pallet.getAantal());
+        int allAantalInOrder = Integer.parseInt(aantal);
         for(Pallet pallets : palletRepository.getAllByOrder_Id(Integer.parseInt(pallet.getOrder_Id()))){
             allAantalInOrder = allAantalInOrder + Integer.parseInt(pallets.getAantal());
         }
         if(allAantalInOrder <= 20) {
-            long ruimte = vrachtwagenTypeRepository.getRuimteById(vrachtwagenRepository.getTyp_IdById(Integer.parseInt(ritRepository.getById(Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getRit_Id())).getVrachtwagen_Id())));
-            if (allAantalInOrder > ruimte) {
-                Order order = orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id()));
-                List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), allAantalInOrder, 1, 0);
-                List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), vrachtwagen.get(0), order.getLand_Id());
-                ritRepository.updateChauffeur_Id(chauffeurs.get(0), Integer.parseInt(order.getRit_Id()));
-                ritRepository.updateVrachtwagen_Id(vrachtwagen.get(0), Integer.parseInt(order.getRit_Id()));
-                reload();
+            if (Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getPalletAantal()) + Integer.parseInt(aantal) <= 30) {
+                long ruimte = vrachtwagenTypeRepository.getRuimteById(vrachtwagenRepository.getTyp_IdById(Integer.parseInt(ritRepository.getById(Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getRit_Id())).getVrachtwagen_Id())));
+                if (allAantalInOrder > ruimte) {
+                    Order order = orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id()));
+                    List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), allAantalInOrder, 1, 0);
+                    List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), vrachtwagen.get(0), order.getLand_Id());
+                    ritRepository.updateChauffeur_Id(chauffeurs.get(0), Integer.parseInt(order.getRit_Id()));
+                    ritRepository.updateVrachtwagen_Id(vrachtwagen.get(0), Integer.parseInt(order.getRit_Id()));
+                    reload();
+                }
+                palletRepository.updateAantal(Integer.parseInt(aantal), pallet.getID());
+                orderRepository.updateAantal(Integer.parseInt(orderRepository.getAllById(Integer.parseInt(pallet.getOrder_Id())).getPalletAantal()) + Integer.parseInt(aantal), Integer.parseInt(pallet.getOrder_Id()));
             }
         }
-        palletRepository.updateAantal(Integer.parseInt(aantal), pallet.getID());
         pallet.setAantal(Integer.parseInt(aantal));
-        gridDetail.setItems(palletsList);
+        detailGrid.setItems(palletsList);
     }
 
-    private void setID(long id, Object item) {
+    private void setID(long id) {
         rowId = id;
-        rowItem = item;
-    }
-
-    private void changeChauffeur(int order_Id) {
-        Order order = orderRepository.getAllById(order_Id);
-        List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getVrachtwagen_Id()), order.getLand_Id());
-        long rit_Id = Integer.parseInt(order.getRit_Id());
-        long chauffeur_Id = chauffeurs.get(0);
-        ritRepository.updateChauffeur_Id(chauffeur_Id, rit_Id);
-        reload();
-    }
-
-    private void changeVrachtwagen(int order_Id) {
-        Order order = orderRepository.getAllById(order_Id);
-        long rit_Id = Integer.parseInt(order.getRit_Id());
-        Rit rit = ritRepository.getById(rit_Id);
-        List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), Integer.parseInt(rit.getRuimte()), 1, 0);
-        long vrachtwagen_Id = vrachtwagen.get(0);
-        ritRepository.updateVrachtwagen_Id(vrachtwagen_Id, rit_Id);
-        vrachtwagenRepository.updateStatus("onderhoud", Integer.parseInt(rit.getVrachtwagen_Id()));
-        reload();
+        laadCombobox(rowId);
     }
 
     private void reload(){
@@ -208,14 +210,34 @@ public class OrdersLayout extends VerticalLayout {
     }
 
     private void addOnclick() {
-        chauffeurBtn.addClickListener(event -> changeChauffeur((int) rowId));
-        vrachtwagenBtn.addClickListener(event -> changeVrachtwagen((int) rowId));
+        vrachtwagenBtn.addClickListener(event -> setVrachtwagen(String.valueOf(vrachtwagenBox.getValue()), rowId));
+        chauffeurBtn.addClickListener(event -> setChauffeur(String.valueOf(chauffeurBox.getValue()), rowId));
         detailsBtn.addClickListener(event -> details());
+    }
+
+    /**
+     * @param chauffeur = nieuwe chauffeur
+     * @param rowId = order_Id
+     */
+    private void setChauffeur(String chauffeur, long rowId) {
+        long chauffeur_Id = chauffeurRepository.getIdByUser_Id(userRepository.getIdByInlognaam(chauffeur));
+        ritRepository.updateChauffeur_Id(chauffeur_Id, Integer.parseInt(orderRepository.getAllById(rowId).getRit_Id()));
+        reload();
+    }
+
+    /**
+     * @param vrachtwagen = nieuwe vrachtwagen
+     * @param rowId = order_Id
+     */
+    private void setVrachtwagen(String vrachtwagen, long rowId) {
+        long vrachtwagen_Id = vrachtwagenRepository.getIdByKenteken(vrachtwagen);
+        ritRepository.updateVrachtwagen_Id(vrachtwagen_Id, Integer.parseInt(orderRepository.getAllById(rowId).getRit_Id()));
+        reload();
     }
 
     private void details() {
         palletsList.clear();
-        gridDetail.removeAllColumns();
+        detailGrid.removeAllColumns();
         laadDetails(rowId);
         setGridDetails();
     }
@@ -228,15 +250,44 @@ public class OrdersLayout extends VerticalLayout {
 
     private void addLayout() {
         gridLayout = plannerUI.gridLayout;
-        grid = plannerUI.gridOrders;
-        gridDetail = plannerUI.gridDetail;
+        orderGrid = plannerUI.ordersGrid;
+        detailGrid = plannerUI.palletsGrid;
         orderList = plannerUI.orderList;
         palletsList = plannerUI.palletsList;
 
         HorizontalLayout layout2 = plannerUI.buttons;
-        layout2.addComponents(chauffeurBtn, vrachtwagenBtn, detailsBtn, send);
+        layout2.addComponents(detailsBtn, send);
+
+        VerticalLayout layout3 = new VerticalLayout();
+        layout2.addComponents(chauffeurBox, chauffeurBtn, vrachtwagenBox, vrachtwagenBtn);
+        gridLayout.addComponent(layout3);
 
         plannerUI.parent.addComponent(layout2);
     }
+
+    /**
+     * @param rowId = order_Id
+     */
+    private void laadCombobox(long rowId){
+        List<String> chauffeurList = new ArrayList<>();
+        Order order = orderRepository.getAllById(rowId);
+        List<Long> chauffeurs = orderMaken.findChauffeur(Date.valueOf(order.getDatum()), Integer.parseInt(ritRepository.getById(Integer.parseInt(order.getRit_Id())).getVrachtwagen_Id()), order.getLand_Id());
+        for(Long chauffeur_Id : chauffeurs){
+            User user = userRepository.findAllById(chauffeurRepository.findUser_IdAllById(chauffeur_Id));
+            chauffeurList.add(user.getInlognaam());
+        }
+        chauffeurBox.setItems(chauffeurList);
+        List<String> vrachtwagenList = new ArrayList<>();
+        long rit_Id = Integer.parseInt(order.getRit_Id());
+        Rit rit = ritRepository.getById(rit_Id);
+        List<Long> vrachtwagen = orderMaken.findVrachtwagen(Date.valueOf(order.getDatum()), Integer.parseInt(rit.getRuimte()), 1, 0);
+        if(vrachtwagen != null) {
+            for (Long vrachtwagen_Id : vrachtwagen) {
+                vrachtwagenList.add(vrachtwagenRepository.getKentekenById(vrachtwagen_Id));
+            }
+        }
+        vrachtwagenBox.setItems(vrachtwagenList);
+    }
+
 }
 

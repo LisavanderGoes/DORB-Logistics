@@ -45,8 +45,8 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
 
     @Transactional
     @Modifying
-    @Query(value = "INSERT INTO vrachtwagens (kenteken, apk, status)" +
-            "VALUES ('', '', 'beschikbaar');", nativeQuery = true)
+    @Query(value = "INSERT INTO vrachtwagens (typ_Id, kenteken, apk, status)" +
+            "VALUES (0, '', '', 'beschikbaar');", nativeQuery = true)
     void addRow();
 
     @Query(value = "SELECT vrachtwagen_Id FROM vrachtwagens ORDER BY vrachtwagen_Id DESC LIMIT 1", nativeQuery = true)
@@ -60,4 +60,7 @@ public interface VrachtwagenRepository extends JpaRepository<Vrachtwagen, Long> 
 
     @Query(value = "SELECT kenteken FROM vrachtwagens WHERE vrachtwagen_Id =:id", nativeQuery = true)
     String getKentekenById(@Param("id") long id);
+
+    @Query(value = "SELECT vrachtwagen_Id FROM vrachtwagens WHERE kenteken =:kenteken", nativeQuery = true)
+    Long getIdByKenteken(@Param("kenteken") String kenteken);
 }

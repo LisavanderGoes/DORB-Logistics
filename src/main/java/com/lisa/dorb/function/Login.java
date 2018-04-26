@@ -1,13 +1,12 @@
 package com.lisa.dorb.function;
 
-import com.lisa.dorb.saved.UserInfo;
-import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.db.Rol;
 import com.lisa.dorb.model.db.users.User;
-import com.lisa.dorb.repository.*;
+import com.lisa.dorb.repository.RolRepository;
+import com.lisa.dorb.repository.UserRepository;
+import com.lisa.dorb.saved.UserInfo;
 import com.vaadin.spring.annotation.SpringComponent;
 import org.springframework.beans.factory.annotation.Autowired;
-
 
 import java.util.List;
 
@@ -17,29 +16,33 @@ public class Login {
     UserRepository userRepository;
     @Autowired
     RolRepository rolRepository;
-    @Autowired
-    LoginUI loginUI;
 
+    /**
+     * @param naam = string met inlognaam
+     * @param wachtwoord = string met wachtwoord
+     * @return List met rollen
+     */
     public List<Rol> login(String naam, String wachtwoord){
         if(!naam.equals("") || !wachtwoord.equals("")){
-            return getStatus(naam, wachtwoord);
+            List<Rol> allRollen;
+            try {
+                User user = userRepository.findAllByInlognaamAndWachtwoord(naam, wachtwoord);
+                allRollen = rolRepository.getAllByUser_Id(user.getID());
+                fillUserInfo(user, allRollen);
+            }catch (Exception e){
+                return null;
+            }
+
+            return allRollen;
         }
         return null;
     }
 
-    private List<Rol> getStatus(String naam, String wachtwoord) {
-        List<Rol> allRollen;
-        try {
-            User user = userRepository.findAllByInlognaamAndWachtwoord(naam, wachtwoord);
-            allRollen = rolRepository.getAllByUser_Id(user.getID());
-            fillUserInfo(user, allRollen);
-        }catch (Exception e){
-            return null;
-        }
-
-        return allRollen;
-    }
-
+    /**
+     * Geef value aan de variabelen in UserInfo
+     * @param user = user(model)
+     * @param allRollen = list met rollen
+     */
     private void fillUserInfo(User user, List<Rol> allRollen) {
         UserInfo.voornaam = user.getVoornaam();
         UserInfo.tussenvoegsel = user.getTussenvoegsel();

@@ -27,5 +27,12 @@ public interface VrachtwagenTypeRepository extends JpaRepository<VrachtwagenType
     @Query(value = "SELECT typ_Id FROM typevrachtwagens WHERE volgorde = :volgorde", nativeQuery = true)
     long getIdByVolgorde(@Param("volgorde") long volgorde);
 
+    @Query(value = "SELECT type FROM typevrachtwagens WHERE typ_Id = :id", nativeQuery = true)
+    String getTypeById(@Param("id") long id);
+
+    @Query(value = "SELECT typ_Id FROM typevrachtwagens WHERE type = :type", nativeQuery = true)
+    long getIdByType(@Param("type") String type);
+
+
 
 }

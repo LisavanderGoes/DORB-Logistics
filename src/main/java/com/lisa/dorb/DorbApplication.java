@@ -12,11 +12,5 @@ public class DorbApplication {
 		SpringApplication.run(DorbApplication.class, args);
 	}
 
-
-	/*private void test(Button... buttons){ // set as many buttons
-		for(Button button: buttons){
-			//do stuff with button all buttons
-		}
-	}*/
 }
 

@@ -1,7 +1,7 @@
 package com.lisa.dorb.layout;
 
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.layout.order.FactureUI;
+import com.lisa.dorb.layout.order.FactuurUI;
 import com.vaadin.navigator.View;
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
@@ -22,7 +22,7 @@ public class TestUI extends VerticalLayout implements View {
     @Autowired
     OrderMaken orderMaken;
     @Autowired
-    FactureUI factureUI;
+    FactuurUI factuurUI;
 
     @PostConstruct
         void init() {

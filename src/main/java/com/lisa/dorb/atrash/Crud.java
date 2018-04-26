@@ -1,4 +1,4 @@
-package com.lisa.dorb.function;
+package com.lisa.dorb.atrash;
 
 import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.model.*;
@@ -39,10 +39,10 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(Admin admin, String wachtwoord) {
+    public String updateRol(Admin admin, String wachtwoord) {
         long id = admin.getID();
         try {
-            adminRepository.updateWachtwoord(wachtwoord, id);
+            adminRepository.updateRol(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -92,10 +92,10 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(chauffeur chauffeur, String wachtwoord) {
+    public String updateRol(chauffeur chauffeur, String wachtwoord) {
         long id = chauffeur.getID();
         try {
-            chauffeurRepository.updateWachtwoord(wachtwoord, id);
+            chauffeurRepository.updateRol(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -132,7 +132,7 @@ public class Crud {
     //endregion
 
     //region [Klant]
-    public List<Klant> list() {
+    public List<Klant> vrachtwagenList() {
         return (List<Klant>) klantRepository.findAll();
     }
 
@@ -157,10 +157,10 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(Klant klant, String wachtwoord) {
+    public String updateRol(Klant klant, String wachtwoord) {
         long id = klant.getID();
         try {
-            klantRepository.updateWachtwoord(wachtwoord, id);
+            klantRepository.updateRol(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -216,10 +216,10 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(Manager model, String wachtwoord) {
+    public String updateRol(Manager model, String wachtwoord) {
         long id = model.getID();
         try {
-            managerRepository.updateWachtwoord(wachtwoord, id);
+            managerRepository.updateRol(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }
@@ -245,7 +245,7 @@ public class Crud {
 
     /*
     //region [Planner]
-    public List<Planner> list() {
+    public List<Planner> vrachtwagenList() {
         return (List<Planner>) plannerRepository.findAll();
     }
 
@@ -270,10 +270,10 @@ public class Crud {
         }
         return null;
     }
-    public String updateWachtwoord(Planner model, String wachtwoord) {
+    public String updateRol(Planner model, String wachtwoord) {
         long id = model.getID();
         try {
-            plannerRepository.updateWachtwoord(wachtwoord, id);
+            plannerRepository.updateRol(wachtwoord, id);
         } catch (Exception e) {
             return "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
         }

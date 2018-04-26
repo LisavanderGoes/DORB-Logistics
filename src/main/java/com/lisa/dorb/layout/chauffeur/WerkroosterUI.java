@@ -1,9 +1,6 @@
 package com.lisa.dorb.layout.chauffeur;
 
-import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.function.Route;
 import com.lisa.dorb.layout.LoginUI;
-import com.lisa.dorb.layout.order.FactureUI;
 import com.lisa.dorb.model.db.Order;
 import com.lisa.dorb.model.db.Rit;
 import com.lisa.dorb.model.Werkrooster;
@@ -28,12 +25,6 @@ public class WerkroosterUI extends VerticalLayout implements View {
     @Autowired
     LoginUI loginUI;
     @Autowired
-    Route route;
-    @Autowired
-    OrderMaken orderMaken;
-    @Autowired
-    FactureUI factureUI;
-    @Autowired
     RitRepository ritRepository;
     @Autowired
     ChauffeurRepository chauffeurRepository;
@@ -47,9 +38,8 @@ public class WerkroosterUI extends VerticalLayout implements View {
     private VerticalLayout parent;
     private List<Werkrooster> werkrooster = new ArrayList<>();
 
-
     //UI
-    public Grid<Werkrooster> grid = new Grid<>();
+    private Grid<Werkrooster> werkroosterGrid = new Grid<>();
     private Button terugBtn = new Button("Terug");
     public Label send = new Label("");
 
@@ -59,9 +49,9 @@ public class WerkroosterUI extends VerticalLayout implements View {
         addHeader();
         addLayout();
         addOnclick();
-//        setGridOrder();
     }
 
+    //wordt opgeroepen vanuit LoginUI
     public void laadWerkrooster() {
         long chauffeur_Id = chauffeurRepository.getIdByUser_Id(UserInfo.user_Id);
         for(Rit rit: ritRepository.getByChauffeur_Id(chauffeur_Id)){
@@ -80,37 +70,37 @@ public class WerkroosterUI extends VerticalLayout implements View {
             }
             werkrooster.add(new Werkrooster(Date.valueOf(rit.getDatum()), kenteken, adressen, i));
         }
-        grid.setItems(werkrooster);
+        werkroosterGrid.setItems(werkrooster);
     }
 
     public void setGrid() {
-        grid.setCaption("Pallets");
-        grid.setSizeFull();
-        grid.setSelectionMode(Grid.SelectionMode.NONE);
+        werkroosterGrid.setCaption("Werkrooster");
+        werkroosterGrid.setSizeFull();
+        werkroosterGrid.setSelectionMode(Grid.SelectionMode.NONE);
         ListDataProvider<Werkrooster> dataProvider =
                 DataProvider.ofCollection(werkrooster);
 
-        grid.setDataProvider(dataProvider);
+        werkroosterGrid.setDataProvider(dataProvider);
 
-        grid.addColumn(Werkrooster::getAantal)
+        werkroosterGrid.addColumn(Werkrooster::getAantal)
                 .setCaption("Aantaal orders")
                 .setExpandRatio(0);
 
 
-        grid.addColumn(Werkrooster::getAdres)
+        werkroosterGrid.addColumn(Werkrooster::getAdres)
                 .setCaption("Adressen")
                 .setExpandRatio(2);
 
-        grid.addColumn(Werkrooster::getKenteken)
+        werkroosterGrid.addColumn(Werkrooster::getKenteken)
                 .setCaption("Vrachtwagen")
                 .setExpandRatio(2);
 
-        grid.addColumn(Werkrooster::getDatum)
+        werkroosterGrid.addColumn(Werkrooster::getDatum)
                 .setCaption("Datum")
                 .setExpandRatio(2);
 
-        grid.getEditor().setEnabled(false);
-        parent.addComponentsAndExpand(grid);
+        werkroosterGrid.getEditor().setEnabled(false);
+        parent.addComponentsAndExpand(werkroosterGrid);
     }
 
     private void addOnclick() {
@@ -133,13 +123,12 @@ public class WerkroosterUI extends VerticalLayout implements View {
     private void addLayout() {
         HorizontalLayout layout2 = new HorizontalLayout();
         layout2.addComponents( terugBtn, send);
-
         parent.addComponent(layout2);
     }
 
     private void terugButtonClick() {
         werkrooster.clear();
-        grid.removeAllColumns();
+        werkroosterGrid.removeAllColumns();
         getUI().setContent(loginUI);
     }
 

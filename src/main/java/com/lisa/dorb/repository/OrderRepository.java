@@ -22,6 +22,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
 
     @Transactional
     @Modifying(clearAutomatically = true)
+    @Query(value = "UPDATE orders SET pallet_aantal = :pallet_aantal WHERE order_Id = :id", nativeQuery = true)
+    void updateAantal(@Param("pallet_aantal") long pallet_aantal, @Param("id") long id);
+
+    @Transactional
+    @Modifying(clearAutomatically = true)
     @Query(value = "UPDATE orders SET adres = :adres WHERE order_Id = :id", nativeQuery = true)
     void updateAdres(@Param("adres") String adres, @Param("id") long id);
 

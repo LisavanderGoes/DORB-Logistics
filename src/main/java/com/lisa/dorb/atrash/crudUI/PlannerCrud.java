@@ -1,36 +1,38 @@
-package com.lisa.dorb.layout.crudUI;
+package com.lisa.dorb.atrash.crudUI;
 
 import com.vaadin.spring.annotation.SpringComponent;
 import com.vaadin.ui.*;
 
 @SpringComponent
-public class AdminCrud extends VerticalLayout {
-
+public class PlannerCrud extends VerticalLayout {
+//
 //    @Autowired
 //    CrudUI crudUI;
 //    @Autowired
-//    AdminRepository repository;
+//    PlannerRepository repository;
 //
-//    private List<Admin> list; //define inside methode otherwise null
+//
+//    private List<Planner> vrachtwagenList; //define inside methode otherwise null
 //    private Button deleteBtn;
-//    private Button addBtn;
-//    private Grid<Admin> Grid;
+//    private Button toevoegenBtn;
+//    private werkroosterGrid<Planner> werkroosterGrid;
 //    private long rowId;
 //    private Object rowItem;
 //
 //    public void addTable() {
-//        list = repository.findAll();
-//        Grid = crudUI.gridAdmin;
+//        vrachtwagenList = repository.findAll();
+//        werkroosterGrid = crudUI.plannerGrid;
 //        deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
-//        addBtn = new Button("Toevoegen");
+//        toevoegenBtn = new Button("Toevoegen");
 //
-//        Grid.setCaption("Admins");
-//        Grid.setSizeFull();
-//        Grid.setSelectionMode(Grid.SelectionMode.NONE);
-//        ListDataProvider<Admin> dataProvider =
-//                DataProvider.ofCollection(list);
 //
-//        Grid.setDataProvider(dataProvider);
+//        werkroosterGrid.setCaption("Planners");
+//        werkroosterGrid.setSizeFull();
+//        werkroosterGrid.setSelectionMode(werkroosterGrid.SelectionMode.NONE);
+//        ListDataProvider<Planner> dataProvider =
+//                DataProvider.ofCollection(vrachtwagenList);
+//
+//        werkroosterGrid.setDataProvider(dataProvider);
 //
 //        TextField taskField1 = new TextField();
 //        TextField taskField2 = new TextField();
@@ -38,51 +40,51 @@ public class AdminCrud extends VerticalLayout {
 //        TextField taskField4 = new TextField();
 //        TextField taskField5 = new TextField();
 //
-//        Grid.addColumn(Admin::getID)
+//        werkroosterGrid.addColumn(Planner::getID)
 //                .setCaption("Id")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getVoornaam)
+//        werkroosterGrid.addColumn(Planner::getVoornaam)
 //                .setEditorComponent(taskField1, this::setVoornaam)
 //                .setCaption("Voornaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getTussenvoegsel)
+//        werkroosterGrid.addColumn(Planner::getTussenvoegsel)
 //                .setEditorComponent(taskField2, this::setTussenvoegsel)
 //                .setCaption("Tussenvoegsel")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getAchternaam)
+//        werkroosterGrid.addColumn(Planner::getAchternaam)
 //                .setEditorComponent(taskField3, this::setAchternaam)
 //                .setCaption("Achternaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getUser_Id)
+//        werkroosterGrid.addColumn(Planner::getUser_Id)
 //                .setEditorComponent(taskField4, this::setUser_Id)
 //                .setCaption("Inlognaam")
 //                .setExpandRatio(2);
 //
-//        Grid.addColumn(Admin::getWachtwoord)
+//        werkroosterGrid.addColumn(Planner::getWachtwoord)
 //                .setEditorComponent(taskField5, this::setWachtwoord) //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
 //                .setCaption("Wachtwoord")
 //                .setExpandRatio(2);
 //
-//        Grid.setSelectionMode(Grid.SelectionMode.SINGLE);
+//        werkroosterGrid.setSelectionMode(werkroosterGrid.SelectionMode.SINGLE);
 //
-//        Grid.addItemClickListener(event ->
+//        werkroosterGrid.addItemClickListener(event ->
 //                setID(event.getItem().getID(), event.getItem()));
 //
-//        Grid.getEditor().setEnabled(true);
+//        werkroosterGrid.getEditor().setEnabled(true);
 //
-//        crudUI.table.addComponentsAndExpand(Grid);
-//        addBtn.addClickListener(event -> {
+//        crudUI.table.addComponentsAndExpand(werkroosterGrid);
+//        toevoegenBtn.addClickListener(event -> {
 //            toevoegen();
 //        });
 //        deleteBtn.addClickListener(event -> {
 //            delete(rowId, rowItem);
 //        });
 //
-//        crudUI.table.addComponents(addBtn, deleteBtn);
+//        crudUI.table.addComponents(toevoegenBtn, deleteBtn);
 //        crudUI.parent.addComponentsAndExpand(crudUI.table);
 //    }
 //
@@ -91,14 +93,14 @@ public class AdminCrud extends VerticalLayout {
 //        rowItem = item;
 //    }
 //
-//    private void setWachtwoord(Admin admin, String wachtwoord) {
+//    private void setWachtwoord(Planner model, String wachtwoord) {
 //        //hier moet het encrypted erin staan dan weer decrypten naar db en weer encrypted erin
-//        long id = admin.getID();
+//        long id = model.getID();
 //        String snd;
 //        try {
-//            repository.updateWachtwoord(wachtwoord, id);
-//            admin.setWachtwoord(wachtwoord);
-//            Grid.setItems(list);
+//            repository.updateRol(wachtwoord, id);
+//            model.setWachtwoord(wachtwoord);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -106,13 +108,13 @@ public class AdminCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setUser_Id(Admin admin, String inlognaam) {
+//    private void setUser_Id(Planner model, String inlognaam) {
 //        String snd;
-//        long id = admin.getID();
+//        long id = model.getID();
 //        try {
 //            repository.updateInlognaam(inlognaam, id);
-//            admin.setUser_Id(inlognaam);
-//            Grid.setItems(list);
+//            model.setUser_Id(inlognaam);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -120,31 +122,25 @@ public class AdminCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//    private void setAchternaam(Admin admin, String achternaam) {
-//        long id = admin.getID();
+//    private void setAchternaam(Planner model, String achternaam) {
+//        long id = model.getID();
 //        repository.updateAchternaam(achternaam, id);
-//        admin.setAchternaam(achternaam);
-//        Grid.setItems(list);
+//        model.setAchternaam(achternaam);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
-//    private void setTussenvoegsel(Admin admin, String tussenvoegsel) {
-//        long id = admin.getID();
+//    private void setTussenvoegsel(Planner model, String tussenvoegsel) {
+//        long id = model.getID();
 //        repository.updateTussenvoegsel(tussenvoegsel, id);
-//        admin.setTussenvoegsel(tussenvoegsel);
-//        Grid.setItems(list);
+//        model.setTussenvoegsel(tussenvoegsel);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
-//    public void setVoornaam(Admin admin, String voornaam) {
-//        long id = admin.getID();
+//    public void setVoornaam(Planner model, String voornaam){
+//        long id = model.getID();
 //        repository.updateVoornaam(voornaam, id);
-//        admin.setVoornaam(voornaam);
-//        Grid.setItems(list);
-//    }
-//
-//    private void test(String s){
-//        if(s == "a") {
-//            crudUI.send.setValue(crudUI.send.getValue() + "L   ");
-//        }
+//        model.setVoornaam(voornaam);
+//        werkroosterGrid.setItems(vrachtwagenList);
 //    }
 //
 //    private void toevoegen() {
@@ -152,9 +148,9 @@ public class AdminCrud extends VerticalLayout {
 //        try {
 //            repository.addRow();
 //            long id = getDBId();
-//            Admin admin = new Admin(id, "", "", "", "", "");
-//            list.add(admin);
-//            Grid.setItems(list);
+//            Planner model = new Planner(id, "", "", "", "", "");
+//            vrachtwagenList.add(model);
+//            werkroosterGrid.setItems(vrachtwagenList);
 //            snd = "";
 //        } catch (Exception e) {
 //            snd = "Inlognaam en wachtwoord kunnen niet twee keer hetzelde zijn!";
@@ -162,15 +158,15 @@ public class AdminCrud extends VerticalLayout {
 //        crudUI.send.setValue(snd);
 //    }
 //
-//        private void delete (long id, Object item){
-//            repository.deleteRow(id);
-//            list.remove(item);
-//            Grid.setItems(list);
-//        }
+//    private void delete(long id, Object item) {
+//        repository.deleteRow(id);
+//        vrachtwagenList.remove(item);
+//        werkroosterGrid.setItems(vrachtwagenList);
+//    }
 //
-//        private long getDBId() {
-//            return repository.getId();
-//        }
+//    private long getDBId() {
+//        return repository.getId();
+//    }
 //
 
 }

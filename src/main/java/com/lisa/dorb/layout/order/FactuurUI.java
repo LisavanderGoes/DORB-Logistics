@@ -17,7 +17,7 @@ import java.sql.Date;
 import java.util.List;
 
 @SpringComponent
-public class FactureUI extends VerticalLayout implements View {
+public class FactuurUI extends VerticalLayout implements View {
 
     @Autowired
     LoginUI loginUI;
@@ -26,8 +26,6 @@ public class FactureUI extends VerticalLayout implements View {
     @Autowired
     KlantRepository klantRepository;
     @Autowired
-    VrachtwagenTypeRepository vrachtwagenTypeRepository;
-    @Autowired
     LandenRepository landenRepository;
     @Autowired
     RitRepository ritRepository;
@@ -35,21 +33,26 @@ public class FactureUI extends VerticalLayout implements View {
     OrderRepository orderRepository;
     @Autowired
     PalletRepository palletRepository;
+    @Autowired
+    PrijsRepository prijsRepository;
+    @Autowired
+    OrderUI orderUI;
 
-    private VerticalLayout parent;
     private NewOrder newOrder;
 
     //UI
-    private Label klant = new Label("");
-    private Label reknmr = new Label("");
-    private Label adres = new Label("");
-    private Label prijs = new Label("");
-    private Label datum = new Label("");
-    private Label pallet = new Label("");
-    private Label palletAantal = new Label("");
+    private VerticalLayout parent;
+    private Label klantLbl = new Label("");
+    private Label reknmrLbl = new Label("");
+    private Label kmLbl = new Label("");
+    private Label adresLbl = new Label("");
+    private Label prijsLbl = new Label("");
+    private Label datumLbl = new Label("");
+    private Label palletLbl = new Label("");
+    private Label palletAantalLbl = new Label("");
     private Label send = new Label("");
-    private Button terugBtn = new Button("Annuleren");
-    private Button order = new Button("Akoord");
+    private Button annulerenBtn = new Button("Annuleren");
+    private Button akoordBtn = new Button("Akoord");
 
     @PostConstruct
     void init() {
@@ -60,26 +63,45 @@ public class FactureUI extends VerticalLayout implements View {
     }
 
     private void addOnclick() {
-        terugBtn.addClickListener(event -> terugButtonClick());
-        terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        order.addClickListener(event -> akoord());
+        annulerenBtn.addClickListener(event -> terugButtonClick());
+        annulerenBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
+        akoordBtn.addClickListener(event -> akoord());
     }
 
     void setComponents(NewOrder order){
-        klant.setValue(userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getVoornaam() +" " +
+        klantLbl.setValue(userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getVoornaam() +" " +
                 userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getTussenvoegsel() +" " +
                 userRepository.findAllById(klantRepository.getUser_IdById(Long.parseLong(order.getOrder().getKlant_Id()))).getAchternaam() +" ");
-        reknmr.setValue(klantRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getRekeningnummer());
-        adres.setValue(order.getOrder().getAdres());
-        prijs.setValue(order.getOrder().getPrijs() + " euro");
-        datum.setValue(order.getOrder().getDatum());
+        reknmrLbl.setValue(klantRepository.findAllById(Long.parseLong(order.getOrder().getKlant_Id())).getRekeningnummer());
+        adresLbl.setValue(order.getOrder().getAdres());
+        prijsLbl.setValue(order.getOrder().getPrijs() + " euro");
+        datumLbl.setValue(order.getOrder().getDatum());
+        kmLbl.setValue(String.valueOf(findKm(Double.parseDouble(order.getOrder().getPrijs()), landenRepository.getLandenByLand_Id(order.getOrder().getLand_Id()), Integer.parseInt(order.getOrder().getPalletAantal()))));
         for(Pallet pallets : order.getPallet()) {
-            pallet.setValue(pallet.getValue() + pallets.getWat() + "/");
+            palletLbl.setValue(palletLbl.getValue() + pallets.getWat() + "/");
         }
-        palletAantal.setValue(order.getOrder().getPalletAantal());
+        palletAantalLbl.setValue(order.getOrder().getPalletAantal());
         newOrder = order;
     }
 
+    /**
+     * @param prijs = prijs van order, double met punt
+     * @param land = land van bestemming
+     * @param palletAantal = aantal pallets in order
+     * @return km in double met punt
+     */
+    private double findKm(double prijs, String land, long palletAantal){
+        double prijsLand = Double.valueOf(prijsRepository.getPrijsByWat(land));
+        double prijsPallets;
+        if(palletAantal<= 6) {
+            prijsPallets = Double.valueOf(prijsRepository.getPrijsByWat(palletAantal + "Pallet"));
+        } else {
+            prijsPallets = Double.valueOf(prijsRepository.getPrijsByWat(6 + "Pallet"));
+        }
+        return (prijs / prijsPallets) - prijsLand;
+    }
+
+    // naar DB
     private void akoord() {
         Long rit_Id;
         if(newOrder.getRit().getID() != 0){
@@ -88,43 +110,42 @@ public class FactureUI extends VerticalLayout implements View {
             rit_Id = rit.getID();
         } else {
             Rit rit = newOrder.getRit();
-            //error: [solved] chauffeur_Id is niet het user_Id
             ritRepository.addRow(Integer.parseInt(rit.getChauffeur_Id()), Integer.parseInt(rit.getVrachtwagen_Id()), Integer.parseInt(rit.getRuimte()), Date.valueOf(rit.getDatum()));
             rit_Id = ritRepository.getId();
         }
         Order order = newOrder.getOrder();
-        //in order model is rit_Id nog steeds 0
-        //error: [solved] klant_Id is niet het user_Id
         orderRepository.addRow(order.getAdres(), order.getPrijs(), Integer.parseInt(order.getKlant_Id()), Date.valueOf(order.getDatum()), rit_Id, order.getLand_Id(), Integer.parseInt(order.getPalletAantal()));
         long order_Id = orderRepository.getId();
         List<Pallet> pallets = newOrder.getPallet();
-        //in pallet model is order_Id nog steeds 0
         for(Pallet pallet : pallets) {
             palletRepository.addRow(pallet.getWat(), order_Id, Integer.parseInt(pallet.getAantal()));
         }
         send.setValue("U bent akoord gegaan!");
-        terugBtn.setCaption("Terug naar login");
+        annulerenBtn.setCaption("Terug naar login");
+        palletLbl.setValue("");
+        orderUI.remove();
     }
 
     private void addHeader() {
-        Label header = new Label("FACATURE");
+        Label header = new Label("FACTUUR");
         header.addStyleName(ValoTheme.LABEL_H1);
         parent.addComponent(header);
     }
 
     private void addLayout() {
         VerticalLayout layout1 = new VerticalLayout();
-        klant.setCaption("Klant:");
-        reknmr.setCaption("Rekeningnummer:");
-        adres.setCaption("Adres:");
-        prijs.setCaption("Prijs:");
-        datum.setCaption("Datum:");
-        pallet.setCaption("Bestelt:");
-        palletAantal.setCaption("Aantal:");
-        layout1.addComponents(klant, reknmr, adres, prijs, datum, pallet, palletAantal);
+        klantLbl.setCaption("Klant:");
+        reknmrLbl.setCaption("Rekeningnummer:");
+        adresLbl.setCaption("Adres:");
+        prijsLbl.setCaption("Prijs:");
+        kmLbl.setCaption("Kilometers:");
+        datumLbl.setCaption("Datum:");
+        palletLbl.setCaption("Bestelt:");
+        palletAantalLbl.setCaption("Aantal:");
+        layout1.addComponents(klantLbl, reknmrLbl, adresLbl, kmLbl, prijsLbl, datumLbl, palletLbl, palletAantalLbl);
 
         VerticalLayout layout2 = new VerticalLayout();
-        layout2.addComponents(order, terugBtn, send);
+        layout2.addComponents(akoordBtn, annulerenBtn, send);
 
         HorizontalLayout layout3 = new HorizontalLayout();
         layout3.addComponents(layout1,layout2);
@@ -134,8 +155,10 @@ public class FactureUI extends VerticalLayout implements View {
 
     private void terugButtonClick() {
         send.setValue("");
-        terugBtn.setCaption("Annuleren");
+        annulerenBtn.setCaption("Annuleren");
         getUI().setContent(loginUI);
+        palletLbl.setValue("");
+        orderUI.remove();
     }
 
     private void setupLayout() {

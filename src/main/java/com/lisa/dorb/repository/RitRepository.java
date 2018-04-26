@@ -54,13 +54,13 @@ public interface RitRepository extends JpaRepository<Rit, Long> {
     @Query(value = "SELECT rit_Id FROM rit ORDER BY rit_Id DESC LIMIT 1", nativeQuery = true)
     long getId();
 
-    @Query(value = "SELECT * FROM rit WHERE datum = :datum", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
+    @Query(value = "SELECT * FROM rit WHERE datum = :datum", nativeQuery = true) //als je in een vrachtwagenList inlaad moet je alles selecten of andere vrachtwagenList maken
     List<Rit> getByDatum(@Param("datum") Date datum);
 
-    @Query(value = "SELECT * FROM rit WHERE chauffeur_Id = :chauffeur_Id", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
+    @Query(value = "SELECT * FROM rit WHERE chauffeur_Id = :chauffeur_Id", nativeQuery = true) //als je in een vrachtwagenList inlaad moet je alles selecten of andere vrachtwagenList maken
     List<Rit> getByChauffeur_Id(@Param("chauffeur_Id") long chauffeur_Id);
 
-    @Query(value = "SELECT * FROM rit WHERE rit_Id = :rit_Id", nativeQuery = true) //als je in een list inlaad moet je alles selecten of andere list maken
+    @Query(value = "SELECT * FROM rit WHERE rit_Id = :rit_Id", nativeQuery = true) //als je in een vrachtwagenList inlaad moet je alles selecten of andere vrachtwagenList maken
     Rit getById(@Param("rit_Id") long rit_Id);
 
 }

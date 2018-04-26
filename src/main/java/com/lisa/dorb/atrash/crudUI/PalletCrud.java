@@ -1,8 +1,8 @@
-package com.lisa.dorb.layout.crudUI;
+package com.lisa.dorb.atrash.crudUI;
 
 import com.lisa.dorb.layout.CrudUI;
-import com.lisa.dorb.model.db.Prijs;
-import com.lisa.dorb.repository.PrijsRepository;
+import com.lisa.dorb.model.db.Pallet;
+import com.lisa.dorb.repository.PalletRepository;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.spring.annotation.SpringComponent;
@@ -15,32 +15,32 @@ import org.springframework.beans.factory.annotation.Autowired;
 import java.util.List;
 
 @SpringComponent
-public class PrijsCrud extends VerticalLayout {
+public class PalletCrud extends VerticalLayout {
 
     @Autowired
     CrudUI crudUI;
     @Autowired
-    PrijsRepository repository;
+    PalletRepository repository;
 
 
-    private List<Prijs> list; //define inside methode otherwise null
+    private List<Pallet> list; //define inside methode otherwise null
     private Button deleteBtn;
     private Button addBtn;
-    private Grid<Prijs> grid;
+    private Grid<Pallet> grid;
     private long rowId;
     private Object rowItem;
 
     public void addTable() {
         list = repository.findAll();
-        grid = crudUI.prijsGrid;
+        grid = crudUI.palletGrid;
         deleteBtn = new Button("Verwijderen"); //Dit moet hier staan want anders zet hij er 2 onclicks op
         addBtn = new Button("Toevoegen");
 
 
-        grid.setCaption("Prijzen");
+        grid.setCaption("StringLongModel");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
-        ListDataProvider<Prijs> dataProvider =
+        ListDataProvider<Pallet> dataProvider =
                 DataProvider.ofCollection(list);
 
         grid.setDataProvider(dataProvider);
@@ -48,18 +48,18 @@ public class PrijsCrud extends VerticalLayout {
         TextField taskField1 = new TextField();
         TextField taskField2 = new TextField();
 
-        grid.addColumn(Prijs::getID)
+        grid.addColumn(Pallet::getID)
                 .setCaption("Id")
                 .setExpandRatio(2);
 
-        grid.addColumn(Prijs::getWat)
+        grid.addColumn(Pallet::getWat)
                 .setEditorComponent(taskField1, this::setWat)
                 .setCaption("Wat?")
                 .setExpandRatio(2);
 
-        grid.addColumn(Prijs::getPrijs)
+        grid.addColumn(Pallet::getOrder_Id)
                 .setEditorComponent(taskField2, this::setPrijs)
-                .setCaption("Prijs")
+                .setCaption("Order_Id")
                 .setExpandRatio(2);
 
         grid.setSelectionMode(Grid.SelectionMode.SINGLE);
@@ -86,27 +86,28 @@ public class PrijsCrud extends VerticalLayout {
         rowItem = item;
     }
 
-    private void setWat(Prijs model, String wat) {
+    private void setWat(Pallet model, String wat) {
         long id = model.getID();
         repository.updateWat(wat, id);
         model.setWat(wat);
         grid.setItems(list);
     }
 
-    private void setPrijs(Prijs model, String prijs) {
+    private void setPrijs(Pallet model, String order_Id) {
         long id = model.getID();
-        repository.updatePrijs(prijs, id);
-        model.setPrijs(prijs);
+        long newLong = Long.parseLong(order_Id);
+        repository.updateOrder_Id(newLong, id);
+//        model.setPrijs(newLong);
         grid.setItems(list);
     }
 
     private void toevoegen() {
         String snd;
-        try {
-            repository.addRow();
+       try {
+//            repository.addRow();
             long id = getDBId();
-            Prijs model = new Prijs(id, "", "");
-            list.add(model);
+//            Pallet model = new Pallet(id, 0, "");
+//            vrachtwagenList.add(model);
             grid.setItems(list);
             snd = "";
         } catch (Exception e) {

@@ -1,6 +1,11 @@
 package com.lisa.dorb.layout;
 
-import com.lisa.dorb.layout.crudUI.*;
+import com.lisa.dorb.atrash.Admin;
+import com.lisa.dorb.atrash.crudUI.AdminCrud;
+import com.lisa.dorb.atrash.crudUI.ChauffeurCrud;
+import com.lisa.dorb.atrash.crudUI.KlantCrud;
+import com.lisa.dorb.atrash.crudUI.ManagerCrud;
+import com.lisa.dorb.atrash.crudUI.*;
 import com.lisa.dorb.model.db.*;
 import com.lisa.dorb.model.db.users.*;
 import com.lisa.dorb.values.strings;
@@ -46,11 +51,6 @@ public class CrudUI extends VerticalLayout implements View {
     public VerticalLayout table = new VerticalLayout();
 
 
-    public Grid<Admin> gridAdmin = new Grid<>();
-    public Grid<Klant> gridKlant = new Grid<>();
-    public Grid<Chauffeur> gridChauffeur = new Grid<>();
-    public Grid<Planner> plannerGrid = new Grid<>();
-    public Grid<Manager> managerGrid = new Grid<>();
     public Grid<Order> gridOrder = new Grid<>();
     public Grid<Vrachtwagen> vrachtwagenGrid = new Grid<>();
     public Grid<Prijs> prijsGrid = new Grid<>();
@@ -147,11 +147,6 @@ public class CrudUI extends VerticalLayout implements View {
 
     private void removeAll(){
         table.removeAllComponents();
-        gridAdmin.removeAllColumns();
-        gridKlant.removeAllColumns();
-        gridChauffeur.removeAllColumns();
-        plannerGrid.removeAllColumns();
-        managerGrid.removeAllColumns();
         gridOrder.removeAllColumns();
         palletGrid.removeAllColumns();
         prijsGrid.removeAllColumns();

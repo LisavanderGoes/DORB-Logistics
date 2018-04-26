@@ -1,4 +1,4 @@
-package com.lisa.dorb.layout.crudUI;
+package com.lisa.dorb.atrash.crudUI;
 
 import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.model.db.Vrachtwagen;
@@ -37,7 +37,7 @@ public class VrachtwagenCrud extends VerticalLayout {
         addBtn = new Button("Toevoegen");
 
 
-        grid.setCaption("Vrachtwagens");
+        grid.setCaption("VrachtwagenPlanner");
         grid.setSizeFull();
         grid.setSelectionMode(Grid.SelectionMode.NONE);
         ListDataProvider<Vrachtwagen> dataProvider =

@@ -80,8 +80,7 @@ public class LoginUI extends VerticalLayout implements View {
         String send = "";
         try {
                 switch (status) {
-                    case strings.ADMIN:
-                        getUI().setContent(crudUI);
+                    case strings.MANAGER:
                         break;
                     case strings.KLANT:
                         getUI().setContent(orderUI);

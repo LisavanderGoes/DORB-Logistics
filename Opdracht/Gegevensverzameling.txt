@@ -112,7 +112,7 @@ Klanten:
   - datum maken pagina
 
 ============================================
-[Systeem]Prijs (input van aantal pallets, [systeem]route.kenteken):
+[Systeem]Prijs (input van _long pallets, [systeem]route.kenteken):
 
 1 Pallet:
 - +0,50 * kenteken
@@ -155,10 +155,10 @@ en als hij daar is ga dan naar de volgende ruimte)
 Klant:
 - ruimte
   - welk natio (kortste route)
-- pallets (aantal)
+- pallets (_long)
 - datum (alle bestellingen worden in 1 dag wegebracht)
 
-Vrachtwagen (input aantal pallets, datum):
+Vrachtwagen (input _long pallets, datum):
 - beschikbaarheid
   - is hij beschikbaar die dag 
   - is hij in onderhoud
@@ -187,8 +187,8 @@ Totaal (return)
 - Adres
 - Prijs
 - datum
-- aantal pallets
-- ruimte over in vrachtwagen (aantal pallets)
+- _long pallets
+- ruimte over in vrachtwagen (_long pallets)
 
 (facaturen naar het rekeningnummer van de klant) (?? klopt niet meer)
 (bij totaal pas naar db -> orders)
@@ -207,7 +207,7 @@ Chauffeurs:
 - achternaam
 - rijbewijs (key) (kunnen meerdere)
 - nat_Id (key) (kunnen meerdere)
-- werkdagen (aantal)
+- werkdagen (_long)
 - user_Id
 - wachtwoord
 
@@ -247,7 +247,7 @@ Orders:
 - ruimte
 - user_Id
 - datum
-- aantal pallets
+- _long pallets
 - rit_Id (key) (kunnen meerdere zijn)
 
 (Klant:
@@ -266,7 +266,7 @@ Typevrachtwagens:
 
 Rit:
 - rit_Id
-- ruimte (aantal pallets na datum) (??)
+- ruimte (_long pallets na datum) (??)
 - datum
 (- datum (key) (kunnen meerdere))
 - vrachtwagen_Id (key)
@@ -306,7 +306,7 @@ Chauffeurs:
 - achternaam
 - rijbewijs (spinner v radiobutton)
 - nationaliteit (spinner met alle opties van nationaliteit)
-- werkdagen (aantal)
+- werkdagen (_long)
 - user_Id
 - wachtwoord
 
@@ -387,5 +387,114 @@ inladen (chauffeurs)
 google maps gebruik
 
 rekening met de route niet de landen
+
+===============================================
+//region [Rittencheck]
+    //if rit !exists where datum == datum
+            //return false
+        //if rit exists where datum == datum
+                //rit_Id *
+                //ruimte
+                //vrachtwagen_Id
+                //chauffeur_Id *
+        // get typ_Id from vrachtwagen where vrachtwagen_Id == vrachtwagen_Id
+        // get ruimte van vrachtwagenType where typ_Id == typ_Id
+        // if ruimte + palletAantal !> ruimte vrachtwagenType
+            //db update rit in ruimte where rit_Id == rit_Id
+            //return true
+        // if ruimte + palletAantal > ruimte vrachtwagenType
+            // get grootst van vrachtwagenType
+                // if grootst
+                    //return false
+                //if !grootst
+                    //boolean check(typ_Id){
+                    //typ_++
+                    //get ruimte van vrachtwagenType where typ_Id == typ_Id++
+                    // if ruimte + palletAantal > ruimte vrachtwagenType
+                        // get grootst van vrachtwagenType
+                            // if grootst
+                                //return false
+                            //if !grootst
+                                //check(type_Id)
+                        // if ruimte + palletAantal !> ruimte vrachtwagenType
+                            //return typ_Id
+                        //}
+                        //findVrachtwagen(typ_++){
+                            //get ruimte van typeVrachtwagens where typ_Id == typ_Id++(????????)
+                            //get vrachtwagen_Id van rit where datum == datum
+                            //get vrachtwagen_Id van vrachtwagen where status == beschikbaar && typ_Id == typ_Id++
+                            //if vrachtwagen_Id != vrachtwagen_Id
+                                //add to List(vrachtwagen_Id)
+                                    //if List == null
+                                        //return false
+                                    //if List != null
+                                        //get List(0) vrachtwagen_Id
+
+
+                            //get rijbewijs van typeVrachtwagens where typ_Id == typ_Id
+                            //get rijbewijs van chauffeurs where chauffeur_Id == chauffeur_Id*
+                                //if rijbewijs_Id != rijbewijs_Id
+                                    //get adres van order where rit_Id == rit_Id *
+
+                                        //land = route(adres)
+                                            //if findChauffeur(datum, vrachtwagen_Id, land) == null
+                                                //return false
+                                            //if findChauffeur(datum, vrachtwagen_Id, land) != null
+                                                //db update rit in vrachtwagen_Id && ruimte && chauffeur_Id where rit_Id == rit_Id
+                                                //return true
+
+                                //if rijbewijs_Id == rijbewijs_Id
+                                    //db update rit in vrachtwagen_Id && ruimte where rit_Id == rit_Id
+                                    //return true
+
+                                        //check ook op het land van nieuwe orde
+//endregion
+
+//region [Chauffeurcheck]
+    //vrachtwagen_Id, land_Id*, datum
+    //get typ_Id van vrachtwagen where vrachtwagen_Id == vrachtwagen_Id
+    //get rijbewijs van Typevrachtwagens where typ_Id == typ_Id
+
+    //get chauffeur_Id van rit where datum == datum
+    //get user_Id van chauffeurs where rijbewijs == rijbewijs
+    //for(user :user_Id)
+        //get land_Id van nationaliteit where chauffeur_Id == user_Id
+        //for(land: land_Id)
+            //if land_Id == land_Id*
+                //add use_Id to vrachtwagenList
+    //if chauffeur_Id == user_Id(vrachtwagenList)
+        //return false
+    //if chauffeur_Id != user_Id
+        //add to vrachtwagenList
+//endregion
+
+//region [Vrachtwagencheck]
+
+    //pallet aantal, datum
+    //volgende = (checkvolgorde(0, pallet aantal, 0))
+    //get typ_Id van typevrachtwagens where volgorde == volgende
+    //get vrachtwagen_Id van rit where datum == datum
+    //get vrachtwagen_Id van vrachtwagens where status == beschikbaar && typ_Id == typ_Id && apk != datum
+    //if vrachtwagen_Id == vrachtwagen_Id)\
+        //return null
+    //if vrachtwagen_Id != vrachtwagen_Id
+        //add to vrachtwagenList
+
+//endregion
+
+//region [Prijsberekenen]
+    //km, land, aantal pallets
+    //get prijs van prijzen where wat == land
+    //get prijs van prijzen where wat == pallet aantal
+    //prijs(pallet) * km + prijs(land)
+//endregion
+
+
+===========================================================
+/*private void test(Button... buttons){ // set as many buttons
+		for(Button button: buttons){
+			//do stuff with button all buttons
+		}
+	}*/
 
 

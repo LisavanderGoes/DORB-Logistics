@@ -8,15 +8,19 @@ public class OrderPlanner implements Serializable {
 
     long order_Id;
     long rit_Id;
+    long ruimte;
     String klantnaam;
     String adres;
+    double prijs;
     Date datum;
     String naamChauffeur;
     String kenteken;
 
-    public OrderPlanner(long order_Id, long rit_Id, String klantnaam, Date datum, String kenteken, String adres, String naamChauffeur){
+    public OrderPlanner(long order_Id,  long rit_Id, String klantnaam, Date datum, String kenteken, String adres, String naamChauffeur, long ruimte, double prijs){
         this.order_Id = order_Id;
         this.rit_Id = rit_Id;
+        this.ruimte = ruimte;
+        this.prijs = prijs;
         this.klantnaam = klantnaam;
         this.datum = datum;
         this.kenteken = kenteken;
@@ -30,6 +34,12 @@ public class OrderPlanner implements Serializable {
 
     public long getRit_Id(){
         return rit_Id;
+    }
+    public long getRuimte(){
+        return ruimte;
+    }
+    public double getPrijs(){
+        return prijs;
     }
 
     public String getKlantnaam(){

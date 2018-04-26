@@ -1,11 +1,10 @@
 package com.lisa.dorb.layout.order;
 
+import com.lisa.dorb.model.StringLongModel;
 import com.lisa.dorb.saved.UserInfo;
 import com.lisa.dorb.function.OrderMaken;
-import com.lisa.dorb.function.Route;
 import com.lisa.dorb.layout.LoginUI;
 import com.lisa.dorb.model.NewOrder;
-import com.lisa.dorb.model.Pallets;
 import com.vaadin.data.provider.DataProvider;
 import com.vaadin.data.provider.ListDataProvider;
 import com.vaadin.navigator.View;
@@ -26,30 +25,28 @@ public class OrderUI extends VerticalLayout implements View {
     @Autowired
     LoginUI loginUI;
     @Autowired
-    Route route;
-    @Autowired
     OrderMaken orderMaken;
     @Autowired
-    FactureUI factureUI;
+    FactuurUI factuurUI;
 
-    private VerticalLayout parent;
-    private List<Pallets> pallets = new ArrayList<>();
+    private List<StringLongModel> pallets = new ArrayList<>();
     private String fullAdres;
 
     //UI
-    public Grid<Pallets> grid = new Grid<>();
-    private TextField straatnaam = new TextField("Straatnaam+Huisnummer");
-    private TextField plaats = new TextField("Plaats");
-    private TextField postcode = new TextField("Postcode");
-    private TextField provincie = new TextField("Provincie");
-    private TextField land = new TextField("Land");
-    private DateField datum = new DateField("Datum van levering");
+    private VerticalLayout parent;
+    private Grid<StringLongModel> palletsGrid = new Grid<>();
+    private TextField straatnaamTxtField = new TextField("Straatnaam+Huisnummer");
+    private TextField plaatsTxtField = new TextField("Plaats");
+    private TextField postcodeTxtField = new TextField("Postcode");
+    private TextField provincieTxtField = new TextField("Provincie");
+    private TextField landTxtField = new TextField("Land");
+    private DateField datumTxtField = new DateField("Datum van levering");
     private Button terugBtn = new Button("Annuleren");
     public Label send = new Label("");
-    public Button addBtn = new Button("+");
-    private TextField pallet = new TextField("Wat wilt u bestellen?");
-    private NumberField aantal = new NumberField("Hoeveel pallets?");
-    private Button order = new Button("order maken");
+    private Button toevoegenBtn = new Button("+");
+    private TextField palletTxtField = new TextField("Wat wilt u bestellen?");
+    private NumberField aantalTxtField = new NumberField("Hoeveel pallets?");
+    private Button orderBtn = new Button("Order maken");
 
     @PostConstruct
     void init() {
@@ -60,77 +57,92 @@ public class OrderUI extends VerticalLayout implements View {
         setGrid();
     }
 
+    public void remove() {
+        pallets.clear();
+        straatnaamTxtField.clear();
+        plaatsTxtField.clear();
+        postcodeTxtField.clear();
+        provincieTxtField.clear();
+        landTxtField.clear();
+        datumTxtField.clear();
+        palletTxtField.clear();
+        aantalTxtField.clear();
+        palletsGrid.removeAllColumns();
+        setGrid();
+    }
+
     private void setGrid() {
-        grid.setCaption("Pallets");
-        grid.setSizeFull();
-        grid.setSelectionMode(com.vaadin.ui.Grid.SelectionMode.NONE);
-        ListDataProvider<Pallets> dataProvider =
+        palletsGrid.setCaption("Pallets");
+        palletsGrid.setSizeFull();
+        palletsGrid.setSelectionMode(com.vaadin.ui.Grid.SelectionMode.NONE);
+        ListDataProvider<StringLongModel> dataProvider =
                 DataProvider.ofCollection(pallets);
 
-        grid.setDataProvider(dataProvider);
+        palletsGrid.setDataProvider(dataProvider);
 
-        grid.addColumn(Pallets::getWat)
+        palletsGrid.addColumn(StringLongModel::getString)
                 .setCaption("Wat?")
                 .setExpandRatio(2);
 
-        grid.addColumn(Pallets::getAantal)
+        palletsGrid.addColumn(StringLongModel::get_long)
                 .setCaption("Aantal")
                 .setExpandRatio(2);
 
-        grid.addColumn(person -> "Delete",
+        palletsGrid.addColumn(person -> "Delete",
                 new ButtonRenderer(clickEvent -> {
                     pallets.remove(clickEvent.getItem());
-                    grid.setItems(pallets);
+                    palletsGrid.setItems(pallets);
                 }))
                 .setExpandRatio(2);
 
-        grid.getEditor().setEnabled(false);
+        palletsGrid.getEditor().setEnabled(false);
     }
 
+    // autofill + userId
     private void test() {
         UserInfo.user_Id = 141;
-        straatnaam.setValue("ruisdaelstraat 36");
-        plaats.setValue("ede");
-        postcode.setValue("6717 tm");
-        provincie.setValue("gelderland");
-        land.setValue("nederland");
+        straatnaamTxtField.setValue("ruisdaelstraat 36");
+        plaatsTxtField.setValue("ede");
+        postcodeTxtField.setValue("6717 tm");
+        provincieTxtField.setValue("gelderland");
+        landTxtField.setValue("nederland");
     }
 
     private void addOnclick() {
-        terugBtn.addClickListener(event -> terugButtonClick());
+        terugBtn.addClickListener(event -> annulerenButtonClick());
         terugBtn.addStyleName(ValoTheme.BUTTON_FRIENDLY);
-        order.addClickListener(event -> validation());
-        addBtn.addClickListener(event -> add());
+        orderBtn.addClickListener(event -> validation());
+        toevoegenBtn.addClickListener(event -> toevoegen());
     }
 
     private void validation() {
         try {
-            if (straatnaam.isEmpty() || plaats.isEmpty() || postcode.isEmpty() || provincie.isEmpty() || land.isEmpty() || datum.isEmpty()) {
+            if (straatnaamTxtField.isEmpty() || plaatsTxtField.isEmpty() || postcodeTxtField.isEmpty() || provincieTxtField.isEmpty() || landTxtField.isEmpty() || datumTxtField.isEmpty()) {
                 sendError("Iets is niet ingevuld!");
-            } else if (aantal.getValue().contains(",") || aantal.getValue().contains(".")) {
+            } else if (aantalTxtField.getValue().contains(",") || aantalTxtField.getValue().contains(".")) {
                 sendError("De pallets kunnen alleen in hele worden besteld!");
             } else if (pallets.isEmpty()) {
                 sendError("Er moet meer dan 0 besteld worden!");
             } else {
-                fullAdres = straatnaam.getValue() + plaats.getValue() + postcode.getValue() + provincie.getValue() + land.getValue();
+                fullAdres = straatnaamTxtField.getValue() + plaatsTxtField.getValue() + postcodeTxtField.getValue() + provincieTxtField.getValue() + landTxtField.getValue();
                 fullAdres = fullAdres.replaceAll("\\s+","");
                 makeOrder();
             }
         }catch (Exception e){
-            sendError("Er is iets foutgegaan!");
+            sendError("Er is iets foutgegaan!" + e);
         }
     }
 
-    private void add(){
+    private void toevoegen(){
         long i = 0;
-        for(Pallets pallets : pallets){
-            i = i + pallets.getAantal();
+        for(StringLongModel pallets : pallets){
+            i = i + pallets.get_long();
         }
-        if(i + Integer.parseInt(aantal.getValue()) <= 20) {
-            pallets.add(new Pallets(pallet.getValue(), Integer.parseInt(aantal.getValue())));
-            pallet.clear();
-            aantal.clear();
-            grid.setItems(pallets);
+        if(i + Integer.parseInt(aantalTxtField.getValue()) <= 20) {
+            pallets.add(new StringLongModel(palletTxtField.getValue(), Integer.parseInt(aantalTxtField.getValue())));
+            palletTxtField.clear();
+            aantalTxtField.clear();
+            palletsGrid.setItems(pallets);
         } else{
             sendError("Er kan niet meer dan 20 besteld worden!");
         }
@@ -143,10 +155,10 @@ public class OrderUI extends VerticalLayout implements View {
     }
 
     private void makeOrder() {
-            NewOrder order = orderMaken.makeOrder(Date.valueOf(datum.getValue()), fullAdres, land.getValue(), pallets);
+            NewOrder order = orderMaken.makeOrder(Date.valueOf(datumTxtField.getValue()), fullAdres, landTxtField.getValue(), pallets);
             if(order != null) {
-                factureUI.setComponents(order);
-                getUI().setContent(factureUI);
+                factuurUI.setComponents(order);
+                getUI().setContent(factuurUI);
             } else{
                 sendError("Geen mogelijkheden kunnen vinden!");
             }
@@ -160,18 +172,18 @@ public class OrderUI extends VerticalLayout implements View {
 
     private void addLayout() {
         VerticalLayout layout1 = new VerticalLayout();
-        layout1.addComponents(straatnaam, plaats, postcode, provincie, land, datum);
+        layout1.addComponents(straatnaamTxtField, plaatsTxtField, postcodeTxtField, provincieTxtField, landTxtField, datumTxtField);
 
         VerticalLayout layout2 = new VerticalLayout();
-        layout2.addComponents(pallet, aantal, addBtn, order, terugBtn, send);
+        layout2.addComponents(palletTxtField, aantalTxtField, toevoegenBtn, orderBtn, terugBtn, send);
 
         HorizontalLayout layout3 = new HorizontalLayout();
-        layout3.addComponents(layout1,layout2, grid);
+        layout3.addComponents(layout1,layout2, palletsGrid);
 
         parent.addComponentsAndExpand(layout3);
     }
 
-    private void terugButtonClick() {
+    private void annulerenButtonClick() {
         getUI().setContent(loginUI);
     }
 
