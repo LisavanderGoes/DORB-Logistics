@@ -26,8 +26,6 @@ public class LoginUI extends VerticalLayout implements View {
     @Autowired
     TestUI testUI;
     @Autowired
-    CrudUI crudUI;
-    @Autowired
     OrderUI orderUI;
     @Autowired
     WerkroosterUI werkroosterUI;

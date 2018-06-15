@@ -1,7 +1,6 @@
 package com.lisa.dorb;
 
 import com.lisa.dorb.layout.LoginUI;
-import com.lisa.dorb.layout.CrudUI;
 import com.lisa.dorb.layout.order.OrderUI;
 import com.lisa.dorb.layout.TestUI;
 import com.vaadin.server.VaadinRequest;
@@ -15,8 +14,6 @@ public class Main extends UI {
 
     @Autowired
     LoginUI loginUI;
-    @Autowired
-    CrudUI crudUI;
     @Autowired
     OrderUI orderUI;
     @Autowired
