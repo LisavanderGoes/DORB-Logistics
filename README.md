@@ -1,6 +1,6 @@
 # DORB-Logistics
 School project
-Gemaakt op 5-04-2018
+Begonnen op 5-04-2018
 
 Gemaakt met SpringBoot en Vaadin
 
